@@ -43,18 +43,10 @@ source $ZSH/oh-my-zsh.sh
 # General
 alias l="ls -a"
 alias cl="clear"
-alias please="shell-genie ask"
-
 # Safe rm - move to trash instead of permanent deletion
 alias rm="trash"
 alias rmi="/bin/rm -i"  # Interactive delete if you really need rm
 alias rmf="/bin/rm -f"  # Force delete if you really need it (use with caution!)
-
-# hledger aliases
-alias hl="hledger"
-alias hlb="hledger bs"
-alias hla="hledger add"
-alias hlc="hledger check"
 
 # GitHub Copilot
 alias copilot="gh copilot"
@@ -120,35 +112,9 @@ function kdo() {
 # DEVELOPMENT TOOLS PATH
 # ==============================================================================
 
-# OpenJDK (prepend)
-add_to_path "/opt/homebrew/opt/openjdk/bin"
-
-# Go (append)
-add_to_path_end "/usr/local/go/bin"
-
-# Maven (append)
-add_to_path_end "/usr/local/lib/apache-maven-3.9.6/bin"
-
 # yt-dlp (append)
 add_to_path_end "$HOME/.config/yt-dlp"
 
-# pnpm (prepend)
-export PNPM_HOME="$HOME/Library/pnpm"
-add_to_path "$PNPM_HOME"
-
-# NVM (Node Version Manager)
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
-# Google Cloud SDK
-if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then
-    . "$HOME/google-cloud-sdk/path.zsh.inc"
-fi
-
-if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then
-    . "$HOME/google-cloud-sdk/completion.zsh.inc"
-fi
 
 # ==============================================================================
 # ENVIRONMENT VARIABLES
@@ -156,9 +122,6 @@ fi
 
 # AWS - use bedrock-claude profile by default
 export AWS_PROFILE=bedrock-claude
-
-# hledger
-export LEDGER_FILE="$HOME/Local/Areas/Personal Finance/hledger/2024.journal"
 
 # ==============================================================================
 # PROMPT

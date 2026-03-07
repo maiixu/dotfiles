@@ -96,6 +96,8 @@ echo ""
 declare -A SHELL_CONFIGS=(
     ["zshenv"]=".zshenv"
     ["zprofile"]=".zprofile"
+    ["gitconfig"]=".gitconfig"
+    ["zshrc/.zshrc"]=".zshrc"
 )
 
 for source_name in "${!SHELL_CONFIGS[@]}"; do
