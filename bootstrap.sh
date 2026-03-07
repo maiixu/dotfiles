@@ -152,7 +152,7 @@ echo -e "${GREEN}🔗 Step 2: Linking config folders to ~/.config...${NC}"
 echo ""
 
 # What to exclude from ~/.config linking
-EXCLUDES=("bootstrap.sh" ".git" ".gitignore" "README.md" "zshenv" "zprofile" "test" "hammerspoon" "raycast")
+EXCLUDES=("bootstrap.sh" ".git" ".gitignore" "README.md" "zshenv" "zprofile" "test" "raycast")
 
 # Link folders to ~/.config
 for item in "$DOTFILES_DIR"/*; do

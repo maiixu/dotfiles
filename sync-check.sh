@@ -109,14 +109,7 @@ check_dir "zshrc"
 check_dir "aerospace"
 check_dir "karabiner"
 check_dir "git"
-
-# Hammerspoon lives at ~/.hammerspoon, not ~/.config/hammerspoon
-if [[ -L "$HOME/.hammerspoon" ]] && [[ "$(readlink $HOME/.hammerspoon)" == "$DOTFILES_DIR/hammerspoon" ]]; then
-    echo -e "${GREEN}✓${NC} ~/.hammerspoon → symlinked correctly"
-else
-    echo -e "${YELLOW}⚠${NC}  ~/.hammerspoon → not symlinked to dotfiles"
-    ALL_SYNCED=false
-fi
+check_dir "hammerspoon"
 
 echo ""
 
