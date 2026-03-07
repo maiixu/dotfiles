@@ -64,16 +64,24 @@ alias copilot="gh copilot"
 # ==============================================================================
 
 # Safe trash function - move files to macOS Trash
+# Handles flags like -r, -rf, etc.
 trash() {
     if [ $# -eq 0 ]; then
-        echo "Usage: trash <file_or_directory>..."
+        echo "Usage: trash [-rf] <file_or_directory>..."
         echo "Move files/directories to Trash instead of permanent deletion"
+        echo ""
+        echo "Options:"
+        echo "  -r, -rf, -f    Ignored (for compatibility with rm commands)"
+        echo ""
+        echo "Examples:"
+        echo "  trash file.txt"
+        echo "  trash -rf directory/"
         return 1
     fi
 
     local item
     for item in "$@"; do
-        # Skip flags that start with -
+        # Skip flags (they're just for rm compatibility)
         if [[ "$item" == -* ]]; then
             continue
         fi
@@ -132,22 +140,6 @@ add_to_path "$PNPM_HOME"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
-# >>> conda initialize >>>
-if [ -f "$HOME/miniconda3/bin/conda" ]; then
-    __conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "$HOME/miniconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="$HOME/miniconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-fi
-# <<< conda initialize <<<
 
 # Google Cloud SDK
 if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then

@@ -43,7 +43,7 @@ echo ""
 # KEYBOARD BEHAVIOR
 # ==============================================================================
 
-echo -e "${GREEN}[1/3] Keyboard behavior...${NC}"
+echo -e "${GREEN}[1/4] Keyboard behavior...${NC}"
 
 # Hold fn key to use F1, F2, etc. as standard function keys
 run defaults write NSGlobalDomain "com.apple.keyboard.fnState" -bool true
@@ -78,10 +78,10 @@ echo ""
 # Format: replace = "shortcut you type"; with = "text that replaces it"
 # Tip: use \U prefix for Unicode, e.g., shrug -> ¯\_(ツ)_/¯
 
-echo -e "${GREEN}[2/3] Text replacement...${NC}"
+echo -e "${GREEN}[2/4] Text replacement...${NC}"
 
 run defaults write NSGlobalDomain NSUserReplacementItems -array \
-    '{ replace = "@@"; with = "maixu@example.com"; }' \
+    '{ replace = "@email"; with = "maizehsu02@gmail.com"; }' \
     '{ replace = "->"; with = "→"; }' \
     '{ replace = "<-"; with = "←"; }'
 
@@ -110,7 +110,7 @@ echo ""
 #   163 = Application windows
 #   164 = Show Desktop
 
-echo -e "${GREEN}[3/3] Keyboard shortcuts...${NC}"
+echo -e "${GREEN}[3/4] Keyboard shortcuts...${NC}"
 
 # Input source switching (keep enabled — needed for Chinese input)
 run defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 79 \
@@ -140,6 +140,24 @@ run defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 164 
 # Uncomment to disable:
 # run defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 \
 #     '<dict><key>enabled</key><false/></dict>'
+
+echo -e "${GREEN}  done${NC}"
+echo ""
+
+# ==============================================================================
+# APP SHORTCUTS (NSUserKeyEquivalents)
+# ==============================================================================
+# Assign keyboard shortcuts to menu items across all apps.
+# Format: "Menu Item Name" = "key"
+#   @ = Cmd, $ = Shift, ^ = Ctrl, ~ = Option
+#   e.g. "@$," = Cmd+Shift+,
+
+echo -e "${GREEN}[4/4] App shortcuts...${NC}"
+
+# Cmd+Shift+, → Open System Settings (via Apple menu item)
+# Note: the "…" is a unicode ellipsis (U+2026), not three dots
+run defaults write NSGlobalDomain NSUserKeyEquivalents \
+    -dict-add "System Settings\U2026" "@\$,"
 
 echo -e "${GREEN}  done${NC}"
 echo ""
