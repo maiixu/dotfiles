@@ -2,12 +2,15 @@
 --- In Chinese input mode:
 ---   " → inserts 「」 with cursor placed between them
 --- In any mode:
----   backspace with cursor between 「」 → deletes both
+---   backspace with cursor between 「」 → deletes both brackets
+---
+--- Cursor context is detected by briefly selecting chars around the cursor
+--- via Shift+arrow + Cmd+C, then restoring. Works in Electron and native apps.
 
 local obj = {}
 obj.__index = obj
 obj.name = "ChineseQuotes"
-obj.version = "2.0"
+obj.version = "3.0"
 
 local function isChineseInput()
     local source = hs.keycodes.currentSourceID() or ""
@@ -21,53 +24,29 @@ local function isChineseInput()
         or source:lower():find("wubi")    ~= nil
 end
 
--- Returns the characters immediately before and after the cursor
--- via the macOS Accessibility API. Works in most native text fields.
-local function charsAroundCursor()
-    local focused = hs.axuielement.focusedElement()
-    if not focused then return nil, nil end
-
-    local value = focused:attributeValue("AXValue")
-    local range  = focused:attributeValue("AXSelectedTextRange")
-
-    if type(value) ~= "string" or type(range) ~= "table" then return nil, nil end
-
-    -- range.location is a 0-indexed UTF-16 offset; BMP characters (including
-    -- all common CJK chars) each occupy exactly 1 UTF-16 unit, so this equals
-    -- their Unicode codepoint index.
-    local pos = range.location
-
-    -- Build a 1-indexed array of Unicode codepoints from the UTF-8 string
-    local codepoints = {}
-    for _, cp in utf8.codes(value) do
-        table.insert(codepoints, cp)
-    end
-
-    local before = pos >= 1           and utf8.char(codepoints[pos])     or nil
-    local after  = pos < #codepoints  and utf8.char(codepoints[pos + 1]) or nil
-
-    return before, after
-end
-
 function obj:start()
+    self._skipBackspace = 0
+
     self._tap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(e)
         local keyCode = e:getKeyCode()
         local flags   = e:getFlags()
         local noMod   = not flags.cmd and not flags.ctrl and not flags.alt
 
-        -- Backspace: delete both brackets if cursor sits between 「 and 」
-        if keyCode == 51 and noMod then
-            local before, after = charsAroundCursor()
-            if before == "「" and after == "」" then
-                hs.eventtap.keyStroke({}, "forwarddelete")  -- delete 」 on the right
-                return false  -- let original backspace delete 「 on the left
-            end
+        -- Skip backspaces we re-inject ourselves
+        if keyCode == 51 and self._skipBackspace > 0 then
+            self._skipBackspace = self._skipBackspace - 1
             return false
+        end
+
+        -- Backspace: consume and check cursor context asynchronously
+        if keyCode == 51 and noMod then
+            self:_checkPairAndDelete()
+            return true
         end
 
         if not isChineseInput() then return false end
 
-        -- Shift + ' (key 39) = " → insert pair with cursor in the middle
+        -- Shift + ' (key 39) = " → insert 「」 with cursor in the middle
         if keyCode == 39 and flags.shift and noMod then
             hs.eventtap.keyStrokes("「」")
             hs.eventtap.keyStroke({}, "left")
@@ -79,6 +58,53 @@ function obj:start()
 
     self._tap:start()
     return self
+end
+
+-- Read chars around cursor by selecting them and copying to clipboard.
+-- Restores both cursor position and clipboard when done.
+-- Calls back with (charBefore, charAfter).
+function obj:_checkPairAndDelete()
+    local saved = hs.pasteboard.getContents()
+
+    -- 1. Select char to the right
+    hs.eventtap.keyStroke({"shift"}, "right")
+
+    hs.timer.doAfter(0.02, function()
+        hs.eventtap.keyStroke({"cmd"}, "c")
+
+        hs.timer.doAfter(0.02, function()
+            local after = hs.pasteboard.getContents()
+            -- Collapse selection → cursor back to original position
+            hs.eventtap.keyStroke({}, "left")
+
+            hs.timer.doAfter(0.01, function()
+                -- 2. Select char to the left
+                hs.eventtap.keyStroke({"shift"}, "left")
+
+                hs.timer.doAfter(0.02, function()
+                    hs.eventtap.keyStroke({"cmd"}, "c")
+
+                    hs.timer.doAfter(0.02, function()
+                        local before = hs.pasteboard.getContents()
+                        -- Restore cursor to original position
+                        hs.eventtap.keyStroke({}, "right")
+
+                        -- Restore clipboard
+                        hs.pasteboard.setContents(saved or "")
+
+                        -- Act: delete pair or normal backspace
+                        self._skipBackspace = 1
+                        if before == "「" and after == "」" then
+                            hs.eventtap.keyStroke({}, "forwarddelete")  -- delete 」
+                            hs.eventtap.keyStroke({}, "delete")          -- delete 「
+                        else
+                            hs.eventtap.keyStroke({}, "delete")          -- normal backspace
+                        end
+                    end)
+                end)
+            end)
+        end)
+    end)
 end
 
 function obj:stop()
