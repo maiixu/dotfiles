@@ -6,7 +6,7 @@
 local obj = {}
 obj.__index = obj
 obj.name = "ChineseQuotes"
-obj.version = "1.2"
+obj.version = "1.3"
 
 local function isChineseInput()
     local source = hs.keycodes.currentSourceID() or ""
@@ -28,14 +28,14 @@ function obj:start()
         local flags   = e:getFlags()
         local noMod   = not flags.cmd and not flags.ctrl and not flags.alt
 
-        -- Backspace (key 51): if we just inserted a pair, delete both
+        -- Backspace: if we just inserted a pair, delete both
         if keyCode == 51 and noMod and self._justPaired then
             self._justPaired = false
             hs.eventtap.keyStroke({}, "forwarddelete")  -- delete 」 on the right
-            return false  -- let the original backspace delete 「 on the left
+            return false  -- let backspace delete 「 on the left
         end
 
-        -- Any other key clears the paired state
+        -- Any other key clears paired state
         self._justPaired = false
 
         if not isChineseInput() then return false end
@@ -44,7 +44,9 @@ function obj:start()
         if keyCode == 39 and flags.shift and noMod then
             hs.eventtap.keyStrokes("「」")
             hs.eventtap.keyStroke({}, "left")  -- move cursor between 「 and 」
-            self._justPaired = true
+            -- Defer _justPaired so injected events (left arrow etc.)
+            -- don't clear it before the user can press backspace
+            hs.timer.doAfter(0, function() self._justPaired = true end)
             return true
         end
 
