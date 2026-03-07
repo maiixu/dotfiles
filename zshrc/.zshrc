@@ -40,9 +40,15 @@ source $ZSH/oh-my-zsh.sh
 # ALIASES
 # ==============================================================================
 
+# General
 alias l="ls -a"
 alias cl="clear"
 alias please="shell-genie ask"
+
+# Safe rm - move to trash instead of permanent deletion
+alias rm="trash"
+alias rmi="/bin/rm -i"  # Interactive delete if you really need rm
+alias rmf="/bin/rm -f"  # Force delete if you really need it (use with caution!)
 
 # hledger aliases
 alias hl="hledger"
@@ -56,6 +62,46 @@ alias copilot="gh copilot"
 # ==============================================================================
 # FUNCTIONS
 # ==============================================================================
+
+# Safe trash function - move files to macOS Trash
+trash() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: trash <file_or_directory>..."
+        echo "Move files/directories to Trash instead of permanent deletion"
+        return 1
+    fi
+
+    local item
+    for item in "$@"; do
+        # Skip flags that start with -
+        if [[ "$item" == -* ]]; then
+            continue
+        fi
+
+        if [ -e "$item" ] || [ -L "$item" ]; then
+            # Convert to absolute path
+            local abs_path
+            if [[ "$item" == /* ]]; then
+                abs_path="$item"
+            else
+                abs_path="$(pwd)/$item"
+            fi
+
+            # Move to Trash
+            osascript -e "tell application \"Finder\" to delete POSIX file \"$abs_path\"" &> /dev/null
+
+            if [ $? -eq 0 ]; then
+                echo "🗑️  Moved to Trash: $item"
+            else
+                echo "❌ Failed to move to Trash: $item"
+                return 1
+            fi
+        else
+            echo "❌ File not found: $item"
+            return 1
+        fi
+    done
+}
 
 # Kill Docker Desktop app and VM (excluding vmnetd service)
 function kdo() {
