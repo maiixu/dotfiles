@@ -124,18 +124,18 @@ export PATH=$PATH:/usr/local/go/bin
 
 
 # Created by `pipx` on 2023-05-31 00:08:59
-export PATH="$PATH:~/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('~/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "~/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "~/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="~/miniconda3/bin:$PATH"
+        export PATH="$HOME/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -144,23 +144,26 @@ unset __conda_setup
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/lib/apache-maven-3.9.6/bin:$PATH
 
-export LEDGER_FILE=~/.config/hledger/.hledger.journal
+export LEDGER_FILE=$HOME/.config/hledger/.hledger.journal
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then . '~/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '$HOME/google-cloud-sdk/path.zsh.inc' ]; then . '$HOME/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then . '~/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '$HOME/google-cloud-sdk/completion.zsh.inc' ]; then . '$HOME/google-cloud-sdk/completion.zsh.inc'; fi
 alias copilot="gh copilot"
 
-export "LEDGER_FILE=~/Local/Areas/Personal Finance/hledger/2024.journal"
+export LEDGER_FILE="$HOME/Local/Areas/Personal Finance/hledger/2024.journal"
 
 # pnpm
-export PNPM_HOME="~/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
 
-export PATH=$PATH:~/.config/yt-dlp
+export PATH=$PATH:$HOME/.config/yt-dlp
+
+# AWS Profile - use bedrock-claude by default
+export AWS_PROFILE=bedrock-claude
