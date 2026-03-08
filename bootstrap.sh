@@ -152,7 +152,7 @@ echo -e "${GREEN}🔗 Step 2: Linking config folders to ~/.config...${NC}"
 echo ""
 
 # What to exclude from ~/.config linking
-EXCLUDES=("bootstrap.sh" ".git" ".gitignore" "README.md" "zshenv" "zprofile" "test" "raycast")
+EXCLUDES=("bootstrap.sh" ".git" ".gitignore" "README.md" "zshenv" "zprofile" "test" "raycast" "claude")
 
 # Link folders to ~/.config
 for item in "$DOTFILES_DIR"/*; do
@@ -223,7 +223,49 @@ fi
 echo ""
 
 # ==============================================================================
-# STEP 4: Install packages (optional)
+# STEP 4: Link Claude Code configuration to ~/.claude
+# ==============================================================================
+
+echo -e "${GREEN}🔗 Step 4: Linking Claude Code configuration...${NC}"
+echo ""
+
+CLAUDE_SOURCE="$DOTFILES_DIR/claude"
+CLAUDE_TARGET="$HOME/.claude"
+
+mkdir -p "$CLAUDE_TARGET"
+
+# Files and directories to link from dotfiles/claude/ into ~/.claude/
+CLAUDE_ITEMS=("CLAUDE.md" "settings.json" "skills" "hooks" "agents")
+
+for item in "${CLAUDE_ITEMS[@]}"; do
+    source_path="$CLAUDE_SOURCE/$item"
+    target_path="$CLAUDE_TARGET/$item"
+
+    [ ! -e "$source_path" ] && continue
+
+    if [ -L "$target_path" ]; then
+        existing_link=$(readlink "$target_path")
+        if [ "$existing_link" = "$source_path" ]; then
+            echo "✓ Already linked: ~/.claude/$item"
+        else
+            echo -e "${YELLOW}⚠️  ~/.claude/$item already symlinked to: $existing_link${NC}"
+        fi
+    elif [ -e "$target_path" ]; then
+        backup_path="$target_path.backup.$(date +%Y%m%d_%H%M%S)"
+        mv "$target_path" "$backup_path"
+        ln -s "$source_path" "$target_path"
+        echo -e "${GREEN}✓ Backed up and linked: ~/.claude/$item${NC}"
+        echo -e "  ${YELLOW}Backup at: $backup_path${NC}"
+    else
+        ln -s "$source_path" "$target_path"
+        echo -e "${GREEN}✓ Linked: ~/.claude/$item${NC}"
+    fi
+done
+
+echo ""
+
+# ==============================================================================
+# STEP 5: Install packages (optional)
 # ==============================================================================
 
 if [ "$INSTALL_PACKAGES" = true ]; then
