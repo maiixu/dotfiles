@@ -235,7 +235,7 @@ CLAUDE_TARGET="$HOME/.claude"
 mkdir -p "$CLAUDE_TARGET"
 
 # Files and directories to link from dotfiles/claude/ into ~/.claude/
-CLAUDE_ITEMS=("CLAUDE.md" "settings.json" "skills" "hooks" "agents" "rules")
+CLAUDE_ITEMS=("CLAUDE.md" "settings.json" "settings.local.json" "skills" "hooks" "agents" "rules")
 
 for item in "${CLAUDE_ITEMS[@]}"; do
     source_path="$CLAUDE_SOURCE/$item"
