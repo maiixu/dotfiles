@@ -1,6 +1,6 @@
 #!/bin/bash
 # Read-only overview of Things 3 database.
-# Usage: ./read-things.sh [--full]
+# Usage: ./things-read.sh [--full]
 #   --full  Include all open tasks
 
 DB=$(find ~/Library/Group\ Containers/JLMPQHK86H.com.culturedcode.ThingsMac \
@@ -56,7 +56,7 @@ ORDER BY area_name, t.'index';"
 echo ""
 echo "## INBOX ($(q "SELECT count(*) FROM TMTask WHERE start=0 AND status=0 AND trashed=0 AND type=0") items)"
 q "
-SELECT '  ' ||
+SELECT '  [' || uuid || '] ' ||
   CASE WHEN deadline IS NOT NULL
     THEN '[due ' || date(deadline + $EPOCH, 'unixepoch', 'localtime') || '] '
     ELSE ''

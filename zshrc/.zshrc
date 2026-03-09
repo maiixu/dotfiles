@@ -51,6 +51,9 @@ alias rmf="/bin/rm -f"  # Force delete if you really need it (use with caution!)
 # GitHub Copilot
 alias copilot="gh copilot"
 
+# Claude Code
+alias c="claude"
+
 # ==============================================================================
 # FUNCTIONS
 # ==============================================================================

@@ -113,6 +113,39 @@ check_dir "hammerspoon"
 
 echo ""
 
+# Check Claude Code configuration
+echo -e "${YELLOW}Checking Claude Code configuration...${NC}"
+echo ""
+
+CLAUDE_SOURCE="$DOTFILES_DIR/claude"
+CLAUDE_TARGET="$HOME/.claude"
+CLAUDE_ITEMS=("CLAUDE.md" "settings.json" "settings.local.json" "skills" "hooks" "agents" "rules" "agent-memory" "scripts")
+
+for item in "${CLAUDE_ITEMS[@]}"; do
+    source_path="$CLAUDE_SOURCE/$item"
+    target_path="$CLAUDE_TARGET/$item"
+
+    [[ ! -e "$source_path" ]] && continue
+
+    if [[ -L "$target_path" ]]; then
+        local_link=$(readlink "$target_path")
+        if [[ "$local_link" == "$source_path" ]]; then
+            echo -e "${GREEN}✓${NC} ~/.claude/$item → symlinked correctly"
+        else
+            echo -e "${YELLOW}⚠${NC}  ~/.claude/$item → symlinked to: $local_link (expected: $source_path)"
+            ALL_SYNCED=false
+        fi
+    elif [[ -e "$target_path" ]]; then
+        echo -e "${YELLOW}⚠${NC}  ~/.claude/$item → NOT a symlink"
+        ALL_SYNCED=false
+    else
+        echo -e "${RED}✗${NC} ~/.claude/$item does not exist"
+        ALL_SYNCED=false
+    fi
+done
+
+echo ""
+
 # Check git status
 echo -e "${YELLOW}Checking git status...${NC}"
 echo ""
