@@ -1,4 +1,6 @@
 {
+  "env": {},
+  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
@@ -12,5 +14,15 @@
       }
     ]
   },
-  "model": "opus"
+  "enabledPlugins": {
+    "ralph-skills@ralph-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "ralph-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "snarktank/ralph"
+      }
+    }
+  }
 }

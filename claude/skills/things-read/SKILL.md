@@ -7,13 +7,13 @@ disable-model-invocation: true
 Run a read-only snapshot of Things 3 and display it.
 
 ```bash
-bash ~/.claude/scripts/things/things-read.sh
+bash ~/code/things-scripts/things-read.sh
 ```
 
 To include all open tasks:
 
 ```bash
-bash ~/.claude/scripts/things/things-read.sh --full
+bash ~/code/things-scripts/things-read.sh --full
 ```
 
 Output sections:

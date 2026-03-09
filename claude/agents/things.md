@@ -39,7 +39,7 @@ Exception: real hard dates (credit card renewal, tax deadlines, event dates) use
 Read current Things state for areas, projects, tags, and inbox:
 
 ```bash
-bash ~/.claude/scripts/things/things-read.sh
+bash ~/code/things-scripts/things-read.sh
 ```
 
 Also read `~/.claude/agent-memory/things/MEMORY.md` for the routing guide, emoji conventions, and tagging conventions.
@@ -67,7 +67,7 @@ subprocess.run(['open', f'things:///add?{params}'])
 **Update existing tasks (requires auth token):**
 ```bash
 echo '[{"id":"UUID","title":"New title","list":"Project","when":"anytime","deadline":"2026-03-14"}]' \
-  | bash ~/.claude/scripts/things/things-write.sh
+  | bash ~/code/things-scripts/things-write.sh
 ```
 
 **`list`:** exact project or area title (copy from reader output), or `Inbox`

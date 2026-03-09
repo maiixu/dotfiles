@@ -9,6 +9,10 @@
 
 所有 Things 3 操作（添加任务、更新任务、读取状态）必须通过 `things` subagent 完成，main session 不直接操作。对话中产生 actionable next steps 时主动 invoke。
 
+## Obsidian
+
+所有 Obsidian vault 写操作（创建笔记）必须通过 `obsidian` subagent 完成，main session 不直接写入 vault 文件。使用 `/obsidian-new-note` skill 触发。
+
 ## 事故复盘：2026-03-07 主目录误删事件
 
 **经过：**

@@ -11,7 +11,7 @@ Do a daily review of Things 3. Today is $ARGUMENTS (if not provided, use today's
 ## Step 1 — Read state
 
 1. Read `~/.claude/agent-memory/things/MEMORY.md` (routing guide, areas, tags)
-2. Run `bash ~/.claude/scripts/things/things-read.sh`
+2. Run `bash ~/code/things-scripts/things-read.sh`
 
 ## Step 2 — Triage inbox
 
@@ -46,7 +46,7 @@ Wait for user reply, parse it, and apply edits.
 ## Step 4 — Execute confirmed items
 
 ```bash
-echo '<JSON>' | bash ~/.claude/scripts/things/things-write.sh
+echo '<JSON>' | bash ~/code/things-scripts/things-write.sh
 ```
 
 Skip items where action == "skip".
