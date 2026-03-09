@@ -9,6 +9,12 @@ if [ -z "$COMMAND" ]; then
   exit 0
 fi
 
+# Block any attempt to bypass the rm→trash alias (e.g. /bin/rm, command rm, \rm, env rm)
+if echo "$COMMAND" | grep -qE '(/bin/rm|/usr/bin/rm|\bcommand\s+rm\b|\\rm\b|\benv\s+rm\b|\bbuiltin\s+rm\b|\brmf\b)'; then
+  echo "BLOCKED: Direct rm binary or alias bypass detected. Use 'trash' for safe deletion." >&2
+  exit 2
+fi
+
 # Block rm -rf on home directory or its direct children
 if echo "$COMMAND" | grep -qE 'rm\s+(-[a-zA-Z]*f[a-zA-Z]*r[a-zA-Z]*|-[a-zA-Z]*r[a-zA-Z]*f[a-zA-Z]*)\s+(~\/?\s*$|~/[^/]+\s*$|/Users/[^/]+\s*$|/Users/[^/]+/[^/]+\s*$)'; then
   echo "BLOCKED: rm -rf on home directory or direct child. Per CLAUDE.md safety rules, this operation is not allowed. Use 'trash' for safe deletion or target a more specific path." >&2

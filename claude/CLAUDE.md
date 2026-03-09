@@ -11,7 +11,7 @@
 
 ## Obsidian
 
-所有 Obsidian vault 写操作（创建笔记）必须通过 `obsidian` subagent 完成，main session 不直接写入 vault 文件。使用 `/obsidian-new-note` skill 触发。
+所有 Obsidian vault 写操作必须通过 `obsidian` subagent 完成，main session 不直接写入 vault 文件。对话中产生关于人的值得记录的信息时主动触发 `obsidian-people-note` skill。
 
 ## 事故复盘：2026-03-07 主目录误删事件
 

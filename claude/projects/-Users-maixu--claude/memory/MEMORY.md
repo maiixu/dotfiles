@@ -24,3 +24,7 @@
 - Week = Saturday → Friday; EOW = coming Friday
 - EOW → this Friday, EOM → last Friday of month, EOQ → last Friday of quarter
 - Use `deadline` field (not `when`) for all EOW/EOM/EOQ anchors
+
+## Active Plans
+
+- **things-read.sh Upcoming fix**: See `things-read-upcoming-fix.md` for full plan. Status: NOT STARTED.

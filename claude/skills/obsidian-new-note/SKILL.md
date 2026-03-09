@@ -1,6 +1,7 @@
 ---
 name: obsidian-new-note
 description: Create a new Obsidian note in the inbox. Drafts a Zettelkasten note from the current conversation context, shows a preview for review, then saves to the inbox on approval.
+agent: obsidian
 ---
 
 Create a new Obsidian note for the inbox.
@@ -72,4 +73,4 @@ Wait for user reply. If they request edits, update and re-show the preview. Repe
 
 ## Step 6 — Save
 
-Invoke the `obsidian` agent with the finalized filename and content to write the file.
+Write the finalized file to the inbox, then open in Obsidian.
