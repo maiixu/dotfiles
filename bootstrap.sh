@@ -262,6 +262,31 @@ for item in "${CLAUDE_ITEMS[@]}"; do
     fi
 done
 
+# Special: link claude/memory into the project-scoped memory directory
+MEMORY_SOURCE="$CLAUDE_SOURCE/memory"
+MEMORY_TARGET="$HOME/.claude/projects/-Users-maixu--claude/memory"
+
+if [ -d "$MEMORY_SOURCE" ]; then
+    mkdir -p "$(dirname "$MEMORY_TARGET")"
+    if [ -L "$MEMORY_TARGET" ]; then
+        existing_link=$(readlink "$MEMORY_TARGET")
+        if [ "$existing_link" = "$MEMORY_SOURCE" ]; then
+            echo "✓ Already linked: claude project memory"
+        else
+            echo -e "${YELLOW}⚠️  claude project memory already symlinked to: $existing_link${NC}"
+        fi
+    elif [ -e "$MEMORY_TARGET" ]; then
+        backup_path="$MEMORY_TARGET.backup.$(date +%Y%m%d_%H%M%S)"
+        mv "$MEMORY_TARGET" "$backup_path"
+        ln -s "$MEMORY_SOURCE" "$MEMORY_TARGET"
+        echo -e "${GREEN}✓ Backed up and linked: claude project memory${NC}"
+        echo -e "  ${YELLOW}Backup at: $backup_path${NC}"
+    else
+        ln -s "$MEMORY_SOURCE" "$MEMORY_TARGET"
+        echo -e "${GREEN}✓ Linked: claude project memory${NC}"
+    fi
+fi
+
 echo ""
 
 # ==============================================================================
