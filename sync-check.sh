@@ -119,7 +119,7 @@ echo ""
 
 CLAUDE_SOURCE="$DOTFILES_DIR/claude"
 CLAUDE_TARGET="$HOME/.claude"
-CLAUDE_ITEMS=("CLAUDE.md" "settings.json" "settings.local.json" "skills" "hooks" "agents" "rules" "agent-memory" "scripts")
+CLAUDE_ITEMS=("CLAUDE.md" "settings.json" "settings.local.json" "skills" "hooks" "agents" "rules" "agent-memory" "scripts" "projects")
 
 for item in "${CLAUDE_ITEMS[@]}"; do
     source_path="$CLAUDE_SOURCE/$item"
@@ -144,26 +144,6 @@ for item in "${CLAUDE_ITEMS[@]}"; do
     fi
 done
 
-# Check project-scoped memory
-MEMORY_SOURCE="$CLAUDE_SOURCE/memory"
-MEMORY_TARGET="$HOME/.claude/projects/-Users-maixu--claude/memory"
-if [[ -d "$MEMORY_SOURCE" ]]; then
-    if [[ -L "$MEMORY_TARGET" ]]; then
-        local_link=$(readlink "$MEMORY_TARGET")
-        if [[ "$local_link" == "$MEMORY_SOURCE" ]]; then
-            echo -e "${GREEN}✓${NC} ~/.claude/projects/-Users-maixu--claude/memory → symlinked correctly"
-        else
-            echo -e "${YELLOW}⚠${NC}  claude project memory → symlinked to: $local_link (expected: $MEMORY_SOURCE)"
-            ALL_SYNCED=false
-        fi
-    elif [[ -e "$MEMORY_TARGET" ]]; then
-        echo -e "${YELLOW}⚠${NC}  claude project memory → NOT a symlink"
-        ALL_SYNCED=false
-    else
-        echo -e "${RED}✗${NC} claude project memory does not exist"
-        ALL_SYNCED=false
-    fi
-fi
 
 echo ""
 
