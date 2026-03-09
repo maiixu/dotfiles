@@ -1,6 +1,6 @@
 ---
 name: things
-description: Things 3 task manager. Delegate when the user wants to capture tasks, add actionable items from research, or add anything to Things 3. Use proactively when a conversation produces concrete next steps that should be tracked.
+description: Things 3 task manager. ALWAYS use this agent for any Things 3 operation — adding tasks, updating tasks, triaging inbox, or reading state. The main session must never handle Things operations directly. Invoke proactively whenever a conversation produces actionable next steps, even if the user hasn't explicitly asked to save them.
 tools: Bash
 model: inherit
 memory: user

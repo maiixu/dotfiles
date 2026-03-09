@@ -5,6 +5,10 @@
 解释技术问题时，优先用第一性原理、具体的底层实现来说明，而不是泛泛的高层描述。
 例如：不说「auto memory 的 scope 是 git repo」，而说「Claude 运行 `git rev-parse --show-toplevel` 找到 repo 根目录并以此路径作为 memory key；如果命令失败（不在 git repo 里），则退回使用 working directory」。
 
+## Things 3
+
+所有 Things 3 操作（添加任务、更新任务、读取状态）必须通过 `things` subagent 完成，main session 不直接操作。对话中产生 actionable next steps 时主动 invoke。
+
 ## 事故复盘：2026-03-07 主目录误删事件
 
 **经过：**
