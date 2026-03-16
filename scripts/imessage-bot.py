@@ -109,8 +109,9 @@ def save_state(state: dict):
 
 
 def get_new_messages(last_rowid: int) -> list[tuple]:
-    """Return list of (rowid, text) for new inbound messages from MY_PHONE.
+    """Return list of (rowid, text, audio_path) for new inbound messages.
 
+    text is None for audio-only messages; audio_path is None for text messages.
     Detects two delivery paths:
     1. Direct iMessage receipt: is_from_me=0, handle=MY_PHONE
     2. iCloud Messages sync fallback: is_from_me=1 in the chat addressed to
@@ -126,9 +127,19 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
                 shutil.copy2(src, tmp_dir / (tmp_path.name + ext))
         conn = sqlite3.connect(str(tmp_path))
 
+        base_select = """
+            SELECT m.ROWID, m.text,
+                   (SELECT a.filename FROM attachment a
+                    JOIN message_attachment_join maj ON a.ROWID = maj.attachment_id
+                    WHERE maj.message_id = m.ROWID
+                      AND (a.mime_type LIKE 'audio/%'
+                           OR a.transfer_name LIKE '%.caf'
+                           OR a.transfer_name LIKE '%.m4a')
+                    LIMIT 1) AS audio_path
+        """
+
         direct = conn.execute(
-            """
-            SELECT m.ROWID, m.text
+            base_select + """
             FROM message m
             JOIN handle h ON m.handle_id = h.ROWID
             WHERE h.id = ?
@@ -142,8 +153,7 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
         icloud = []
         if MY_EMAIL:
             icloud = conn.execute(
-                """
-                SELECT m.ROWID, m.text
+                base_select + """
                 FROM message m
                 JOIN chat_message_join cmj ON m.ROWID = cmj.message_id
                 JOIN chat c ON cmj.chat_id = c.ROWID
@@ -165,10 +175,32 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
         if row[0] not in seen:
             seen.add(row[0])
             merged.append(row)
-    return merged
+    return merged  # [(rowid, text, audio_path), ...]
 
 
 # ── Sending & invoking Claude ─────────────────────────────────────────────────
+
+def transcribe_audio(raw_path: str) -> str:
+    """Transcribe an iMessage audio attachment using Whisper."""
+    path = raw_path.replace("~/", str(Path.home()) + "/")
+    if not Path(path).exists():
+        return ""
+    tmp_dir = Path(tempfile.mkdtemp())
+    try:
+        result = subprocess.run(
+            ["whisper", path, "--model", "base", "--output_format", "txt",
+             "--output_dir", str(tmp_dir), "--fp16", "False"],
+            capture_output=True, text=True, timeout=120,
+        )
+        # whisper writes <stem>.txt in output_dir
+        txts = list(tmp_dir.glob("*.txt"))
+        return txts[0].read_text().strip() if txts else ""
+    except Exception as e:
+        print(f"Transcription error: {e}")
+        return ""
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
 
 def send_imessage(text: str):
     global _recent_sent
@@ -237,7 +269,14 @@ def main():
     while True:
         try:
             rows = get_new_messages(last_rowid)
-            for rowid, text in rows:
+            for rowid, text, audio_path in rows:
+                # Transcribe audio if no text
+                if not (text and text.strip()) and audio_path:
+                    print(f"Transcribing audio [{rowid}]: {audio_path}")
+                    text = transcribe_audio(audio_path)
+                    if text:
+                        print(f"Transcribed [{rowid}]: {text[:80]}")
+
                 if text and text.strip():
                     if text in _recent_sent:
                         print(f"Skipped [{rowid}] (iCloud reflection of own reply)")
