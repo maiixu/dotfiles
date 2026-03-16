@@ -47,15 +47,19 @@ echo "✓ Notes repo"
 npm install -g @anthropic-ai/claude-code
 echo "✓ Claude Code"
 
-# 7. Secrets from SSM → local env files
-echo "--- Fetching secrets from SSM ---"
+# 7. Configure Claude Code to use Bedrock (IAM role provides access, no API key needed)
+cat > ~/.claude/settings.local.json <<'EOF'
+{
+  "env": {
+    "AWS_DEFAULT_REGION": "us-west-2",
+    "CLAUDE_CODE_USE_BEDROCK": "1"
+  }
+}
+EOF
+echo "✓ Claude Code configured for Bedrock"
 
-ANTHROPIC_KEY=$(aws ssm get-parameter \
-    --name /claude-ec2/anthropic-api-key \
-    --with-decryption \
-    --query Parameter.Value \
-    --output text)
-echo "ANTHROPIC_API_KEY=$ANTHROPIC_KEY" >> ~/.env
+# 8. Secrets from SSM → local env files
+echo "--- Fetching secrets from SSM ---"
 
 THINGS_TOKEN=$(aws ssm get-parameter \
     --name /claude-ec2/things-token \
@@ -82,12 +86,12 @@ aws ssm get-parameter \
 chmod 600 ~/.env ~/code/signals/.env.local
 echo "✓ Secrets fetched"
 
-# 8. Source env in shell
+# 9. Source env in shell
 if ! grep -q 'source ~/.env' ~/.zshrc 2>/dev/null; then
     echo 'source ~/.env' >> ~/.zshrc
 fi
 
-# 9. Install launchd agents
+# 10. Install launchd agents
 echo "--- Installing launchd agents ---"
 PLIST_SRC=~/code/dotfiles/scripts/aws
 
