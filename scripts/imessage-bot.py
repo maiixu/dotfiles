@@ -21,7 +21,19 @@ import tempfile
 import time
 from pathlib import Path
 
-MY_PHONE = os.environ.get("IMESSAGE_PHONE", "")
+def _load_env_file() -> dict:
+    env_file = Path.home() / ".env"
+    result = {}
+    if env_file.exists():
+        for line in env_file.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                result[k.strip()] = v.strip()
+    return result
+
+_env = _load_env_file()
+MY_PHONE = os.environ.get("IMESSAGE_PHONE") or _env.get("IMESSAGE_PHONE", "")
 STATE_FILE = Path.home() / ".imessage-bot-state.json"
 DB_PATH = Path.home() / "Library/Messages/chat.db"
 POLL_INTERVAL = 10  # seconds
