@@ -174,8 +174,10 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
     for row in sorted(direct + icloud, key=lambda r: r[0]):
         if row[0] not in seen:
             seen.add(row[0])
-            merged.append(row)
-    return merged  # [(rowid, text, audio_path), ...]
+            # Tag source: direct messages → phone, icloud sync → email
+            source = "phone" if row in direct else "email"
+            merged.append((*row, source))
+    return merged  # [(rowid, text, audio_path, source), ...]
 
 
 # ── Sending & invoking Claude ─────────────────────────────────────────────────
@@ -216,15 +218,16 @@ def transcribe_audio(raw_path: str) -> str:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
-def send_imessage(text: str):
+def send_imessage(text: str, target: str | None = None):
     global _recent_sent
     _recent_sent.append(text)
     if len(_recent_sent) > _RECENT_SENT_MAX:
         _recent_sent = _recent_sent[-_RECENT_SENT_MAX:]
+    buddy_id = target or MY_PHONE
     escaped = text.replace("\\", "\\\\").replace('"', '\\"')
     script = f'''tell application "Messages"
   set targetService to 1st service whose service type = iMessage
-  set b to buddy "{MY_PHONE}" of targetService
+  set b to buddy "{buddy_id}" of targetService
   send "{escaped}" to b
 end tell'''
     subprocess.run(["osascript", "-e", script], check=False)
@@ -283,7 +286,10 @@ def main():
     while True:
         try:
             rows = get_new_messages(last_rowid)
-            for rowid, text, audio_path in rows:
+            for rowid, text, audio_path, source in rows:
+                # Determine reply target based on message source
+                reply_target = MY_EMAIL if source == "email" else MY_PHONE
+
                 # Transcribe audio if no text
                 if not (text and text.strip()) and audio_path:
                     print(f"Transcribing audio [{rowid}]: {audio_path}")
@@ -295,12 +301,12 @@ def main():
                     if text in _recent_sent:
                         print(f"Skipped [{rowid}] (iCloud reflection of own reply)")
                     else:
-                        print(f"Received [{rowid}]: {text[:80]}")
+                        print(f"Received [{rowid}] via {source}: {text[:80]}")
                         history_append("user", text.strip())
                         reply = invoke_claude(text.strip())
                         history_append("assistant", reply)
-                        send_imessage(reply)
-                        print(f"Replied [{rowid}]: {reply[:80]}")
+                        send_imessage(reply, target=reply_target)
+                        print(f"Replied [{rowid}] to {reply_target}: {reply[:80]}")
                 last_rowid = rowid
             if rows:
                 save_state({"last_rowid": last_rowid})
