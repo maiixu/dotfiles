@@ -51,12 +51,17 @@ def save_state(state: dict):
 
 def get_new_messages(last_rowid: int) -> list[tuple]:
     """Return list of (rowid, text) for new inbound messages from MY_PHONE."""
-    # chat.db is locked by Messages; work on a copy
-    with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
-        tmp_path = f.name
+    # chat.db uses WAL mode; copy all three files so SQLite can read WAL entries
+    import tempfile as _tempfile
+    tmp_dir = Path(_tempfile.mkdtemp())
+    tmp_path = tmp_dir / "chat.db"
     try:
         shutil.copy2(DB_PATH, tmp_path)
-        conn = sqlite3.connect(tmp_path)
+        for ext in ("-wal", "-shm"):
+            src = DB_PATH.parent / (DB_PATH.name + ext)
+            if src.exists():
+                shutil.copy2(src, tmp_dir / (tmp_path.name + ext))
+        conn = sqlite3.connect(str(tmp_path))
         rows = conn.execute(
             """
             SELECT m.ROWID, m.text
@@ -71,7 +76,7 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
         ).fetchall()
         conn.close()
     finally:
-        Path(tmp_path).unlink(missing_ok=True)
+        shutil.rmtree(tmp_dir, ignore_errors=True)
     return rows
 
 
@@ -79,7 +84,8 @@ def send_imessage(text: str):
     # Escape for AppleScript string literal
     escaped = text.replace("\\", "\\\\").replace('"', '\\"')
     script = f'''tell application "Messages"
-  set b to buddy "{MY_PHONE}" of service "iMessage"
+  set targetService to 1st service whose service type = iMessage
+  set b to buddy "{MY_PHONE}" of targetService
   send "{escaped}" to b
 end tell'''
     subprocess.run(["osascript", "-e", script], check=False)
@@ -105,16 +111,20 @@ def main():
 
     # On first run, initialize last_rowid to current max so we don't replay history
     if last_rowid == 0 and DB_PATH.exists():
-        with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
-            tmp_path = f.name
+        tmp_dir = Path(tempfile.mkdtemp())
+        tmp_path = tmp_dir / "chat.db"
         try:
             shutil.copy2(DB_PATH, tmp_path)
-            conn = sqlite3.connect(tmp_path)
+            for ext in ("-wal", "-shm"):
+                src = DB_PATH.parent / (DB_PATH.name + ext)
+                if src.exists():
+                    shutil.copy2(src, tmp_dir / (tmp_path.name + ext))
+            conn = sqlite3.connect(str(tmp_path))
             row = conn.execute("SELECT MAX(ROWID) FROM message").fetchone()
             conn.close()
             last_rowid = row[0] or 0
         finally:
-            Path(tmp_path).unlink(missing_ok=True)
+            shutil.rmtree(tmp_dir, ignore_errors=True)
         save_state({"last_rowid": last_rowid})
         print(f"Initialized at ROWID={last_rowid}")
 
