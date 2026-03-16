@@ -1,0 +1,247 @@
+~/code/rss via 🐍 v3.11.8 on ☁️  bedrock-claude (us-west-2)
+❯  python3 digest.py --debug --dry-run
+
+════════════════════════════════════════════════════════════
+  DAILY DIGEST  ·  Sun Mar 15, 2026 · 10:47
+════════════════════════════════════════════════════════════
+
+🔴  MUST DO TODAY (2)
+────────────────────────────────────────────────────────────
+  [1] [Doctor Of Credit] [Tulare County, CA] Tucoemas FCU $400 Checking Bonus
+     → CA-specific local bank bonus, direct geographic match
+  [2] [美卡论坛 - 最新话题] 万豪Q1 Bug：每次2500分->每晚2500分
+     → Marriott points earning bug, potential quick exploit
+
+📋  WORTH READING (24)
+────────────────────────────────────────────────────────────
+  [3] [美卡论坛 - 最新话题] Alaska 调表了
+     → Alaska Airlines update, potentially interesting miles strategy
+  [4] [美卡论坛 - 最新话题] 航班取消修改自动rebook到明天 能薅到csp保险嘛
+     → CSP travel insurance strategy for flight cancellation
+  [5] [美卡论坛 - 最新话题] 平均信用长度（AAoA）也包括Closed Accounts
+     → Credit strategy about average account length
+  [6] [Doctor Of Credit] List of Stackable TurboTax Deals
+     → Tax software deals, potentially stackable
+  [7] [Doctor Of Credit] Office Depot/Max Stores: Buy $300 In Mastercard Giftcards & Get $15 Instant Discount (3/15-3/21)
+     → Gift card deal with instant discount
+  [8] [美国信用卡指南] Marriott Bonvoy 联名卡开卡奖励限制政策汇总及申请策略【2026.3 更新：Brilliant和Bevy限制更大了】
+     → Marriott Bonvoy card strategy update
+  [9] [美卡论坛 - 最新话题] Chase United Quest行李托运需要提前购买还是机场直接drop？
+     → United Quest card travel logistics
+  [10] [美卡论坛 - 最新话题] CSR Edit酒店订两晚，提前一天check out会怎样？
+     → CSR hotel booking strategy
+  [11] [美卡论坛 - 最新话题] 丽思FHR+积分房能蹭待遇吗
+     → Luxury hotel status and points strategy
+  [12] [美卡论坛 - 最新话题] Iberia是否一定要有足够的点数才会显示该班飞机？
+     → Iberia award availability discussion
+  [13] [美卡论坛 - 最新话题] T-Mobile Tuesday Popeyes Coupon 无限循环
+     → T-Mobile coupon potential loop
+  [14] [美国信用卡指南] 5%季度返现卡激活提醒【2026.3 更新：来激活2026 Q2啦！】
+     → Quarterly cashback card activation reminder
+  [15] [美卡论坛 - 最新话题] amex这个4冲6可行吗
+     → Amex spending strategy
+  [16] [Doctor Of Credit] Q2 2026 5% Quarterly Categories: Activate, Offers & Suggestions (Freedom/Flex, Discover, Dividend, Cash+ & More)
+     → Q2 credit card category activation details
+  [17] [美卡论坛 - 最新话题] Amex travel chat定西南拿不到商白的35%bonus？
+     → Amex travel bonus strategy
+  [18] [美卡论坛 - 最新话题] 31岁单男 多少资产可以“躺平”呢
+     → Financial independence discussion
+  [19] [美卡论坛 - 最新话题] CSR open table 餐馆moody tongue sushi体验简述
+     → CSR dining experience and points usage
+  [20] [美卡论坛 - 最新话题] 改W4的时候应该用边际税率还是边际总税率
+     → Tax withholding strategy
+  [21] [美国信用卡指南] Chase Freedom Unlimited (CFU) 信用卡【2026.3 更新：$250 开卡奖励】
+     → Chase Freedom Unlimited card update
+  [22] [Doctor Of Credit] Chase Freedom Unlimited $250 Bonus
+     → Chase Freedom Unlimited bonus details
+  [23] [美国信用卡 101] Kroger 超市油点介绍（可折扣买礼卡）【4x 油点 3/13-3/15】
+     → Kroger fuel points and gift card strategy
+  [24] [Doctor Of Credit] inKind Updates Terms – No More Stacking Offers & inKind Cash
+     → InKind platform terms change
+  [25] [美卡论坛 - 最新话题] 希尔顿bug价
+     → Potential hotel pricing error/bug
+  [26] [美卡论坛 - 最新话题] 1k UA里程: Boston 水族馆 UA 100th year anniversary - MileagePlus Exclusive Experience
+     → United Airlines miles promotion
+
+  ── skipped (21) ──
+  [27] [SKIP] [美卡论坛 - 最新话题] ANA发布了新商务舱座椅The Room FX？
+         → Chinese-language content about ANA seat, not actionable
+  [28] [SKIP] [美卡论坛 - 最新话题] THC credit被酒店没收了
+         → Personal credit issue with no general applicability
+  [29] [SKIP] [美卡论坛 - 最新话题] 求国内肩颈按摩仪推荐
+         → Personal product recommendation, not finance related
+  [30] [SKIP] [美卡论坛 - 最新话题] 请教航班取消后的confirmation code
+         → Personal flight code question
+  [31] [SKIP] [美卡论坛 - 最新话题] 有可能全职打扑克吗？
+         → Personal career discussion
+  [32] [SKIP] [美卡论坛 - 最新话题] 什么东西的国产牌子比老外的好？
+         → Off-topic product comparison
+  [33] [SKIP] [美卡论坛 - 最新话题] UA 账号被关了，UA 也能杀全家？？？
+         → Personal account suspension complaint
+  [34] [SKIP] [Doctor Of Credit] [MI, OH] Cornerstone Community Financial Credit Union $300 Checking Bonus
+         → Non-CA state bank bonus
+  [35] [SKIP] [美卡论坛 - 最新话题] ATT 350BJS礼品卡的50部分一直没拿到
+         → Personal gift card tracking issue
+  [36] [SKIP] [美卡论坛 - 最新话题] AA75 ORD-HNL晚点了
+         → Flight delay report, no actionable info
+  [37] [SKIP] [Doctor Of Credit] [TX] MemberSource Credit Union $250 Checking Bonus
+         → Non-CA state bank bonus
+  [38] [SKIP] [美卡论坛 - 最新话题] 话说AI成人片大概什么时候成熟
+         → Inappropriate, off-topic content
+  [39] [SKIP] [美卡论坛 - 最新话题] 打Uber black给小费吗？
+         → Personal service tipping question
+  [40] [SKIP] [美卡论坛 - 最新话题] 小红书碰到有人借我公寓电费便宜的充电桩，一度电只多给5分钱，充满才赚2块钱
+         → Personal electricity charging anecdote
+  [41] [SKIP] [美卡论坛 - 最新话题] 如何将信报绑定在自己的ITIN上？
+         → Personal tax identification question
+  [42] [SKIP] [美卡论坛 - 最新话题] chime的checking怎么还上信报
+         → Personal banking account question
+  [43] [SKIP] [美卡论坛 - 最新话题] 你们手机app排版是怎么排的，可以伸手参考吗
+         → Off-topic app design question
+  [44] [SKIP] [美卡论坛 - 最新话题] 好想吃卤煮和炒肝
+         → Personal food craving
+  [45] [SKIP] [Doctor Of Credit] [Expired] Amazon: $200 Select Giftcards For $180 (Netflix, Chipotle, Airbnb, Southwest, Ulta & Many More)
+         → Expired Amazon gift card deal
+  [46] [SKIP] [美卡论坛 - 最新话题] InKind要完💊
+         → Emotional reaction to platform changes
+  [47] [SKIP] [美卡论坛 - 最新话题] aruba租车需要额外买保险吗？
+         → Personal car rental insurance question
+
+📰  NEWS  (16 of 69 headlines)
+────────────────────────────────────────────────────────────
+  [48] [5] ★★★★★  #War  Iran War Live Updates: ‘No Guarantees’ Oil Prices Drop Soon, U.S. Official Says
+  [49] [4] ★★★★☆  #Diplomacy  After Trump’s Call to Send Warships to Strait of Hormuz, Nations Respond With Caution
+  [50] [4] ★★★★☆  #Security  Israel Says Michigan Synagogue Attacker’s Brother Was a Hezbollah Commander
+  [51] [4] ★★★★☆  #Security  Two Arrested in Death of Anti-Iranian Regime Activist in Canada
+  [52] [4] ★★★★☆  #War  As Rockets Fly Overhead, Residents of Israel’s Border City Stay Underground
+  [53] [4] ★★★★☆  #War  Amid War in Iran, Europe’s Flashes of Military Strength Also Show Its Weakness
+  [54] [4] ★★★★☆  #Media  FCC Chair Threatens to Revoke Broadcasters’ Licenses Over Iran War Coverage
+  [55] [5] ★★★★★  #War  Warning to Americans to leave Iraq is a sign the Iran war is spilling over the border.
+  [56] [4] ★★★★☆  #Security  Explosion at Jewish School in Amsterdam Is 2nd Antisemitic Attack in 2 Days, Officials Say
+  [57] [4] ★★★★☆  #War  Tehran Seems Largely Empty, as Many Flee and Others Weary of the Fighting
+  [58] [4] ★★★★☆  #Economy  What to Know About Kharg Island, Iran’s Key Oil Hub
+  [59] [5] ★★★★★  #War  Here’s What Happened in the U.S.-Israel War With Iran on Saturday
+  [60] [4] ★★★★☆  #Military  How a Marine Unit in the Middle East Could Open New Phase of Iran War
+  [61] [5] ★★★★★  #War  Iran War Live Updates: Iran Defies Trump’s Threats Over Strait of Hormuz Blockade
+  [62] [4] ★★★★☆  #Environment  The war has put Middle East water supplies at risk.
+  [63] [5] ★★★★★  #War  Dozens of Medical Workers Killed as Israel Hits Lebanon
+
+  ── low score (53) ──
+  [64] [3] ★★★☆☆  开源情报停止运作
+         → Possible media platform shutdown
+  [65] [3] ★★★☆☆  Pentagon Names 6 Military Members Killed in Iraq Tanker Crash
+         → U.S. military personnel casualty report
+  [66] [1] ★☆☆☆☆  Here is the latest.
+         → Generic news update placeholder
+  [67] [2] ★★☆☆☆  Markwayne Mullin, Trump’s Homeland Security Pick, Got Wealthier Stock Trading in Congress
+         → Stock trading by congressional member
+  [68] [2] ★★☆☆☆  ‘Nobody Owns Us’: How Plans for a Google Data Center Divided an Oklahoma Town
+         → Local impact of tech company expansion
+  [69] [3] ★★★☆☆  In Scolding the New U.S. Ambassador, South Africa Signals Defiance
+         → Diplomatic tension with South Africa
+  [70] [3] ★★★☆☆  A Timeline of the Fraught Relationship Between Iran and the U.S.
+         → Background on Iran-U.S. relations
+  [71] [2] ★★☆☆☆  State Department Cuts Price of Renouncing U.S. Citizenship to $450
+         → Citizenship renunciation fee change
+  [72] [3] ★★★☆☆  Synagogue Attack Tests Bonds of Michigan Community
+         → Community response to synagogue attack
+  [73] [3] ★★★☆☆  Figma and HubSpot CEOs Say They Aren’t Fazed by Risks From AI Agents. Their Disclosures Say Otherwise
+         → AI risks in tech leadership
+  [74] [2] ★★☆☆☆  Some Olympic Leaders Want to See Fixed Winter Games Host Cities
+         → Olympic hosting proposal
+  [75] [1] ★☆☆☆☆  This is what happened on March 14.
+         → Generic daily summary
+  [76] [3] ★★★☆☆  Energy Secretary Says ‘No Guarantees’ Oil Prices Will Fall Soon
+         → Oil price uncertainty statement
+  [77] [3] ★★★☆☆  尼蒂什·库马尔为印度最贫困的邦——比哈尔邦做了什么
+         → Indian state development report
+  [78] [3] ★★★☆☆  Nordic Leaders Praise Carney as They Discuss Arctic Security
+         → Nordic leadership discussion
+  [79] [2] ★★☆☆☆  工业规模的非法倾倒垃圾现象正在英国各地蔓延
+         → UK illegal waste dumping issue
+  [80] [3] ★★★☆☆  Three More Iranian Soccer Players Withdraw Bid for Asylum in Australia
+         → Iranian athletes asylum situation
+  [81] [2] ★★☆☆☆  In Texas, an Unyielding Gun Culture Jumps Off YouTube and Into Politics
+         → Gun culture political dynamics
+  [82] [2] ★★☆☆☆  In a Wild Corner of the West, Elk Are Everywhere and Causing Conflict
+         → Wildlife-human conflict
+  [83] [2] ★★☆☆☆  Trump Administration Turns to Migrant Workers to Help Farm Labor Shortage
+         → Migrant worker labor strategy
+  [84] [3] ★★★☆☆  Trump adds to speculation about Iranian leader’s condition.
+         → Speculation about Iranian leader
+  [85] [3] ★★★☆☆  Marseille’s Tight Mayoral Race Is a Bellwether for France’s Future
+         → French local election insight
+  [86] [2] ★★☆☆☆  Iceland’s Chief ‘Lava Cooler’ Is Bracing for the Next Volcanic Eruption
+         → Iceland volcanic preparedness
+  [87] [1] ★☆☆☆☆  Here is the latest.
+         → Generic news update
+  [88] [2] ★★☆☆☆  Judge Rules Lawmaker Must Be Allowed to Join Kennedy Center Board Meeting
+         → Legal ruling on board meeting
+  [89] [2] ★★☆☆☆  Fund-raising Email Features Trump at Ritual for Soldiers Killed in Iran War
+         → Fundraising event detail
+  [90] [1] ★☆☆☆☆  Lily Collins’s Ring, Stolen Years Ago, Makes an Unexpected Return
+         → Celebrity personal item story
+  [91] [3] ★★★☆☆  Sandstorm Batters Gaza, Slamming Makeshift Shelters
+         → Gaza humanitarian conditions
+  [92] [1] ★☆☆☆☆  Abiqua Falls in Oregon Draws a State Offer After Listing on Real Estate Site
+         → Waterfall real estate listing
+  [93] [3] ★★★☆☆  2026-03-14 The World this Week - 《封面故事》通讯：对世界经济的冲击
+         → Global economic impact overview
+  [94] [2] ★★☆☆☆  Trump Pardons: Lobbyist Charged in Extortion Attempt
+         → Trump pardon detail
+  [95] [2] ★★☆☆☆  John M. Perkins Dies at 95; Evangelical Minister Espoused Social Justice
+         → Obituary of religious leader
+  [96] [2] ★★☆☆☆  Trump Proposes New White House Visitor Screening Center
+         → White House security proposal
+  [97] [1] ★☆☆☆☆  RT @DJSnM: The computational power in your iPhone’s CHARGER is more than what was used to land on the moon.
+         → Technology trivia tweet
+  [98] [1] ★☆☆☆☆  RT @IraninSA: We received the letter of condolence from H. E. @CyrilRamaphosa following the martyrdom of Imam Khamenei. …
+         → Retweet of diplomatic communication
+  [99] [1] ★☆☆☆☆  RT @RestoreBritain_: A Restore Britain Government would defund the BBC. https://t.co/K63UGn7DSw
+         → Political media criticism
+  [100] [1] ★☆☆☆☆  The Age of the Last Men https://t.co/QnuVhYA7KU
+         → Link to philosophical article
+  [101] [1] ★☆☆☆☆  RT @Dannyjokes: Fired USAID Employee In Charge of Making Countries Gay Speaks Out https://t.co/wFnj3WlhyO
+         → Satirical news retweet
+  [102] [1] ★☆☆☆☆  RT @AJamesMcCarthy: The planet Saturn, captured during it's closest approach to Earth from the top of a parking garage i…
+         → Space photography tweet
+  [103] [1] ★☆☆☆☆  Yes
+         → Single word response
+  [104] [1] ★☆☆☆☆  RT @GigaBasedDad: 🎯 https://t.co/dzCzKEB1Pv
+         → Emoji/link tweet
+  [105] [1] ★☆☆☆☆  RT @niccruzpatane: Evolution of the Taxi https://t.co/DpVJ69Kud1
+         → Technology evolution graphic
+  [106] [2] ★★☆☆☆  Starlink now available in Kuwait!
+         → Starlink service expansion
+  [107] [1] ★☆☆☆☆  RT @niccruzpatane: PBD Podcast on Elon Musk: “Whoever creates the most value for everybody else should end up with the m…
+         → Podcast commentary retweet
+  [108] [1] ★☆☆☆☆  Couldn’t script it better
+         → Cryptic personal comment
+  [109] [1] ★☆☆☆☆  RT @XFreeze: Grok Imagine gets the vibe, iterates the world you imagine https://t.co/jjQgSLW8A6
+         → AI image generation tweet
+  [110] [1] ★☆☆☆☆  Welcome to the PvP of social media
+         → Metaphorical comment
+  [111] [1] ★☆☆☆☆  RT @dvorahfr: A touch of romance for your day thanks to Grok Imagine https://t.co/FTtQnrtdIP
+         → AI image generation tweet
+  [112] [1] ★☆☆☆☆  🥧
+         → Emoji tweet
+  [113] [1] ★☆☆☆☆  This is the only way to save Britain. There is no other.
+         → Political opinion tweet
+  [114] [1] ★☆☆☆☆  True
+         → Single word response
+  [115] [1] ★☆☆☆☆  RT @BrianRoemmele: “I think the next company I do will have a long beneficial effect”—@elonmusk, 2001 Mission accomplish…
+         → Musk quote retweet
+  [116] [1] ★☆☆☆☆  Yeah
+         → Single word response
+
+⚠️   FEED HEALTH WARNINGS
+────────────────────────────────────────────────────────────
+  Dataroma — last post 310h ago (expected every 168h)
+  Trump — never fetched / no posts found
+  Sam Altman — never fetched / no posts found
+
+────────────────────────────────────────────────────────────
+Open links in background (no focus switch):
+  numbers: 1 3 5   range: 1-5   all: a   skip: enter
+> 5 7 8 16
+Opening 4 link(s)…

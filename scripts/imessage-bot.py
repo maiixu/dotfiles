@@ -96,6 +96,63 @@ def history_load() -> list[dict]:
     return entries[-HISTORY_MAX:]
 
 
+# ── attributedBody decoding ───────────────────────────────────────────────────
+
+def _read_compact_int(blob: bytes, pos: int) -> tuple[int, int]:
+    """Read NSCoder compact integer. Returns (value, new_pos)."""
+    if pos >= len(blob):
+        return 0, pos
+    b = blob[pos]
+    if b < 0x80:
+        return b, pos + 1
+    elif b == 0x81 and pos + 2 < len(blob):
+        return (blob[pos + 1] << 8) | blob[pos + 2], pos + 3
+    elif b == 0x82 and pos + 4 < len(blob):
+        return ((blob[pos + 1] << 24) | (blob[pos + 2] << 16) |
+                (blob[pos + 3] << 8) | blob[pos + 4]), pos + 5
+    return b, pos + 1
+
+
+def decode_attributed_body(data) -> str | None:
+    """Extract plain text from an NSAttributedString binary blob (attributedBody)."""
+    if not data:
+        return None
+    blob = bytes(data)
+
+    # Newer format: binary plist
+    try:
+        import plistlib
+        plist = plistlib.loads(blob)
+        if isinstance(plist, dict):
+            text = plist.get("NS.string")
+            if text:
+                return text.replace("\ufffc", "").strip() or None
+    except Exception:
+        pass
+
+    # Older streamtyped format: find NSString class marker
+    marker = b"NSString\x01\x94\x84\x01"
+    idx = blob.find(marker)
+    if idx < 0:
+        return None
+    pos = idx + len(marker)
+
+    # Skip '+' (0x2b) C-string type byte if present
+    if pos < len(blob) and blob[pos] == 0x2B:
+        pos += 1
+
+    length, pos = _read_compact_int(blob, pos)
+    if length <= 0 or pos + length > len(blob):
+        return None
+
+    try:
+        text = blob[pos:pos + length].decode("utf-8")
+        text = text.replace("\ufffc", "").strip()
+        return text if text else None
+    except Exception:
+        return None
+
+
 # ── DB polling ────────────────────────────────────────────────────────────────
 
 def load_state() -> dict:
@@ -135,7 +192,8 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
                       AND (a.mime_type LIKE 'audio/%'
                            OR a.transfer_name LIKE '%.caf'
                            OR a.transfer_name LIKE '%.m4a')
-                    LIMIT 1) AS audio_path
+                    LIMIT 1) AS audio_path,
+                   m.attributedBody
         """
 
         direct = conn.execute(
@@ -286,9 +344,18 @@ def main():
     while True:
         try:
             rows = get_new_messages(last_rowid)
+<<<<<<< HEAD
             for rowid, text, audio_path, source in rows:
                 # Determine reply target based on message source
                 reply_target = MY_EMAIL if source == "email" else MY_PHONE
+=======
+            for rowid, text, audio_path, attributed_body in rows:
+                # Fall back to attributedBody when text column is NULL
+                if not (text and text.strip()):
+                    text = decode_attributed_body(attributed_body)
+                    if text:
+                        print(f"Decoded attributedBody [{rowid}]: {text[:80]}")
+>>>>>>> 5568635 (Fix iMessage bot: decode attributedBody when text IS NULL)
 
                 # Transcribe audio if no text
                 if not (text and text.strip()) and audio_path:

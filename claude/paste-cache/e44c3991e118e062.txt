@@ -1,0 +1,121 @@
+Skill & Agent Orchestration Methodology
+Core Principle
+The unit of decision is not "how big is the tool" but "how much context bloat does a single operation produce."
+Skill 是默认选择。Subagent 是针对 context 膨胀的隔离手段，不是组织代码的架构单元。
+
+Skill Loading 机制
+理解整个方法论的前提：
+
+Description 常驻 main context，共享约 4000 token budget（~2% context window）
+Body 按需加载（lazy），触发时注入，用完随对话推进或 /compact 滑出
+Subagent 的 skills: field 会把 skill 全文注入 subagent context，不是按需加载
+
+所以 skill 的真实成本是 "description 常驻 + body 瞬时"，不是 "description + body 永久占用"。
+
+三种 Pattern
+Pattern 1: 细粒度平级 Skills（默认）
+适用条件：
+
+Tool 有良好的自描述机制（--help、schema 命令、structured JSON output）
+单次操作产出少量结果（几十行 JSON）
+操作天然原子化
+
+架构：
+skills/
+├── tool-shared/SKILL.md        # auth, global flags, security rules
+├── tool-service-a/SKILL.md     # service A 的 API 参考
+├── tool-service-b/SKILL.md     # service B 的 API 参考
+├── tool-action-x/SKILL.md      # 原子操作 helper
+├── tool-action-y/SKILL.md      # 原子操作 helper
+├── recipe-workflow-1/SKILL.md   # 多步 playbook（仍是 skill）
+└── persona-role/SKILL.md       # 角色编排指南（仍是 skill）
+GWS CLI 是这个 pattern 的典范。 100+ skills，零 subagent。能成立是因为：
+
+gws schema <service>.<resource>.<method> 让 Claude 运行时自查参数，skill 不用塞操作手册
+--dry-run 防止误写
+输出全是 structured JSON，Claude 无需额外 parse
+Persona skill 只是"角色级编排指南"——告诉 Claude 在什么场景调哪些 skill
+Recipe skill 只是"多步 playbook"——Claude 在 main session 按步执行
+
+判断标准： 如果 tool --help 就能告诉 Claude 怎么用，你只需要 skill 来消除歧义和提供编排剧本。
+Pattern 2: Router + Recipes（context-fence）
+适用条件：
+
+Tool 没有好的自描述机制（没有统一 --help，没有 schema 命令）
+参考资料很大（几百条命令，复杂参数矩阵）
+不想让大量 skill descriptions 吃光 4000 token budget
+
+架构：
+skills/
+├── tool-router/SKILL.md         # context: inherit, allowed-tools: Skill, Read, Bash
+│                                 # 轻量（~130行），从对话提取意图，构造结构化参数
+│                                 # 然后调用 recipes skill
+└── tool-recipes/SKILL.md        # context: fork
+                                  # 密集参考知识库（可以几百上千行）
+                                  # 收到参数 → 匹配参考 → 返回结果 → 整个内容被丢弃
+Router 是镜头，Recipes 是图书馆。镜头聚焦，图书馆永远不离开书架。
+只占 1 个 description 的 token budget（router 的），但可以承载无限大的参考资料。
+Pattern 3: Custom Subagent
+适用条件：
+
+操作过程产生大量中间 context 垃圾（扫描几百个文件、批量 API 调用、大量文本处理）
+需要多步推理 + 持续 context，不是单次查询-返回
+跨多个 tool/service 的复杂编排，中间产物不需要回到 main session
+
+架构：
+.claude/agents/
+└── complex-workflow.md          # custom subagent definition
+                                  # frontmatter 里用 skills: 引用需要的原子 skills
+                                  # 注意：skills field 会全文注入 subagent context
+典型场景举例：
+
+"扫描本周所有 unread email，提取 action items，按 project 分类写进 Obsidian notes，再在 Things 里创建 tasks"
+
+这里 email 扫描会产生几万 token 的原文，分类推理需要持续 context，最终 main session 只需要一份摘要。
+
+Decision Framework
+收到一个 tool integration 需求时：
+
+1. Tool 有好的自描述能力吗？（--help / schema / structured output）
+   ├─ Yes → Pattern 1（细粒度 skills）
+   └─ No  → 参考资料大吗？
+            ├─ Yes → Pattern 2（router-recipes）
+            └─ No  → Pattern 1 也够用，skill body 里直接写参考
+
+2. 某个具体操作的 context 膨胀量大吗？
+   ├─ 低膨胀（发邮件、查日程、建 task、读几行数据）
+   │   → Skill，在 main session 直接执行
+   └─ 高膨胀（扫描大量文件、批量处理、生成报告）
+       → context: fork skill 或 custom subagent
+
+3. 需要跨多个 tool 的复杂编排吗？
+   ├─ No  → 用 recipe skill（多步 playbook，仍在 main session）
+   └─ Yes + 高膨胀 → Custom subagent
+       Yes + 低膨胀 → Recipe skill 或 persona skill 足够
+
+关键反直觉
+
+"用 subagent 一定更省 context" 是错的。 Subagent 有冷启动开销（加载 system prompt + 接收 delegation + skill 全文注入 + 生成摘要）。对于低膨胀操作，这个固定开销 > skill body 临时进 main context 的成本。Token 没有消失，只是花在了另一个 context window 里，而且花得更多。
+Persona 和 Recipe 不是 agent，是 skill。 Persona 是"角色级编排指南"——告诉 Claude 什么场景用什么 skill 组合。Recipe 是"多步 playbook"——步骤序列，Claude 在 main session 按步执行。两者的 body 都不大，不需要隔离。
+决定 pattern 的是 tool 的自描述质量，不是 tool 的功能数量。 GWS CLI 有 100+ 个命令但只用 skills，因为 gws schema 让 Claude 自己查参数。一个只有 10 条命令但文档混乱的 tool 反而可能需要 router-recipes。
+Subagent 不能 spawn subagent。 如果你的 workflow 需要嵌套委派，用 skills 或从 main session chain subagents。
+
+
+实际应用参考
+Tool自描述质量操作膨胀推荐 PatternGWS CLI高（schema, --help, JSON output）低（多数是原子操作）Pattern 1: 直接用官方 skillsObsidian取决于实现（直接读写 md vs CLI wrapper）低~中（单 note 操作低，vault 扫描高）Pattern 1 for CRUD; Pattern 3 for vault-wide opsThings中（AppleScript/URL scheme，有限文档）低Pattern 1 or 2，取决于命令集文档质量跨 tool workflowN/A高Pattern 3: custom subagent
+
+已知 Caveats
+
+context: fork 在 Skill tool 调用时可能不完全 honor frontmatter 里的 agent: 指定（已知 issue anthropics/claude-code#17283）。Workaround：用 custom subagent + skills: field。
+Skill descriptions 共享 ~4000 token budget。超限时用 SLASH_COMMAND_TOOL_TOKEN_BUDGET 环境变量调高，或精简 descriptions。
+用 /context 命令检查当前 skill loading 状态。
+"A skill file is cheaper than a hallucination." —— 即使 skill body 看起来只是重复了 --help 的信息，它消除了 Claude 猜错参数导致 retry 的隐性成本。
+
+
+来源
+
+GWS CLI repo: https://github.com/googleworkspace/cli
+context-fence pattern: https://github.com/jimmc414/claude-context-fence
+Claude Code skills docs: https://code.claude.com/docs/en/skills
+Claude Code subagents docs: https://code.claude.com/docs/en/sub-agents
+Anthropic skills explainer: https://claude.com/blog/skills-explained

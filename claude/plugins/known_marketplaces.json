@@ -1,0 +1,10 @@
+{
+  "ralph-marketplace": {
+    "source": {
+      "source": "github",
+      "repo": "snarktank/ralph"
+    },
+    "installLocation": "/Users/maixu/.claude/plugins/marketplaces/ralph-marketplace",
+    "lastUpdated": "2026-03-09T21:17:55.892Z"
+  }
+}

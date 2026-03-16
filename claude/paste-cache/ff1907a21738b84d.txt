@@ -1,0 +1,93 @@
+~/code/rss via 🐍 v3.11.8 on ☁️  bedrock-claude (us-west-2) took 1m55s
+❯ python3 digest.py --no-sync --debug
+
+════════════════════════════════════════════════════════════
+  DAILY DIGEST  ·  Sun Mar 15, 2026 · 10:41
+════════════════════════════════════════════════════════════
+
+🔴  MUST DO TODAY (1)
+────────────────────────────────────────────────────────────
+  [1] [美卡论坛 - 最新话题] 希尔顿bug价
+     → Potential Hilton bug price, rare opportunity for cheap booking
+
+📋  WORTH READING (2)
+────────────────────────────────────────────────────────────
+  [2] [美卡论坛 - 最新话题] 1k UA里程: Boston 水族馆 UA 100th year anniversary - MileagePlus Exclusive Experience
+     → United Airlines mile opportunity, potential limited experience
+  [3] [美卡论坛 - 最新话题] costco rewards check的问题， 我是不是被costco给坑了
+     → Costco rewards issue, always trackable for potential system problems
+
+  ── skipped (2) ──
+  [4] [SKIP] [美卡论坛 - 最新话题] InKind要完💊
+         → Non-actionable post about potential company issue, non-specific
+  [5] [SKIP] [美卡论坛 - 最新话题] aruba租车需要额外买保险吗？
+         → Personal travel rental insurance question with no broad value
+
+📰  NEWS  (2 of 25 headlines)
+────────────────────────────────────────────────────────────
+  [6] [4] ★★★★☆  #War  Iran War Live Updates: Iran Defies Trump’s Threats Over Strait of Hormuz Blockade
+  [7] [5] ★★★★★  #War  Dozens of Medical Workers Killed as Israel Hits Lebanon
+
+  ── low score (23) ──
+  [8] [3] ★★★☆☆  The war has put Middle East water supplies at risk.
+         → Water supply risks in Middle East conflict
+  [9] [3] ★★★☆☆  Lobbyist Arrested in Extortion Attempt of Client Who Received a Trump Pardon
+         → Lobbyist arrested in Trump pardon-related case
+  [10] [2] ★★☆☆☆  What to Know About Iran’s Kharg Island
+         → Background information on Iranian location
+  [11] [1] ★☆☆☆☆  RT @DJSnM: The computational power in your iPhone’s CHARGER is more than what was used to land on the moon.
+         → Random tech trivia tweet
+  [12] [1] ★☆☆☆☆  RT @IraninSA: We received the letter of condolence from H. E. @CyrilRamaphosa following the martyrdom of Imam Khamenei. …
+         → Diplomatic condolence tweet
+  [13] [1] ★☆☆☆☆  RT @RestoreBritain_: A Restore Britain Government would defund the BBC. https://t.co/K63UGn7DSw
+         → Political media defunding proposal
+  [14] [1] ★☆☆☆☆  The Age of the Last Men https://t.co/QnuVhYA7KU
+         → Link to philosophical article
+  [15] [1] ★☆☆☆☆  RT @Dannyjokes: Fired USAID Employee In Charge of Making Countries Gay Speaks Out https://t.co/wFnj3WlhyO
+         → Sensationalist tweet
+  [16] [1] ★☆☆☆☆  RT @AJamesMcCarthy: The planet Saturn, captured during it's closest approach to Earth from the top of a parking garage i…
+         → Amateur astronomy photo
+  [17] [1] ★☆☆☆☆  Yes
+         → Single word tweet
+  [18] [1] ★☆☆☆☆  RT @GigaBasedDad: 🎯 https://t.co/dzCzKEB1Pv
+         → Cryptic image tweet
+  [19] [1] ★☆☆☆☆  RT @niccruzpatane: Evolution of the Taxi https://t.co/DpVJ69Kud1
+         → Technological evolution graphic
+  [20] [2] ★★☆☆☆  Starlink now available in Kuwait!
+         → Starlink service expansion
+  [21] [1] ★☆☆☆☆  RT @niccruzpatane: PBD Podcast on Elon Musk: “Whoever creates the most value for everybody else should end up with the m…
+         → Podcast quote retweet
+  [22] [1] ★☆☆☆☆  Couldn’t script it better
+         → Vague comment
+  [23] [1] ★☆☆☆☆  RT @XFreeze: Grok Imagine gets the vibe, iterates the world you imagine https://t.co/jjQgSLW8A6
+         → AI image generation tweet
+  [24] [1] ★☆☆☆☆  Welcome to the PvP of social media
+         → Metaphorical comment
+  [25] [1] ★☆☆☆☆  RT @dvorahfr: A touch of romance for your day thanks to Grok Imagine https://t.co/FTtQnrtdIP
+         → AI image generation tweet
+  [26] [1] ★☆☆☆☆  🥧
+         → Emoji tweet
+  [27] [1] ★☆☆☆☆  This is the only way to save Britain. There is no other.
+         → Hyperbolic political statement
+  [28] [1] ★☆☆☆☆  True
+         → Single word affirmation
+  [29] [1] ★☆☆☆☆  RT @BrianRoemmele: “I think the next company I do will have a long beneficial effect”—@elonmusk, 2001 Mission accomplish…
+         → Old Elon Musk quote retweet
+  [30] [1] ★☆☆☆☆  Yeah
+         → Single word response
+
+⚠️   FEED HEALTH WARNINGS
+────────────────────────────────────────────────────────────
+  美卡论坛 — last post 23h ago (expected every 12h)
+  Doctor of Credit — last post 24h ago (expected every 24h)
+  NYT US — last post 23h ago (expected every 12h)
+  NYT World — last post 23h ago (expected every 12h)
+  The Information — last post 24h ago (expected every 24h)
+  Dataroma — last post 310h ago (expected every 168h)
+  Trump — never fetched / no posts found
+  Sam Altman — never fetched / no posts found
+
+────────────────────────────────────────────────────────────
+Open links in background (no focus switch):
+  numbers: 1 3 5   range: 1-5   all: a   skip: enter
+>

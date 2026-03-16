@@ -1,0 +1,211 @@
+OK,我们现在来做一个反馈啊。 首先,AMX用卡可拆链接,这挺好的。这个Must do Today挺好的。 然后,Reading里面的话,首先我人在加州,对吧,所以说Doctor of Credits一些区域性的东西,你可以只看有没有targeted CA,对不对?没有target别的你就不用给我看了。 然后,Otherwise的话,Doctor of Credits大多数的东西我觉得都挺有价值的,你可以考虑一下。 别的我看有没有误杀的,美卡论坛里面其中第13条,对吧,是Costco,Costco一般我们是要的。 然后,15、16,阿拉斯加这种里程票啊,中美啊,一般也可以看,对吧。16的话,后退大法,这是AMX嘛,AMX一般也看,Chase AMX一般我们都看,对吧。 21,你看这种就是理财的,投资理财的,然后大家对于这个言论,我觉得也可以看一看。 包括23,然后,33特别好啊,这种带子你就完全不用给我看了,这个特别好。 然后35,对吧,这种持仓讨论,这种金融的,我投资的,我觉得都可以看一看,对。 然后38这种绝对不应该skip,就cloud pro六个月是好东西啊。 我也是可以好学生优惠的,现在。 对,然后我再看看新闻。 诶,新闻为啥都是no rating啊?你帮我看一下是为啥?
+
+  [2] [美卡论坛 - 最新话题] 希尔顿bug价
+     → Potential Hilton pricing error/bug worth investigating
+  [3] [美卡论坛 - 最新话题] 1k UA里程: Boston 水族馆 UA 100th year anniversary - MileagePlus Exclusive Experience
+     → United miles promotion for local experience
+  [4] [美卡论坛 - 最新话题] costco rewards check的问题， 我是不是被costco给坑了
+     → Costco rewards issue might be relevant to other users
+  [5] [Doctor Of Credit] [VA only] Virginia Credit Union $100 Checking Bonus
+     → State-specific bank bonus for Virginia residents
+  [6] [美卡论坛 - 最新话题] Alaska 给中美里程票偷偷涨价了？
+     → Potential mileage price change for Alaska Airlines
+  [7] [Doctor Of Credit] [Targeted OK, IL KS & MO, CO only] Central Bank $500 Checking Bonus
+     → Targeted bank bonus for multiple states
+  [8] [Doctor Of Credit] [OR & WA only] Unitus Community Credit Union $300
+     → Regional credit union bonus for Oregon/Washington
+  [9] [Doctor Of Credit] [NY, PA, NJ] Visions Federal Credit Union $500 Checking Bonus
+     → Regional bank bonus for NY/PA/NJ
+  [10] [Doctor Of Credit] [OH, KY, IN, MI] Superior Credit Union $200 Checking Bonus
+     → Bank bonus for Midwest states
+  [11] [Doctor Of Credit] [TX only] Broadway Bank $300 Checking Bonus
+     → Bank bonus for Texas residents
+  [12] [美卡论坛 - 最新话题] 【羊毛】Claude Pro 6个月（ASU 学生福利）
+     → Potential student discount for Claude Pro
+  [13] [Doctor Of Credit] PayPal Removes BillPay Option
+     → PayPal service change
+
+📰  NEWS  (5 of 55 headlines)
+────────────────────────────────────────────────────────────
+  [14] [5] ★★★★★  #War  Dozens of Medical Workers Killed as Israel Hits Lebanon
+  [15] [4] ★★★★☆  #War  Lebanon’s Displaced Flee Israeli Strikes One Year Into War
+  [16] [4] ★★★★☆  #Security  Explosion at Jewish School in Amsterdam Is 2nd Antisemitic Attack in 2 Days, Officials Say
+  [17] [4] ★★★★☆  #Economy  Surge in Oil Prices Shakes Pakistan’s Already Fragile Economy
+  [18] [4] ★★★★☆  #Geopolitics  Iran War Live Updates: Iran Defies Trump’s Threats Over Strait of Hormuz Blockade
+
+⚠️   FEED HEALTH WARNINGS
+────────────────────────────────────────────────────────────
+  美卡论坛 — last post 13h ago (expected every 12h)
+  NYT US — last post 13h ago (expected every 12h)
+  NYT World — last post 13h ago (expected every 12h)
+  Dataroma — last post 299h ago (expected every 168h)
+  Trump — never fetched / no posts found
+  Sam Altman — never fetched / no posts found
+
+────────────────────────────────────────────────────────────
+Open links in background (no focus switch):
+  numbers: 1 3 5   range: 1-5   all: a   skip: enter
+> ^C%
+
+~/code/rss via 🐍 v3.11.8 on ☁️  bedrock-claude (us-west-2) took 4m50s
+❯ clear
+
+~/code/rss via 🐍 v3.11.8 on ☁️  bedrock-claude (us-west-2)
+❯ python3 digest.py --no-sync --dry-run --debug
+
+════════════════════════════════════════════════════════════
+  DAILY DIGEST  ·  Sun Mar 15, 2026 · 00:27
+════════════════════════════════════════════════════════════
+
+🔴  MUST DO TODAY (1)
+────────────────────────────────────────────────────────────
+  [1] [美国信用卡指南] AmEx Marriott 系列信用卡可Churn链接 (No Lifetime Language (NLL))【2026.3 更新：Brilliant 200k】
+     → No lifetime language Amex Marriott card offer
+
+📋  WORTH READING (9)
+────────────────────────────────────────────────────────────
+  [2] [美卡论坛 - 最新话题] 希尔顿bug价
+     → Potential Hilton pricing error/bug
+  [3] [美卡论坛 - 最新话题] 1k UA里程: Boston 水族馆 UA 100th year anniversary - MileagePlus Exclusive Experience
+     → United miles promotion for local experience
+  [4] [Doctor Of Credit] [VA only] Virginia Credit Union $100 Checking Bonus
+     → Targeted bank bonus for specific state
+  [5] [Doctor Of Credit] [Targeted OK, IL KS & MO, CO only] Central Bank $500 Checking Bonus
+     → Targeted bank bonus for multiple states
+  [6] [Doctor Of Credit] [OR & WA only] Unitus Community Credit Union $300
+     → Targeted credit union bonus for specific states
+  [7] [Doctor Of Credit] [NY, PA, NJ] Visions Federal Credit Union $500 Checking Bonus
+     → Targeted bank bonus for specific states
+  [8] [Doctor Of Credit] [OH, KY, IN, MI] Superior Credit Union $200 Checking Bonus
+     → Targeted bank bonus for multiple states
+  [9] [Doctor Of Credit] [TX only] Broadway Bank $300 Checking Bonus
+     → Targeted bank bonus for specific state
+  [10] [Doctor Of Credit] PayPal Removes BillPay Option
+     → PayPal service change
+
+  ── skipped (28) ──
+  [11] [SKIP] [美卡论坛 - 最新话题] InKind要完💊
+         → Non-English post about unknown service
+  [12] [SKIP] [美卡论坛 - 最新话题] aruba租车需要额外买保险吗？
+         → Personal travel logistics question
+  [13] [SKIP] [美卡论坛 - 最新话题] costco rewards check的问题， 我是不是被costco给坑了
+         → Personal customer service complaint
+  [14] [SKIP] [美卡论坛 - 最新话题] US Bank Triple Cash Back卡有点坑
+         → Personal bank card complaint
+  [15] [SKIP] [美卡论坛 - 最新话题] Alaska 给中美里程票偷偷涨价了？
+         → Mileage pricing discussion
+  [16] [SKIP] [美卡论坛 - 最新话题] [Update: approve了，变DP了?]后退大法这样操作对吗？
+         → Unclear personal credit card strategy
+  [17] [SKIP] [美卡论坛 - 最新话题] 湾区公寓连个 warning 都不给直接拖车，怎么撕？
+         → Personal local rental complaint
+  [18] [SKIP] [美卡论坛 - 最新话题] 有栗子上车大聪明后没有tracker
+         → Unclear personal reference
+  [19] [SKIP] [美卡论坛 - 最新话题] 中国三大航：中国版24小时免费退票，OTA卖高价退款加追责
+         → Chinese airline policy discussion
+  [20] [SKIP] [美卡论坛 - 最新话题] 如果你很久都不开心
+         → Personal emotional post
+  [21] [SKIP] [美卡论坛 - 最新话题] 浑水创始人转空：若AI持续替代白领，美股401K体系或将崩盘
+         → Market speculation
+  [22] [SKIP] [美卡论坛 - 最新话题] 如果不用上班，旅游还是挺便宜的
+         → Personal travel musing
+  [23] [SKIP] [美卡论坛 - 最新话题] 160这个价格不买Lululemon股票，活该你赚不到钱，此贴留念，上看900超耐克
+         → Personal stock speculation
+  [24] [SKIP] [美卡论坛 - 最新话题] Marriage Penalty怎么解决？
+         → Personal tax strategy question
+  [25] [SKIP] [美卡论坛 - 最新话题] 有人海运过玻璃窗吗
+         → Personal shipping question
+  [26] [SKIP] [美卡论坛 - 最新话题] 预约卖窗户的，结果来了不卖
+         → Personal selling complaint
+  [27] [SKIP] [美卡论坛 - 最新话题] Hyatt Double Booking如何避免审计
+         → Hyatt booking strategy question
+  [28] [SKIP] [美卡论坛 - 最新话题] 用Dell Rewards的单子被砍后过期时间会延长吗？
+         → Personal rewards tracking question
+  [29] [SKIP] [美卡论坛 - 最新话题] 广州32岁程序员猝死 被认定为工伤
+         → Non-US work-related news
+  [30] [SKIP] [美卡论坛 - 最新话题] J1申请redress number DP
+         → Personal immigration process
+  [31] [SKIP] [美卡论坛 - 最新话题] Amex biz gold 升级还是降级
+         → Personal Amex card strategy
+  [32] [SKIP] [美卡论坛 - 最新话题] [dead] &pizza - 10个pizza $31.40 有效期30天 (DC, MD, VA, PA, NJ)
+         → Expired local pizza deal
+  [33] [SKIP] [美卡论坛 - 最新话题] 除了申请新信用卡卡，pp卡还有什么挂壁方式可以获得？
+         → Unclear points earning strategy
+  [34] [SKIP] [美卡论坛 - 最新话题] xhs现在这么明目张胆的吗
+         → Non-relevant social media discussion
+  [35] [SKIP] [美卡论坛 - 最新话题] 假设马上有一次08年金融危机似的黑天鹅，目前大家的持仓能应对的了吗
+         → Market speculation
+  [36] [SKIP] [美卡论坛 - 最新话题] 打算去苹果tradein 16e，还没搞过求咨询
+         → Personal Apple trade-in question
+  [37] [SKIP] [美卡论坛 - 最新话题] 考考你？测试你
+         → Unclear test post
+  [38] [SKIP] [美卡论坛 - 最新话题] 【羊毛】Claude Pro 6个月（ASU 学生福利）
+         → Student service promotion
+
+📰  NEWS  (5 of 55 headlines)
+────────────────────────────────────────────────────────────
+  [39] [5] ★★★★★  #War  Dozens of Medical Workers Killed as Israel Hits Lebanon
+  [40] [4] ★★★★☆  #War  Iran War Live Updates: Iran Defies Trump’s Threats Over Strait of Hormuz Blockade
+  [41] [4] ★★★★☆  #War  Lebanon’s Displaced Flee Israeli Strikes One Year Into War
+  [42] [4] ★★★★☆  #Security  Explosion at Jewish School in Amsterdam Is 2nd Antisemitic Attack in 2 Days, Officials Say
+  [43] [4] ★★★★☆  #Economy  Surge in Oil Prices Shakes Pakistan’s Already Fragile Economy
+
+  ── low score / unrated (50) ──
+  [44] [?] (no rating)  The war has put Middle East water supplies at risk.
+  [45] [?] (no rating)  Lobbyist Arrested in Extortion Attempt of Client Who Received a Trump Pardon
+  [46] [?] (no rating)  What to Know About Iran’s Kharg Island
+  [47] [?] (no rating)  New White House Visitor Screening Center Proposed by Trump
+  [48] [?] (no rating)  Nvidia Cloud Ally In Talks to Buy a Major U.S. AI Data Center Site
+  [49] [?] (no rating)  John M. Perkins Dies at 95; Evangelical Minister Espoused Social Justice
+  [50] [?] (no rating)  ‘Nobody Owns Us’: How Plans for a Google Data Center Roiled an Oklahoma Town
+  [51] [?] (no rating)  Judge Rules Lawmaker Must Be Allowed to Join Kennedy Center Board Meeting
+  [52] [?] (no rating)  ByteDance Suspends Launch of Video AI Model After Copyright Disputes With Hollywood
+  [53] [?] (no rating)  Here is the latest.
+  [54] [?] (no rating)  ‘Sleeper Cells’ and Lone Attackers: Security Experts Brace for More Violence at Home
+  [55] [?] (no rating)  Canada Takes Its Sovereignty Push to Space
+  [56] [?] (no rating)  This is what happened on March 13.
+  [57] [?] (no rating)  Is Latin America Ready to Abandon Cuba?
+  [58] [?] (no rating)  Patrick Collison’s Palace Intrigue Complaint
+  [59] [?] (no rating)  Can Protein-Obsessed Techies Help Save Sweetgreen?
+  [60] [?] (no rating)  《制衡简报》：为何美国人对伊朗战争三缄其口
+  [61] [?] (no rating)  What’s Good?
+  [62] [?] (no rating)  Where Israeli Strikes Are Hitting Beirut
+  [63] [?] (no rating)  What Does It Mean to Have Air Superiority Over Iran?
+  [64] [?] (no rating)  Netanyahu Has the War He Always Wanted, but on Trump’s Terms
+  [65] [?] (no rating)  Tim Kaine Is Forcing the Iran War Debate From the Minority
+  [66] [?] (no rating)  How My Trip to Antarctica Unlocked a Family Discovery
+  [67] [?] (no rating)  How Migrant Workers Have Been Affected by Iran’s Strikes
+  [68] [?] (no rating)  Inside a Doomed Mission to Cuba: 10 Men Willing to ‘Leave Everything’
+  [69] [?] (no rating)  Trump and Rubio’s Vision of War: The Art of Destroy and Deal
+  [70] [?] (no rating)  In Arizona, an Electric Utility Holds an Election, Open Only to Property Owners
+  [71] [?] (no rating)  Cuba’s History Since the Revolution, in Photos
+  [72] [?] (no rating)  Mahmood Mamdani, Father of NYC Mayor, Is Writing a Book on Gaza
+  [73] [?] (no rating)  Terafab Project launches in 7 days
+  [74] [?] (no rating)  Yes
+  [75] [?] (no rating)  RT @GigaBasedDad: 🎯 https://t.co/dzCzKEB1Pv
+  [76] [?] (no rating)  RT @niccruzpatane: Evolution of the Taxi https://t.co/DpVJ69Kud1
+  [77] [?] (no rating)  Starlink now available in Kuwait!
+  [78] [?] (no rating)  RT @niccruzpatane: PBD Podcast on Elon Musk: “Whoever creates the most value for everybody else should end up with the m…
+  [79] [?] (no rating)  Couldn’t script it better
+  [80] [?] (no rating)  RT @XFreeze: Grok Imagine gets the vibe, iterates the world you imagine https://t.co/jjQgSLW8A6
+  [81] [?] (no rating)  Welcome to the PvP of social media
+  [82] [?] (no rating)  RT @dvorahfr: A touch of romance for your day thanks to Grok Imagine https://t.co/FTtQnrtdIP
+  [83] [?] (no rating)  🥧
+  [84] [?] (no rating)  This is the only way to save Britain. There is no other.
+  [85] [?] (no rating)  True
+  [86] [?] (no rating)  RT @BrianRoemmele: “I think the next company I do will have a long beneficial effect”—@elonmusk, 2001 Mission accomplish…
+  [87] [?] (no rating)  Yeah
+  [88] [?] (no rating)  This is real explanation
+  [89] [?] (no rating)  RT @cybertruck: https://t.co/b0qvto54C8
+  [90] [?] (no rating)  RT @Designarena: BREAKING: Grok Imagine by @xai takes 1st overall on Video Editing Arena, with an overall Elo of 1290. T…
+  [91] [?] (no rating)  RT @karaebel: Created using Grok Imagine multi-image to video. 4 base images, 6 videos. https://t.co/3XjtkYCPoq
+  [92] [?] (no rating)  RT @cb_doge: The new upgrade of Grok Imagine is absolutely 🔥🔥 Download @Grok and try it now. https://t.co/j309HBhSEe
+  [93] [?] (no rating)  RT @art_muse: Skater Girl 🛹 https://t.co/7oxIDUC23a
+
+⚠️   FEED HEALTH WARNINGS
+────────────────────────────────────────────────────────────
+  美卡论坛 — last post 13h ago (expected every 12h)
+  NYT US — last post 13h ago (expected every 12h)
+  NYT World — last post 13h ago (expected every 12h)
+  Dataroma — last post 299h ago (expected every 168h)
+  Trump — never fetched / no posts found
+  Sam Altman — never fetched / no posts found

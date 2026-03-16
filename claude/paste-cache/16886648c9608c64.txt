@@ -1,0 +1,71 @@
+你不知道的 Claude Code：架构、治理与工程实践
+by Tw93 (@HiTw93)
+
+0. 太长不读
+今天这篇文章源于最近半年深度使用 Claude Code、两个账号每月 40 刀氪金换来的一些踩坑经验。研究了 Claude Code 本身之后才意识到，这不是 Prompt 问题，而是这套系统的设计就是这样的。
+
+图表一：六层架构表
+层职责CLAUDE.md / rules / memory长期上下文，告诉 Claude "是什么"Tools / MCP动作能力，告诉 Claude "能做什么"Skills按需加载的方法论，告诉 Claude "怎么做"Hooks强制执行某些行为，不依赖 Claude 自己判断Subagents隔离上下文的工作者，负责受控自治Verifiers验证闭环，让输出可验、可回滚、可审计
+
+图表二：真正要关注的五个层面（Section 1）
+层面核心问题主要载体Context surface哪些信息常驻，哪些按需加载CLAUDE.md, rules, memory, skillsAction surfaceClaude 当前具备哪些动作能力built-in tools, MCP, pluginsControl surface哪些动作必须被约束、阻断或审计permissions, sandbox, hooksIsolation surface哪些任务需要隔离上下文和权限subagents, worktrees, forked sessionsVerification surface如何判断任务完成且结果可信tests, lint, screenshots, logs, CI
+
+图表三：概念边界对比表（Section 2）
+概念运行时角色解决什么典型调用（反例）CLAUDE.md项目级持久契约每次会话都必须成立的命令、边界、禁止项写成团队知识库.claude/rules/*路径或语言相关规则目录、文件类型局部规范所有规则都堆到根 CLAUDE.mdBuilt-in Tools内置能力读文件、改文件、跑命令、搜索把所有事都塞进 shellMCP外部能力接入协议访问 GitHub, Sentry, 数据库接太多 server，工具定义撑爆上下文Plugin打包分发层把 Skills/Hooks/MCP 一起分发把 plugin 当成运行时 primitiveSkill按需加载的知识/工作流给 Claude 一个"方法论包"skill 既是百科全书又是执行脚本Hook强制执行规则的拦截层在生命周期事件前后执行规则用 hook 替代所有模型判断Subagent隔离上下文的工作单元并行研究、限制工具与权限无边界 fan-out，治理失控
+
+图表四："When Features Load into Context" 图（Section 3）
+加载时机内容说明Session start（常驻上下文）CLAUDE.mdFull content, every requestSession start（常驻上下文）MCP serversTool definitions, every requestSession start（常驻上下文）Skills*Descriptions only (default)On use（按需加载）SkillsFull content on useIsolated（独立上下文）SubagentsFresh, isolated（Separate context）Outside main context（零成本）HooksRun externally, zero cost
+*Skills with disableModelInvocation: true load nothing until you invoke them
+
+图表五：Session Continuity 图（Section 3）
+session-abc123: ●—●—●—●—●——▶  claude --continue / claude --resume
+                                  (appends to same session)
+
+Fork creates a new session from any point:
+  ●—●—◉—●—●   ←分叉点
+         ↘
+          session-xyz789 (new ID) ——▶  claude --resume abc123 --fork-session
+
+图表六：Plan Mode 图（Section 3）
+阶段特征探索阶段 (PlanMode)只读操作为主，澄清目标，提交方案，价值：将探索与执行在"副作用"层面隔离，降低错误方向的自动成本执行阶段产生实际变更，消耗 Token，产生历史记录
+配合命令：/clear（切断失败路径）、/compact（压缩历史）、--fork-session/--worktree（并行隔离）
+
+图表七：好工具 vs 坏工具（Section 5）
+维度好工具坏工具名称jira_issue_get, sentry_errors_searchquery, fetch, do_action参数issue_key, project_id, response_formatid, name, target返回与下一步决策直接相关的信息一堆 UUID、内部字段、原始噪声规模单一目标，边界清晰多个动作混杂，副作用不透明成本默认输出受控、可截断默认返回过大上下文错误信息包含修正建议仅返回 opaque error code
+
+图表八：AskUserQuestion 工具演进 - "Finding the Sweet Spot"（Section 5）
+← NO STRUCTURE ————————————————————————— TOO RIGID →
+
+[modified markdown output]  →  [AskUserQuestion tool]  →  [ExitPlanTool parameter]
+  model free but messy,          structured + composable,    plan already formed,
+  hard to format                 clear UI surface            questions come too late
+
+图表九：From TODOs to TASKS（Section 5）
+TODOS (Single Agent)             →  models improve  →  TASKS (Multi-Agent)
+  ☑ Set up project                                      Agent A    Agent B
+  ☑ Write tests                                         Task 1 ✓   Task 2 ✓
+  □ Implement feature                                   Task 3 ★
+  □ Deploy                                              Task 4
+
+图表十：System Prompt Layout（Section 8）
+ComponentCache typeBase System Instructionsprivate cachedTools (Read, Write, Bash, Grep, Glob, ...)private cachedCLAUDE.md & Memorycached per-projectSession State (env, MCP, output style)cached per-sessionMessages (user messages, tool results, ...)grows each turn
+
+图表十一：Compaction 执行流程（Section 8）
+BEFORE                    FORCED COMPACTION CALL         AFTER
+─────────────────         ──────────────────────         ──────────────────
+System + Tools     →      System + Tools                 System + Tools
+user message              Full conversation              [cached ✓]
+assistant + results       (all messages)                 Conversation summary
+user message              cache hit = 1/10 price         (~20k tokens)
+assistant + results       "Summarize this               No chat history
+...many more turns         conversation"                 (ready for new turns)
+[compaction buffer]       → Summary (~20k tokens max)
+context window nearly full
+
+图表十二：Section 13 常见反模式表
+反模式症状修复CLAUDE.md 当 wiki每次加载污染上下文，关键指令令被稀释只保留契约的，资料拆到 Skills 和 rulesSkill 大杂烩描述过于模糊，工作流冲突一个 Skill 只做一件事，副作用显式控制工具太多描述模糊选错工具，schema 污染上下文合并同类工具，细明 namespacing没有验证闭环Claude 只能"觉得自己完成了"给每类任务明定 verifier过度自治多 agent 并行无边界，出错难定位角色/权限/worktree 最小化，限制 maxTurns上下文不做切分研究、实现、审查全堆在主线程，有效上下文被稀释任务切换 /clear，阶段切换 /compact，重型探索交给 subagent（Explore → Main 模式）自动范围过宽治理不足多 agent，外部工具全开，但缺乏权限边界和结果回收逻辑permissions + sandbox + hooks + subagent 组合边界已批准命令令触发不清晰settings.json 里残留 rm -rf 等危险操作，一旦触发不可逆定期审查 .claude/settings.json 的 allowedTools 列表
+
+图表十三：Section 15 结语 - 使用 Claude Code 的三个阶段
+阶段关注点效率感知工具使用者"这个功能怎么用"有帮助但有限流程优化者"如何让协作更顺"，开始写 CLAUDE.md 和 Skills明显提升系统设计者"如何让 Agent 在约束下自主运行"质变
+
+以上是帖子中所有文字内容及图片/表格的完整提取。全文已涵盖所有 15 个章节的正文，以及所有视觉图表（共 13 个）均已转换为文字格式。

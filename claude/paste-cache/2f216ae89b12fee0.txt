@@ -1,0 +1,43 @@
+~/code on ☁️  bedrock-claude (us-west-2) on ☁️  maixu@umich.edu took 2s
+❯ gws auth logout
+{
+  "message": "Logged out. All credentials and token caches removed.",
+  "removed": [
+    "/Users/maixu/.config/gws/credentials.enc",
+    "/Users/maixu/.config/gws/token_cache.json"
+  ],
+  "status": "success"
+}
+
+~/code on ☁️  bedrock-claude (us-west-2) on ☁️  maixu@umich.edu
+❯ gws auth login --scopes https://www.googleapis.com/auth/chat.spaces.readonly
+Open this URL in your browser to authenticate:
+
+  https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/chat.spaces.readonly%20openid%20https://www.googleapis.com/auth/userinfo.email&access_type=offline&redirect_uri=http://localhost:61210&response_type=code&client_id=240741820067-b4mkh4lvciignn7c5f0slph1r6l76bdq.apps.googleusercontent.com&prompt=select_account+consent
+
+Using keyring backend: keyring
+{
+  "account": "maixu@umich.edu",
+  "credentials_file": "/Users/maixu/.config/gws/credentials.enc",
+  "encryption": "AES-256-GCM (key in OS keyring or local `.encryption_key`; set GOOGLE_WORKSPACE_CLI_KEYRING_BACKEND=file for headless)",
+  "message": "Authentication successful. Encrypted credentials saved.",
+  "scopes": [
+    "https://www.googleapis.com/auth/chat.spaces.readonly",
+    "openid",
+    "https://www.googleapis.com/auth/userinfo.email"
+  ],
+  "status": "success"
+}
+
+~/code on ☁️  bedrock-claude (us-west-2) on ☁️  maixu@umich.edu took 14s
+❯   gws chat spaces list
+Using keyring backend: keyring
+{
+  "error": {
+    "code": 404,
+    "message": "Google Chat app not found. To create a Chat app, you must turn on the Chat API and configure the app in the Google Cloud console.",
+    "reason": "unknown"
+  }
+}
+
+~

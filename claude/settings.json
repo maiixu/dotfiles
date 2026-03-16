@@ -4,7 +4,7 @@
     "AWS_PROFILE": "bedrock-claude",
     "AWS_REGION": "us-west-2"
   },
-  "model": "us.anthropic.claude-opus-4-6-v1[1m]",
+  "model": "claude-sonnet-4-6[1m]",
   "hooks": {
     "PreToolUse": [
       {
