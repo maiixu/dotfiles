@@ -33,8 +33,8 @@ ZSH_THEME="robbyrussell"
 # Plugins
 plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
 
-# Load oh-my-zsh
-source $ZSH/oh-my-zsh.sh
+# Load oh-my-zsh (skip if not installed)
+[[ -f $ZSH/oh-my-zsh.sh ]] && source $ZSH/oh-my-zsh.sh
 
 # ==============================================================================
 # ALIASES
@@ -52,7 +52,7 @@ alias rmf="/bin/rm -f"  # Force delete if you really need it (use with caution!)
 alias copilot="gh copilot"
 
 # Claude Code
-alias c="claude"
+alias c="claude --dangerously-skip-permissions"
 
 # ==============================================================================
 # FUNCTIONS
@@ -117,6 +117,12 @@ function kdo() {
 
 # yt-dlp (append)
 add_to_path_end "$HOME/.config/yt-dlp"
+
+# Node.js global binaries (for npm install -g packages like gws)
+add_to_path "$(brew --prefix)/Cellar/node/$(node --version | tr -d v)/bin"
+
+# Google Cloud SDK
+add_to_path "/opt/homebrew/share/google-cloud-sdk/bin"
 
 
 # ==============================================================================
