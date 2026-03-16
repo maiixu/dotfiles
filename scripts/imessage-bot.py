@@ -243,7 +243,7 @@ def invoke_claude(user_message: str) -> str:
         prompt = user_message
 
     result = subprocess.run(
-        ["claude", "--print", prompt],
+        ["claude", "--print", "--dangerously-skip-permissions", prompt],
         capture_output=True,
         text=True,
         timeout=180,
