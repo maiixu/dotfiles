@@ -98,22 +98,22 @@ fi
 echo -e "${GREEN}🔗 Step 1: Linking shell configuration files...${NC}"
 echo ""
 
-# Shell config files to link
-declare -A SHELL_CONFIGS=(
-    ["zshenv"]=".zshenv"
-    ["zprofile"]=".zprofile"
-    ["gitconfig"]=".gitconfig"
-    ["zshrc/.zshrc"]=".zshrc"
+# Shell config files to link: "source_name:target_name"
+SHELL_CONFIGS=(
+    "zshenv:.zshenv"
+    "zprofile:.zprofile"
+    "gitconfig:.gitconfig"
+    "zshrc/.zshrc:.zshrc"
 )
 
-for source_name in "${!SHELL_CONFIGS[@]}"; do
-    target_name="${SHELL_CONFIGS[$source_name]}"
-    source_path="$DOTFILES_DIR/$source_name"
-    target_path="$HOME_DIR/$target_name"
+link_file() {
+    local source_name="$1" target_name="$2"
+    local source_path="$DOTFILES_DIR/$source_name"
+    local target_path="$HOME_DIR/$target_name"
 
     if [ ! -f "$source_path" ]; then
         echo -e "${YELLOW}⚠️  Skipping missing file: $source_name${NC}"
-        continue
+        return
     fi
 
     if [ -L "$target_path" ]; then
@@ -133,6 +133,10 @@ for source_name in "${!SHELL_CONFIGS[@]}"; do
         ln -s "$source_path" "$target_path"
         echo -e "${GREEN}✓ Linked: ~/$target_name${NC}"
     fi
+}
+
+for pair in "${SHELL_CONFIGS[@]}"; do
+    link_file "${pair%%:*}" "${pair#*:}"
 done
 
 # Special handling for .zshrc (sources from ~/.config/zshrc/.zshrc)
@@ -245,19 +249,22 @@ fi
 echo -e "${GREEN}🔗 Step 4: Linking home-directory dotfiles...${NC}"
 echo ""
 
-# Map of dotfiles/ subdirectory → target path in home
-declare -A HOME_DIRS=(
-    ["claude"]="$HOME/.claude"
+# Pairs: "source_name:target_path"
+HOME_DIRS=(
+    "claude:$HOME/.claude"
 )
 if [ "$SERVER_MODE" = false ]; then
-    HOME_DIRS["hammerspoon"]="$HOME/.hammerspoon"
+    HOME_DIRS+=("hammerspoon:$HOME/.hammerspoon")
 fi
 
-for source_name in "${!HOME_DIRS[@]}"; do
-    source_path="$DOTFILES_DIR/$source_name"
-    target_path="${HOME_DIRS[$source_name]}"
+link_dir() {
+    local source_name="$1" target_path="$2"
+    local source_path="$DOTFILES_DIR/$source_name"
 
-    [ ! -d "$source_path" ] && echo -e "${YELLOW}⚠️  Skipping missing dir: $source_name${NC}" && continue
+    if [ ! -d "$source_path" ]; then
+        echo -e "${YELLOW}⚠️  Skipping missing dir: $source_name${NC}"
+        return
+    fi
 
     if [ -L "$target_path" ]; then
         existing_link=$(readlink "$target_path")
@@ -276,6 +283,10 @@ for source_name in "${!HOME_DIRS[@]}"; do
         ln -s "$source_path" "$target_path"
         echo -e "${GREEN}✓ Linked: $target_path${NC}"
     fi
+}
+
+for pair in "${HOME_DIRS[@]}"; do
+    link_dir "${pair%%:*}" "${pair#*:}"
 done
 
 echo ""
