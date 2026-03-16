@@ -61,12 +61,26 @@ aws ssm put-parameter --region us-west-2 --name /claude-ec2/things-token    --ty
 
 ## One-Time GUI Steps (via VNC: open vnc://52.39.255.21)
 
-1. App Store → Things 3 → install with Apple ID
-2. Things 3 → Settings → Things Cloud → sign in
-3. Enable Things URL API → copy token → store in SSM `/claude-ec2/things-token`
-4. Messages.app → sign in with Apple ID → enable iMessage
-5. System Settings → Privacy & Security → **Full Disk Access** → add Terminal + Python
-6. System Settings → Privacy & Security → **Automation** → allow Terminal to control Messages
+1. System Settings → General → Sharing → **Screen Sharing ON** (if not already reachable)
+2. System Settings → Users & Groups → enable **auto-login** for ec2-user (so GUI session persists across reboots)
+3. App Store → Things 3 → install with Apple ID
+4. Things 3 → Settings → Things Cloud → sign in
+5. Enable Things URL API → copy token → store in SSM:
+   `aws ssm put-parameter --region us-west-2 --name /claude-ec2/things-token --type SecureString --value "TOKEN"`
+6. Messages.app → sign in with Apple ID → enable iMessage
+7. System Settings → Privacy & Security → **Full Disk Access** → add Terminal + Python
+8. System Settings → Privacy & Security → **Automation** → allow Terminal to control Messages
+9. Open Terminal (via VNC) and load launchd agents (GUI session required):
+   ```bash
+   launchctl bootstrap gui/501 ~/Library/LaunchAgents/com.mai.rss-daily.plist
+   launchctl bootstrap gui/501 ~/Library/LaunchAgents/com.mai.imessage-bot.plist
+   launchctl list | grep com.mai
+   ```
+10. Test RSS digest:
+    ```bash
+    source ~/.env && source ~/code/signals/.env.local
+    cd ~/code/signals && .venv/bin/python3 digest.py --no-sync --no-interactive --dry-run
+    ```
 
 ## Billing Notes
 
