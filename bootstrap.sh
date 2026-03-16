@@ -11,6 +11,7 @@ NC='\033[0m' # No Color
 # Flags
 INSTALL_BREW=false
 INSTALL_PACKAGES=false
+SERVER_MODE=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -23,12 +24,17 @@ while [[ $# -gt 0 ]]; do
             INSTALL_PACKAGES=true
             shift
             ;;
+        --server)
+            SERVER_MODE=true
+            shift
+            ;;
         --help)
             echo "Usage: bash bootstrap.sh [OPTIONS]"
             echo ""
             echo "Options:"
             echo "  --install-brew       Install Homebrew if not present"
             echo "  --install-packages   Install essential packages"
+            echo "  --server             Server mode: skip UI tools (Karabiner, Hammerspoon, Aerospace)"
             echo "  --help               Show this help message"
             exit 0
             ;;
@@ -154,6 +160,11 @@ echo ""
 # What to exclude from ~/.config linking
 EXCLUDES=("bootstrap.sh" ".git" ".gitignore" "README.md" "zshenv" "zprofile" "test" "raycast" "claude")
 
+# In server mode, skip UI-only tools
+if [ "$SERVER_MODE" = true ]; then
+    EXCLUDES+=("aerospace" "karabiner" "hammerspoon")
+fi
+
 # Link folders to ~/.config
 for item in "$DOTFILES_DIR"/*; do
     [ ! -d "$item" ] && continue  # Skip if not a directory
@@ -190,75 +201,80 @@ echo ""
 # STEP 3: Special handling for karabiner
 # ==============================================================================
 
-echo -e "${GREEN}🔗 Step 3: Linking karabiner configuration...${NC}"
-echo ""
-
-KARABINER_SOURCE="$DOTFILES_DIR/karabiner/karabiner.json"
-KARABINER_TARGET="$CONFIG_DIR/karabiner/karabiner.json"
-
-if [ -f "$KARABINER_SOURCE" ]; then
-    mkdir -p "$(dirname "$KARABINER_TARGET")"
-
-    if [ -L "$KARABINER_TARGET" ]; then
-        existing_link=$(readlink "$KARABINER_TARGET")
-        if [ "$existing_link" = "$KARABINER_SOURCE" ]; then
-            echo "✓ Already linked: ~/.config/karabiner/karabiner.json"
-        else
-            echo -e "${YELLOW}⚠️  karabiner.json already symlinked to: $existing_link${NC}"
-        fi
-    elif [ -f "$KARABINER_TARGET" ]; then
-        backup_path="$KARABINER_TARGET.backup.$(date +%Y%m%d_%H%M%S)"
-        mv "$KARABINER_TARGET" "$backup_path"
-        ln -s "$KARABINER_SOURCE" "$KARABINER_TARGET"
-        echo -e "${GREEN}✓ Backed up and linked: karabiner.json${NC}"
-        echo -e "  ${YELLOW}Backup at: $backup_path${NC}"
-    else
-        ln -s "$KARABINER_SOURCE" "$KARABINER_TARGET"
-        echo -e "${GREEN}✓ Linked: ~/.config/karabiner/karabiner.json${NC}"
-    fi
+if [ "$SERVER_MODE" = true ]; then
+    echo -e "${YELLOW}⚠️  Step 3: Skipping karabiner (server mode)${NC}"
+    echo ""
 else
-    echo -e "${YELLOW}⚠️  Karabiner config not found${NC}"
+    echo -e "${GREEN}🔗 Step 3: Linking karabiner configuration...${NC}"
+    echo ""
+
+    KARABINER_SOURCE="$DOTFILES_DIR/karabiner/karabiner.json"
+    KARABINER_TARGET="$CONFIG_DIR/karabiner/karabiner.json"
+
+    if [ -f "$KARABINER_SOURCE" ]; then
+        mkdir -p "$(dirname "$KARABINER_TARGET")"
+
+        if [ -L "$KARABINER_TARGET" ]; then
+            existing_link=$(readlink "$KARABINER_TARGET")
+            if [ "$existing_link" = "$KARABINER_SOURCE" ]; then
+                echo "✓ Already linked: ~/.config/karabiner/karabiner.json"
+            else
+                echo -e "${YELLOW}⚠️  karabiner.json already symlinked to: $existing_link${NC}"
+            fi
+        elif [ -f "$KARABINER_TARGET" ]; then
+            backup_path="$KARABINER_TARGET.backup.$(date +%Y%m%d_%H%M%S)"
+            mv "$KARABINER_TARGET" "$backup_path"
+            ln -s "$KARABINER_SOURCE" "$KARABINER_TARGET"
+            echo -e "${GREEN}✓ Backed up and linked: karabiner.json${NC}"
+            echo -e "  ${YELLOW}Backup at: $backup_path${NC}"
+        else
+            ln -s "$KARABINER_SOURCE" "$KARABINER_TARGET"
+            echo -e "${GREEN}✓ Linked: ~/.config/karabiner/karabiner.json${NC}"
+        fi
+    else
+        echo -e "${YELLOW}⚠️  Karabiner config not found${NC}"
+    fi
+
+    echo ""
 fi
 
-echo ""
-
 # ==============================================================================
-# STEP 4: Link Claude Code configuration to ~/.claude
+# STEP 4: Link home-directory dotfiles (whole-directory symlinks)
 # ==============================================================================
 
-echo -e "${GREEN}🔗 Step 4: Linking Claude Code configuration...${NC}"
+echo -e "${GREEN}🔗 Step 4: Linking home-directory dotfiles...${NC}"
 echo ""
 
-CLAUDE_SOURCE="$DOTFILES_DIR/claude"
-CLAUDE_TARGET="$HOME/.claude"
+# Map of dotfiles/ subdirectory → target path in home
+declare -A HOME_DIRS=(
+    ["claude"]="$HOME/.claude"
+)
+if [ "$SERVER_MODE" = false ]; then
+    HOME_DIRS["hammerspoon"]="$HOME/.hammerspoon"
+fi
 
-mkdir -p "$CLAUDE_TARGET"
+for source_name in "${!HOME_DIRS[@]}"; do
+    source_path="$DOTFILES_DIR/$source_name"
+    target_path="${HOME_DIRS[$source_name]}"
 
-# Files and directories to link from dotfiles/claude/ into ~/.claude/
-CLAUDE_ITEMS=("CLAUDE.md" "settings.json" "settings.local.json" "skills" "hooks" "agents" "rules" "agent-memory" "scripts" "projects")
-
-for item in "${CLAUDE_ITEMS[@]}"; do
-    source_path="$CLAUDE_SOURCE/$item"
-    target_path="$CLAUDE_TARGET/$item"
-
-    [ ! -e "$source_path" ] && continue
+    [ ! -d "$source_path" ] && echo -e "${YELLOW}⚠️  Skipping missing dir: $source_name${NC}" && continue
 
     if [ -L "$target_path" ]; then
         existing_link=$(readlink "$target_path")
         if [ "$existing_link" = "$source_path" ]; then
-            echo "✓ Already linked: ~/.claude/$item"
+            echo "✓ Already linked: $target_path"
         else
-            echo -e "${YELLOW}⚠️  ~/.claude/$item already symlinked to: $existing_link${NC}"
+            echo -e "${YELLOW}⚠️  $target_path already symlinked to: $existing_link${NC}"
         fi
-    elif [ -e "$target_path" ]; then
+    elif [ -d "$target_path" ]; then
         backup_path="$target_path.backup.$(date +%Y%m%d_%H%M%S)"
         mv "$target_path" "$backup_path"
         ln -s "$source_path" "$target_path"
-        echo -e "${GREEN}✓ Backed up and linked: ~/.claude/$item${NC}"
+        echo -e "${GREEN}✓ Backed up and linked: $target_path${NC}"
         echo -e "  ${YELLOW}Backup at: $backup_path${NC}"
     else
         ln -s "$source_path" "$target_path"
-        echo -e "${GREEN}✓ Linked: ~/.claude/$item${NC}"
+        echo -e "${GREEN}✓ Linked: $target_path${NC}"
     fi
 done
 
@@ -269,7 +285,7 @@ echo ""
 # ==============================================================================
 
 if [ "$INSTALL_PACKAGES" = true ]; then
-    echo -e "${GREEN}📦 Step 4: Installing essential packages...${NC}"
+    echo -e "${GREEN}📦 Step 5: Installing essential packages...${NC}"
     echo ""
 
     if ! command -v brew &> /dev/null; then
