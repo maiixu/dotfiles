@@ -38,6 +38,11 @@ STATE_FILE = Path.home() / ".imessage-bot-state.json"
 DB_PATH = Path.home() / "Library/Messages/chat.db"
 POLL_INTERVAL = 10  # seconds
 
+# Guard against iCloud-reflected copies of our own replies appearing as inbound.
+# Keeps the last N reply texts; if a "received" message matches, skip it.
+_recent_sent: list[str] = []
+_RECENT_SENT_MAX = 10
+
 
 def load_state() -> dict:
     if STATE_FILE.exists():
@@ -81,6 +86,10 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
 
 
 def send_imessage(text: str):
+    global _recent_sent
+    _recent_sent.append(text)
+    if len(_recent_sent) > _RECENT_SENT_MAX:
+        _recent_sent = _recent_sent[-_RECENT_SENT_MAX:]
     # Escape for AppleScript string literal
     escaped = text.replace("\\", "\\\\").replace('"', '\\"')
     script = f'''tell application "Messages"
@@ -133,10 +142,13 @@ def main():
             rows = get_new_messages(last_rowid)
             for rowid, text in rows:
                 if text and text.strip():
-                    print(f"Received [{rowid}]: {text[:80]}")
-                    reply = invoke_claude(text.strip())
-                    send_imessage(reply)
-                    print(f"Replied [{rowid}]: {reply[:80]}")
+                    if text in _recent_sent:
+                        print(f"Skipped [{rowid}] (iCloud reflection of own reply)")
+                    else:
+                        print(f"Received [{rowid}]: {text[:80]}")
+                        reply = invoke_claude(text.strip())
+                        send_imessage(reply)
+                        print(f"Replied [{rowid}]: {reply[:80]}")
                 last_rowid = rowid
             if rows:
                 save_state({"last_rowid": last_rowid})
