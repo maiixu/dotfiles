@@ -38,6 +38,22 @@ STATE_FILE = Path.home() / ".imessage-bot-state.json"
 DB_PATH = Path.home() / "Library/Messages/chat.db"
 POLL_INTERVAL = 10  # seconds
 
+
+def _get_apple_id_email() -> str:
+    """Detect the Apple ID email for this Mac from system preferences."""
+    try:
+        result = subprocess.run(
+            ["defaults", "read", "MobileMeAccounts"],
+            capture_output=True, text=True
+        )
+        import re
+        m = re.search(r'AccountID = "([^"]+)"', result.stdout)
+        return m.group(1) if m else ""
+    except Exception:
+        return ""
+
+MY_EMAIL = os.environ.get("IMESSAGE_EMAIL") or _env.get("IMESSAGE_EMAIL", "") or _get_apple_id_email()
+
 # Guard against iCloud-reflected copies of our own replies appearing as inbound.
 # Keeps the last N reply texts; if a "received" message matches, skip it.
 _recent_sent: list[str] = []
@@ -55,7 +71,13 @@ def save_state(state: dict):
 
 
 def get_new_messages(last_rowid: int) -> list[tuple]:
-    """Return list of (rowid, text) for new inbound messages from MY_PHONE."""
+    """Return list of (rowid, text) for new inbound messages from MY_PHONE.
+
+    Detects two delivery paths:
+    1. Direct iMessage receipt: is_from_me=0, handle=MY_PHONE
+    2. iCloud Messages sync fallback: is_from_me=1 in the chat addressed to
+       MY_EMAIL (user sent from iPhone → synced to Mac as a 'sent' entry)
+    """
     # chat.db uses WAL mode; copy all three files so SQLite can read WAL entries
     import tempfile as _tempfile
     tmp_dir = Path(_tempfile.mkdtemp())
@@ -67,7 +89,9 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
             if src.exists():
                 shutil.copy2(src, tmp_dir / (tmp_path.name + ext))
         conn = sqlite3.connect(str(tmp_path))
-        rows = conn.execute(
+
+        # Path 1: direct delivery
+        direct = conn.execute(
             """
             SELECT m.ROWID, m.text
             FROM message m
@@ -79,10 +103,36 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
             """,
             (MY_PHONE, last_rowid),
         ).fetchall()
+
+        # Path 2: iCloud sync fallback (is_from_me=1 in the MY_EMAIL chat)
+        icloud = []
+        if MY_EMAIL:
+            icloud = conn.execute(
+                """
+                SELECT m.ROWID, m.text
+                FROM message m
+                JOIN chat_message_join cmj ON m.ROWID = cmj.message_id
+                JOIN chat c ON cmj.chat_id = c.ROWID
+                WHERE c.chat_identifier = ?
+                  AND m.ROWID > ?
+                  AND m.is_from_me = 1
+                ORDER BY m.ROWID
+                """,
+                (MY_EMAIL, last_rowid),
+            ).fetchall()
+
         conn.close()
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
-    return rows
+
+    # Merge, deduplicate, sort
+    seen = set()
+    merged = []
+    for row in sorted(direct + icloud, key=lambda r: r[0]):
+        if row[0] not in seen:
+            seen.add(row[0])
+            merged.append(row)
+    return merged
 
 
 def send_imessage(text: str):
@@ -114,7 +164,7 @@ def main():
     if not MY_PHONE:
         raise RuntimeError("IMESSAGE_PHONE env var not set")
 
-    print(f"iMessage bot started, watching messages from {MY_PHONE}")
+    print(f"iMessage bot started, watching messages from {MY_PHONE} (email: {MY_EMAIL or 'not detected'})")
     state = load_state()
     last_rowid = state["last_rowid"]
 
