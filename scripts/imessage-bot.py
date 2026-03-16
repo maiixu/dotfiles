@@ -4,6 +4,7 @@ iMessage bot: polls ~/Library/Messages/chat.db for new messages from a specified
 phone number, invokes `claude --print`, and replies via osascript.
 
 State: ~/.imessage-bot-state.json (tracks last seen ROWID)
+History: ~/code/claude-bot/conversations.jsonl (rolling 100-message window)
 
 Requirements:
   - Terminal must have Full Disk Access (Privacy & Security → Full Disk Access)
@@ -14,6 +15,7 @@ Requirements:
 
 import json
 import os
+import re
 import shutil
 import sqlite3
 import subprocess
@@ -37,16 +39,17 @@ MY_PHONE = os.environ.get("IMESSAGE_PHONE") or _env.get("IMESSAGE_PHONE", "")
 STATE_FILE = Path.home() / ".imessage-bot-state.json"
 DB_PATH = Path.home() / "Library/Messages/chat.db"
 POLL_INTERVAL = 10  # seconds
+BOT_DIR = Path.home() / "code" / "claude-bot"
+HISTORY_FILE = BOT_DIR / "conversations.jsonl"
+HISTORY_MAX = 100
 
 
 def _get_apple_id_email() -> str:
-    """Detect the Apple ID email for this Mac from system preferences."""
     try:
         result = subprocess.run(
             ["defaults", "read", "MobileMeAccounts"],
             capture_output=True, text=True
         )
-        import re
         m = re.search(r'AccountID = "([^"]+)"', result.stdout)
         return m.group(1) if m else ""
     except Exception:
@@ -55,10 +58,45 @@ def _get_apple_id_email() -> str:
 MY_EMAIL = os.environ.get("IMESSAGE_EMAIL") or _env.get("IMESSAGE_EMAIL", "") or _get_apple_id_email()
 
 # Guard against iCloud-reflected copies of our own replies appearing as inbound.
-# Keeps the last N reply texts; if a "received" message matches, skip it.
 _recent_sent: list[str] = []
 _RECENT_SENT_MAX = 10
 
+
+# ── History ──────────────────────────────────────────────────────────────────
+
+def history_append(role: str, content: str):
+    """Append one turn to the rolling conversation log."""
+    BOT_DIR.mkdir(parents=True, exist_ok=True)
+    entry = {"role": role, "content": content, "ts": int(time.time())}
+    with HISTORY_FILE.open("a") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    _history_trim()
+
+
+def _history_trim():
+    """Keep only the last HISTORY_MAX lines."""
+    if not HISTORY_FILE.exists():
+        return
+    lines = HISTORY_FILE.read_text().splitlines()
+    if len(lines) > HISTORY_MAX:
+        HISTORY_FILE.write_text("\n".join(lines[-HISTORY_MAX:]) + "\n")
+
+
+def history_load() -> list[dict]:
+    if not HISTORY_FILE.exists():
+        return []
+    entries = []
+    for line in HISTORY_FILE.read_text().splitlines():
+        line = line.strip()
+        if line:
+            try:
+                entries.append(json.loads(line))
+            except json.JSONDecodeError:
+                pass
+    return entries[-HISTORY_MAX:]
+
+
+# ── DB polling ────────────────────────────────────────────────────────────────
 
 def load_state() -> dict:
     if STATE_FILE.exists():
@@ -78,9 +116,7 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
     2. iCloud Messages sync fallback: is_from_me=1 in the chat addressed to
        MY_EMAIL (user sent from iPhone → synced to Mac as a 'sent' entry)
     """
-    # chat.db uses WAL mode; copy all three files so SQLite can read WAL entries
-    import tempfile as _tempfile
-    tmp_dir = Path(_tempfile.mkdtemp())
+    tmp_dir = Path(tempfile.mkdtemp())
     tmp_path = tmp_dir / "chat.db"
     try:
         shutil.copy2(DB_PATH, tmp_path)
@@ -90,7 +126,6 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
                 shutil.copy2(src, tmp_dir / (tmp_path.name + ext))
         conn = sqlite3.connect(str(tmp_path))
 
-        # Path 1: direct delivery
         direct = conn.execute(
             """
             SELECT m.ROWID, m.text
@@ -104,7 +139,6 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
             (MY_PHONE, last_rowid),
         ).fetchall()
 
-        # Path 2: iCloud sync fallback (is_from_me=1 in the MY_EMAIL chat)
         icloud = []
         if MY_EMAIL:
             icloud = conn.execute(
@@ -125,7 +159,6 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
-    # Merge, deduplicate, sort
     seen = set()
     merged = []
     for row in sorted(direct + icloud, key=lambda r: r[0]):
@@ -135,12 +168,13 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
     return merged
 
 
+# ── Sending & invoking Claude ─────────────────────────────────────────────────
+
 def send_imessage(text: str):
     global _recent_sent
     _recent_sent.append(text)
     if len(_recent_sent) > _RECENT_SENT_MAX:
         _recent_sent = _recent_sent[-_RECENT_SENT_MAX:]
-    # Escape for AppleScript string literal
     escaped = text.replace("\\", "\\\\").replace('"', '\\"')
     script = f'''tell application "Messages"
   set targetService to 1st service whose service type = iMessage
@@ -150,10 +184,18 @@ end tell'''
     subprocess.run(["osascript", "-e", script], check=False)
 
 
-BOT_DIR = Path.home() / "code" / "claude-bot"
+def invoke_claude(user_message: str) -> str:
+    history = history_load()
+    if history:
+        lines = []
+        for h in history:
+            speaker = "Mai" if h["role"] == "user" else "Claude"
+            lines.append(f"{speaker}: {h['content']}")
+        context = "\n".join(lines)
+        prompt = f"Recent conversation:\n{context}\n\nMai: {user_message}"
+    else:
+        prompt = user_message
 
-
-def invoke_claude(prompt: str) -> str:
     result = subprocess.run(
         ["claude", "--print", prompt],
         capture_output=True,
@@ -164,6 +206,8 @@ def invoke_claude(prompt: str) -> str:
     return result.stdout.strip() or result.stderr.strip() or "(no response)"
 
 
+# ── Main loop ─────────────────────────────────────────────────────────────────
+
 def main():
     if not MY_PHONE:
         raise RuntimeError("IMESSAGE_PHONE env var not set")
@@ -172,7 +216,6 @@ def main():
     state = load_state()
     last_rowid = state["last_rowid"]
 
-    # On first run, initialize last_rowid to current max so we don't replay history
     if last_rowid == 0 and DB_PATH.exists():
         tmp_dir = Path(tempfile.mkdtemp())
         tmp_path = tmp_dir / "chat.db"
@@ -200,7 +243,9 @@ def main():
                         print(f"Skipped [{rowid}] (iCloud reflection of own reply)")
                     else:
                         print(f"Received [{rowid}]: {text[:80]}")
+                        history_append("user", text.strip())
                         reply = invoke_claude(text.strip())
+                        history_append("assistant", reply)
                         send_imessage(reply)
                         print(f"Replied [{rowid}]: {reply[:80]}")
                 last_rowid = rowid
