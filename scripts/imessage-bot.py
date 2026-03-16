@@ -150,12 +150,16 @@ end tell'''
     subprocess.run(["osascript", "-e", script], check=False)
 
 
+BOT_DIR = Path.home() / "code" / "claude-bot"
+
+
 def invoke_claude(prompt: str) -> str:
     result = subprocess.run(
         ["claude", "--print", prompt],
         capture_output=True,
         text=True,
         timeout=180,
+        cwd=str(BOT_DIR) if BOT_DIR.exists() else None,
     )
     return result.stdout.strip() or result.stderr.strip() or "(no response)"
 
