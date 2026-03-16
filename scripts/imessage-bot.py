@@ -98,57 +98,32 @@ def history_load() -> list[dict]:
 
 # ── attributedBody decoding ───────────────────────────────────────────────────
 
-def _read_compact_int(blob: bytes, pos: int) -> tuple[int, int]:
-    """Read NSCoder compact integer. Returns (value, new_pos)."""
-    if pos >= len(blob):
-        return 0, pos
-    b = blob[pos]
-    if b < 0x80:
-        return b, pos + 1
-    elif b == 0x81 and pos + 2 < len(blob):
-        return (blob[pos + 1] << 8) | blob[pos + 2], pos + 3
-    elif b == 0x82 and pos + 4 < len(blob):
-        return ((blob[pos + 1] << 24) | (blob[pos + 2] << 16) |
-                (blob[pos + 3] << 8) | blob[pos + 4]), pos + 5
-    return b, pos + 1
-
-
 def decode_attributed_body(data) -> str | None:
-    """Extract plain text from an NSAttributedString binary blob (attributedBody)."""
     if not data:
         return None
     blob = bytes(data)
-
-    # Newer format: binary plist
     try:
         import plistlib
         plist = plistlib.loads(blob)
-        if isinstance(plist, dict):
-            text = plist.get("NS.string")
-            if text:
-                return text.replace("\ufffc", "").strip() or None
+        if isinstance(plist, dict) and (text := plist.get("NS.string")):
+            return text.replace("\ufffc", "").strip() or None
     except Exception:
         pass
-
-    # Older streamtyped format: find NSString class marker
     marker = b"NSString\x01\x94\x84\x01"
     idx = blob.find(marker)
     if idx < 0:
         return None
     pos = idx + len(marker)
-
-    # Skip '+' (0x2b) C-string type byte if present
     if pos < len(blob) and blob[pos] == 0x2B:
         pos += 1
-
-    length, pos = _read_compact_int(blob, pos)
+    if pos >= len(blob):
+        return None
+    length = blob[pos]; pos += 1
     if length <= 0 or pos + length > len(blob):
         return None
-
     try:
-        text = blob[pos:pos + length].decode("utf-8")
-        text = text.replace("\ufffc", "").strip()
-        return text if text else None
+        text = blob[pos:pos + length].decode("utf-8").replace("\ufffc", "").strip()
+        return text or None
     except Exception:
         return None
 
@@ -284,8 +259,9 @@ def send_imessage(text: str, target: str | None = None):
     buddy_id = target or MY_PHONE
     escaped = text.replace("\\", "\\\\").replace('"', '\\"')
     script = f'''tell application "Messages"
+  activate
   set targetService to 1st service whose service type = iMessage
-  set b to buddy "{buddy_id}" of targetService
+  set b to buddy "{MY_PHONE}" of targetService
   send "{escaped}" to b
 end tell'''
     subprocess.run(["osascript", "-e", script], check=False)
@@ -344,18 +320,11 @@ def main():
     while True:
         try:
             rows = get_new_messages(last_rowid)
-<<<<<<< HEAD
-            for rowid, text, audio_path, source in rows:
-                # Determine reply target based on message source
-                reply_target = MY_EMAIL if source == "email" else MY_PHONE
-=======
-            for rowid, text, audio_path, attributed_body in rows:
-                # Fall back to attributedBody when text column is NULL
+            for rowid, text, audio_path, attributed_body, source in rows:
                 if not (text and text.strip()):
                     text = decode_attributed_body(attributed_body)
                     if text:
                         print(f"Decoded attributedBody [{rowid}]: {text[:80]}")
->>>>>>> 5568635 (Fix iMessage bot: decode attributedBody when text IS NULL)
 
                 # Transcribe audio if no text
                 if not (text and text.strip()) and audio_path:
@@ -372,8 +341,8 @@ def main():
                         history_append("user", text.strip())
                         reply = invoke_claude(text.strip())
                         history_append("assistant", reply)
-                        send_imessage(reply, target=reply_target)
-                        print(f"Replied [{rowid}] to {reply_target}: {reply[:80]}")
+                        send_imessage(reply)
+                        print(f"Replied [{rowid}]: {reply[:80]}")
                 last_rowid = rowid
             if rows:
                 save_state({"last_rowid": last_rowid})
