@@ -180,21 +180,35 @@ def get_new_messages(last_rowid: int) -> list[tuple]:
 
 # ── Sending & invoking Claude ─────────────────────────────────────────────────
 
+WHISPER_CLI = "/opt/homebrew/bin/whisper-cli"
+WHISPER_MODEL = str(Path.home() / "whisper-models" / "ggml-large-v3-turbo-q5_0.bin")
+
+
 def transcribe_audio(raw_path: str) -> str:
-    """Transcribe an iMessage audio attachment using Whisper."""
+    """Transcribe an iMessage audio attachment using whisper.cpp."""
     path = raw_path.replace("~/", str(Path.home()) + "/")
     if not Path(path).exists():
+        print(f"Audio file not found: {path}")
         return ""
+    # whisper-cli only supports wav/mp3/flac/ogg; convert CAF → WAV via ffmpeg
     tmp_dir = Path(tempfile.mkdtemp())
     try:
+        wav_path = tmp_dir / "audio.wav"
+        subprocess.run(
+            ["ffmpeg", "-i", path, "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le",
+             str(wav_path)],
+            capture_output=True, check=True, timeout=30,
+        )
         result = subprocess.run(
-            ["whisper", path, "--model", "base", "--output_format", "txt",
-             "--output_dir", str(tmp_dir), "--fp16", "False"],
+            [WHISPER_CLI, "-m", WHISPER_MODEL, "-l", "auto",
+             "--no-timestamps", "-of", str(tmp_dir / "out"), str(wav_path)],
             capture_output=True, text=True, timeout=120,
         )
-        # whisper writes <stem>.txt in output_dir
-        txts = list(tmp_dir.glob("*.txt"))
-        return txts[0].read_text().strip() if txts else ""
+        out_txt = tmp_dir / "out.txt"
+        if out_txt.exists():
+            return out_txt.read_text().strip()
+        # fallback: parse stdout
+        return result.stdout.strip()
     except Exception as e:
         print(f"Transcription error: {e}")
         return ""
