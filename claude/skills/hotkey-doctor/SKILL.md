@@ -28,6 +28,7 @@ Audit the user's hotkey configuration across Aerospace (window manager) and Kara
 | `j` | 行下 ↓ | 选择行下 | 聚焦下 | 移动窗口下 | 下一 workspace | 移动窗口到下一 workspace |
 | `k` | 行上 ↑ | 选择行上 | 聚焦上 | 移动窗口上 | 上一 workspace | 移动窗口到上一 workspace |
 | `l` | 词右 ⌥→ | 选择词右 | 聚焦右 | 移动窗口右 | 聚焦下一显示器 | 移动窗口到下一显示器 |
+| `u` | 下方新行 | — | — | — | — | — |
 | `i` | 字符左 ← | 选择字符左 | 垂直布局切换 | join-with left | — | — |
 | `o` | 字符右 → | 选择字符右 | 水平布局切换 | join-with right | — | — |
 | `n` | 文档顶部 | 选到文档顶部 | — | — | — | — |

@@ -159,29 +159,16 @@
                         ]
                     },
                     {
-                        "_disabled": true,
-                        "description": "o/O vim new line below/above (parked)",
+                        "description": "u vim new line below",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "o",
-                                    "modifiers": { "mandatory": ["right_control", "left_command", "left_option"] }
+                                    "key_code": "u",
+                                    "modifiers": { "mandatory": ["right_control"] }
                                 },
                                 "to": [
                                     { "key_code": "right_arrow", "modifiers": ["left_command"] },
                                     { "key_code": "return_or_enter" }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "o",
-                                    "modifiers": { "mandatory": ["right_control", "left_command", "left_option", "left_shift"] }
-                                },
-                                "to": [
-                                    { "key_code": "left_arrow", "modifiers": ["left_command"] },
-                                    { "key_code": "return_or_enter" },
-                                    { "key_code": "up_arrow" }
                                 ],
                                 "type": "basic"
                             }
