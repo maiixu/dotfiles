@@ -1,0 +1,52 @@
+---
+name: gws_drive_upload
+version: 1.0.0
+description: Use when uploading a file to Google Drive.
+metadata:
+  openclaw:
+    category: "productivity"
+    requires:
+      bins: ["gws"]
+    cliHelp: "gws drive +upload --help"
+---
+
+# drive +upload
+
+> **PREREQUISITE:** Read `../gws_shared/SKILL.md` for auth, global flags, and security rules. If missing, run `gws generate-skills` to create it.
+
+Upload a file with automatic metadata
+
+## Usage
+
+```bash
+gws drive +upload <file>
+```
+
+## Flags
+
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `<file>` | ✓ | — | Path to file to upload |
+| `--parent` | — | — | Parent folder ID |
+| `--name` | — | — | Target filename (defaults to source filename) |
+
+## Examples
+
+```bash
+gws drive +upload ./report.pdf
+gws drive +upload ./report.pdf --parent FOLDER_ID
+gws drive +upload ./data.csv --name 'Sales Data.csv'
+```
+
+## Tips
+
+- MIME type is detected automatically.
+- Filename is inferred from the local path unless --name is given.
+
+> [!CAUTION]
+> This is a **write** command — confirm with the user before executing.
+
+## See Also
+
+- [gws_shared](../gws_shared/SKILL.md) — Global flags and auth
+- [gws_drive](../gws_drive/SKILL.md) — All manage files, folders, and shared drives commands

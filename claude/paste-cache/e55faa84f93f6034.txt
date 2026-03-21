@@ -1,0 +1,61 @@
+~/code on ☁️  bedrock-claude (us-west-2) on ☁️  maixu@umich.edu took 2s
+❯ gws auth login
+Open this URL in your browser to authenticate:
+
+  https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/cloud-platform%20openid%20https://www.googleapis.com/auth/userinfo.email&access_type=offline&redirect_uri=http://localhost:60974&response_type=code&client_id=240741820067-b4mkh4lvciignn7c5f0slph1r6l76bdq.apps.googleusercontent.com&prompt=select_account+consent
+
+Using keyring backend: keyring
+{
+  "account": "maixu@umich.edu",
+  "credentials_file": "/Users/maixu/.config/gws/credentials.enc",
+  "encryption": "AES-256-GCM (key in OS keyring or local `.encryption_key`; set GOOGLE_WORKSPACE_CLI_KEYRING_BACKEND=file for headless)",
+  "message": "Authentication successful. Encrypted credentials saved.",
+  "scopes": [
+    "https://www.googleapis.com/auth/cloud-platform",
+    "openid",
+    "https://www.googleapis.com/auth/userinfo.email"
+  ],
+  "status": "success"
+}
+
+~/code on ☁️  bedrock-claude (us-west-2) on ☁️  maixu@umich.edu took 13s
+❯ echo "=== calendar ===" && \
+  gws calendar +agenda --today 2>&1 | head -5 && \
+  echo "=== gmail ===" && \
+  gws gmail users getProfile --params '{"userId":"me"}' 2>&1 | head -5 && \
+  echo "=== people ===" && \
+  gws people people get --params '{"resourceName":"people/me","personFields":"names,emailAddresses"}' 2>&1 | head -5 && \
+  echo "=== docs ===" && \
+  gws docs documents list 2>&1 | head -5 && \
+  echo "=== drive ===" && \
+  gws drive files list --params '{"pageSize":1}' 2>&1 | head -5
+=== calendar ===
+Using keyring backend: keyring
+{
+  "error": {
+    "code": 0,
+    "message": "{\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"Request had insufficient authentication scopes.\",\n    \"errors\": [\n      {\n        \"message\": \"Insufficient Permission\",\n        \"domain\": \"global\",\n        \"reason\": \"insufficientPermissions\"\n      }\n    ],\n    \"status\": \"PERMISSION_DENIED\",\n    \"details\": [\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.ErrorInfo\",\n        \"reason\": \"ACCESS_TOKEN_SCOPE_INSUFFICIENT\",\n        \"domain\": \"googleapis.com\",\n        \"metadata\": {\n          \"service\": \"calendar-json.googleapis.com\",\n          \"method\": \"calendar.v3.CalendarList.List\"\n        }\n      }\n    ]\n  }\n}\n",
+=== gmail ===
+Using keyring backend: keyring
+{
+  "error": {
+    "code": 403,
+    "message": "Request had insufficient authentication scopes.",
+=== people ===
+Using keyring backend: keyring
+{
+  "error": {
+    "code": 403,
+    "message": "People API has not been used in project gws-cli-maixu-umich before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/people.googleapis.com/overview?project=gws-cli-maixu-umich then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+=== docs ===
+{
+  "error": {
+    "code": 400,
+    "message": "error: unrecognized subcommand 'list'\n\nUsage: gws documents [OPTIONS] <COMMAND>\n\nFor more information, try '--help'.\n",
+    "reason": "validationError"
+=== drive ===
+Using keyring backend: keyring
+{
+  "error": {
+    "code": 403,
+    "message": "Request had insufficient authentication scopes.",

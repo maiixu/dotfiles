@@ -1,0 +1,104 @@
+这个问题挺常见的，本质上是 CLAUDE.md 的指令在长 context 里权重衰减，加上 codebase 里如果有韩/日文 string 或 comment，模型会被 in-context language 带跑。
+
+几个实际能用的手段：
+
+**1. CLAUDE.md 里用更强的否定约束**
+
+光说"只能中英文"不够，模型对 negative constraint 更敏感：
+
+```markdown
+# LANGUAGE POLICY (STRICTLY ENFORCED)
+- Output ONLY in Chinese (中文) or English. 
+- NEVER output in Korean, Japanese, or any other language.
+- This applies to ALL responses: code comments, explanations, commit messages, everything.
+```
+
+放在文件最顶部，然后在底部再重复一遍（recency bias 和 primacy bias 两头吃）。
+
+**2. 多层级配置叠加**
+
+CLAUDE.md 只是 project 级别，你还可以在 `~/.claude/settings.json` 的 `instructions` 字段里加一层 user-level 的约束：
+
+```json
+{
+  "instructions": "You must ONLY respond in Chinese or English. Never use Korean or Japanese."
+}
+```
+
+两层叠加比单层可靠得多。
+
+**3. Claude Code Hooks（如果你版本够新）**
+
+Claude Code 支持 pre/post tool-use hooks。可以考虑写一个 post-response hook 做 language detection：
+
+```bash
+# .claude/hooks/post-response.sh
+# 检测输出里是否包含韩文/日文字符范围
+if echo "$CLAUDE_RESPONSE" | grep -P '[\x{AC00}-\x{D7AF}\x{3040}-\x{30FF}\x{31F0}-\x{31FF}]' > /dev/null 2>&1; then
+  echo "WARNING: Non-CN/EN language detected in output" >&2
+  exit 1
+fi
+```
+
+不过 hooks 的具体 API 一直在变，建议先查一下你当前版本支不支持 response-level hook。好，查了一下最新的 hooks 文档，你的情况有一个非常干净的解法。
+
+核心问题你自己其实已经点到了：CLAUDE.md 本质上是 suggestion，模型可以选择性忽略；hooks 才是 guarantee，每次都会执行。 所以靠 CLAUDE.md 单点强调语言约束，本质上是在和 context window 里的 noise 做概率对抗，赢面不稳定。
+
+**最优解：Prompt Hook + Stop Event**
+
+Claude Code 现在支持 prompt 类型的 hook，它会把 hook 的输入 JSON 发给一个快速模型（默认 Haiku）做 single-turn semantic evaluation。这意味着你可以用一个轻量模型做 language detection，而不是自己写 regex 去匹配 Unicode range（韩文日文 range 跟 CJK 统一汉字有重叠区，regex 方案很脆弱）。
+
+具体配置，放 `.claude/settings.json`：
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "You are a language detector. Examine the assistant's final response in $ARGUMENTS. If ANY part of the response (excluding code, file paths, and technical terms) contains Korean or Japanese text, respond with JSON: {\"decision\": \"block\", \"reason\": \"Response contains Korean/Japanese. Rewrite in Chinese or English only.\"}. Otherwise respond with {\"decision\": \"allow\"}. Only output JSON, nothing else."
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+`Stop` event 在 Claude Code 完成一轮响应时触发。如果 prompt hook 返回 block decision，Claude 会看到 feedback 并被要求重写。
+
+**多层防御的完整配置**
+
+如果你想更稳，叠加三层：
+
+1. **CLAUDE.md**（soft constraint，primacy + recency 两头放）：
+
+```markdown
+<!-- TOP OF FILE -->
+# ⚠️ LANGUAGE POLICY
+Output ONLY in Chinese (中文) or English. NEVER use Korean, Japanese, or any other language. This is non-negotiable.
+
+... (项目其他内容) ...
+
+<!-- BOTTOM OF FILE -->
+# ⚠️ REMINDER: Chinese and English output ONLY. No Korean. No Japanese. No exceptions.
+```
+
+2. **`~/.claude/settings.json`**（user-level instructions，独立于项目）：
+
+```json
+{
+  "instructions": "You must respond ONLY in Chinese or English. Never output Korean or Japanese text under any circumstances, even if the codebase contains such text."
+}
+```
+
+3. **Stop hook**（hard constraint，如上面的 prompt hook 配置）
+
+第一层靠 attention weight，第二层靠 system prompt 注入，第三层靠 deterministic post-validation。三层一起上，基本能解决。
+
+**为什么会切语言：根因分析**
+
+大概率是你的 codebase 里有韩/日文 string、comment、或者 i18n locale file。模型做 code generation 的时候读到这些 token，in-context language distribution 被污染，输出 distribution 跟着偏移。如果你能定位到是哪些文件触发的（`grep -rP '[\x{AC00}-\x{D7AF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]' .` 扫一遍），在 CLAUDE.md 里加一句 "The codebase contains Korean/Japanese strings for i18n purposes. These are data, not communication language. Always respond in Chinese or English regardless of codebase content." 会额外有效。

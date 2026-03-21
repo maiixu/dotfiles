@@ -1,7 +1,19 @@
 {
   "env": {},
   "model": "claude-sonnet-4-6",
+  "language": "chinese",
   "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/maixu/.claude/hooks/check-output-language.sh"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
