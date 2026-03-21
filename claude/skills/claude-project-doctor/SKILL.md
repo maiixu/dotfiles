@@ -1,145 +1,129 @@
 ---
 name: claude-project-doctor
-description: Audit current project .claude/ config health.
+description: Use when auditing the current project's .claude/ config.
 context: fork
 ---
 
-Perform a health check on the **current project's** `.claude/` configuration using the six-layer framework. Read each relevant file and report findings with ✅ OK / ⚠️ Warning / ❌ Error. After all checks, call `/global-doctor` and ask whether to run it too.
+Checks the current project's `.claude/` configuration across six layers. Report findings with ✅ OK / ⚠️ Warning / ❌ Error.
 
----
+## Checks
 
-## Layer 1 — Project Context
+### Layer 1 — CLAUDE.md
 
-**Project CLAUDE.md** (look for `CLAUDE.md` in cwd, then parent dirs up to git root):
-- Exists?
-- Token estimate. Warn if > 2000 tokens. Flag if it reads like a wiki/knowledge base rather than a contract (long prose, API docs, background history).
-- Has build / test / lint / run commands? (The single most important thing to put here.)
-- Has architecture boundary section (which dirs own what, what must not cross)?
-- Has `## NEVER` list?
-- Has `## Verification` or definition-of-done section with actual commands?
-- Has `## Compact Instructions` that specifies what to preserve on compression? Without this, architecture decisions get silently dropped.
-- Any references to paths, tools, or env vars that no longer exist?
+| # | Check | Severity |
+|---|-------|----------|
+| 1 | `CLAUDE.md` exists at project root or git root | FAIL |
+| 2 | Token estimate ≤ 2000 tokens (characters ÷ 4); warn if reads like a wiki rather than a contract | WARN |
+| 3 | Has build / test / lint / run commands — the single most important thing to put here | WARN |
+| 4 | Has architecture boundary section (which dirs own what, what must not cross) | WARN |
+| 5 | Has `## NEVER` list | WARN |
+| 6 | Has `## Verification` or definition-of-done section with runnable commands | WARN |
+| 7 | Has `## Compact Instructions` specifying what to preserve on compression — without this, architecture decisions get silently dropped | WARN |
+| 8 | No outdated references: paths that don't exist, tools not installed, env vars that changed | WARN |
 
-**Rules** (`.claude/rules/`):
-- Exists? If not: note that path/language-specific rules belong here, not in the root CLAUDE.md.
-- If exists: list files. Are they scoped (e.g. `python.md`, `src-api.md`) rather than repeating global constraints? Warn on empty files.
+### Layer 2 — Rules
 
----
+| # | Check | Severity |
+|---|-------|----------|
+| 9 | `.claude/rules/` exists; if not, note that path/language-specific rules belong here, not in root CLAUDE.md | WARN |
+| 10 | Rules are scoped by language or path (e.g. `python.md`, `src-api.md`) — not global catch-alls repeating constraints already in CLAUDE.md | WARN |
 
-## Layer 2 — Project Skills
+### Layer 3 — Skills
 
-Check `.claude/skills/`:
+| # | Check | Severity |
+|---|-------|----------|
+| 11 | Each skill has `SKILL.md` with both `name:` and `description:` fields | FAIL |
+| 12 | `description:` ≤ 9 tokens (target); warn if > 15 — constant tax on every session | WARN |
+| 13 | Trigger-oriented description ("Use when X"), not capability-oriented | WARN |
+| 14 | Single-concern skill — not mixing review + deploy + debug + docs | WARN |
+| 15 | Skills with side effects where no LLM reasoning needed — `disable-model-invocation: true` present | WARN |
+| 16 | Referenced supporting files exist on disk | FAIL |
+| 17 | High-bloat skills (file scans, large API responses) — `context: fork` in frontmatter | WARN |
+| 18 | Skill groups (≥ 2 for same tool): shared context skill exists for auth, paths, conventions | WARN |
+| 19 | Service/recipe split: capability skills separate from step-by-step workflow scripts | WARN |
+| 20 | No hardcoded dates, absolute user paths (`/Users/<name>/...`), or env-specific values in body | WARN |
+| 21 | Cross-skill dependencies explicitly referenced — no implicit "assumes X is set up" | WARN |
 
-For each skill:
-- `SKILL.md` exists?
-- `description:` token count. Target ≤ 9 tokens. Warn if > 15 — every descriptor loads every session.
-- Does the description say "Use when X" (trigger-oriented) rather than "This skill does Y" (capability-oriented)?
-- Clear stop condition and output format defined?
-- Skills with side effects (writes, deploys, migrations, API calls): has `disable-model-invocation: true`?
-- Referenced supporting files actually exist on disk?
-- Single-concern? Flag skills that mash together review + deploy + debug + docs.
-- Supporting files unreasonably large (> 500 lines)? Those should be further split.
+### Layer 4 — Tools & MCP
 
-**Skill description budget**: All descriptions share ~4000 tokens in main context. Bodies are lazy-loaded per invocation and slide out on compaction — the constant tax is descriptions only. Warn if total descriptions across all loaded skills > 3K tokens; flag if > 4K.
+| # | Check | Severity |
+|---|-------|----------|
+| 22 | No dangerous patterns in `allowedTools`: `rm -rf`, `sudo`, `chmod 777`, `dd`, `mkfs`, `:(){ :|:& };:` | FAIL |
+| 23 | No MCP servers that duplicate global ones — flag redundancy | WARN |
+| 24 | `skipDangerousModePermissionPrompt: true` only if strong PreToolUse hook guards are in place | WARN |
 
-**Pattern selection — verify each skill group is using the right pattern:**
-- **`context: fork`**: Skills that scan files, make batch API calls, or receive large responses should use `context: fork`. Without it, a single high-bloat invocation pollutes main context for the rest of the session.
-- **Router-Recipes pattern**: ≥ 3 skills for the same tool AND the tool lacks runtime self-description? Candidate for Pattern 2 — lightweight router + dense `context: fork` recipes skill. The recipes body is a disposable reference library.
-- **Skill vs. Subagent**: Agent doing low-context-bloat work (single write, single API call)? Cold start overhead exceeds skill body cost for low-bloat ops. Use a skill.
+### Layer 5 — Hooks
 
-**For groups of related skills (≥ 2 skills targeting the same tool or service):**
-- **Shared context pattern**: Is there a shared agent or shared SKILL.md documenting auth, paths, and global conventions for the group? Without it, each skill repeats setup independently — drift risk. Good example: GWS `gws-shared/SKILL.md` referenced by all 37 service skills. Bad: each skill re-explains auth tokens or base paths differently.
-- **Service vs. recipe split**: Are capability skills ("what commands exist") separate from workflow skills ("step-by-step task procedure")? Flag skills that mix API documentation with multi-step task scripts. Recipe skills should explicitly list the service skill prerequisites they depend on.
-- **Hardcoded user-specifics**: Scan skill bodies for hardcoded dates (e.g., `2026-03-14`), absolute user paths (`/Users/<name>/...`), or env-specific values. These belong in a shared context file, not hardcoded in each skill.
-- **Input validation at write boundaries**: Skills that write files, pass user-provided arguments to shell commands, or call external APIs — is there a note about validating inputs at the boundary? (path traversal, shell injection) Write side effects without validation guidance are a silent risk.
-- **Cross-skill dependency links**: When a skill depends on another, is that dependency explicitly referenced? Implicit dependencies ("assumes X is already set up") cause silent failures when skills are used in isolation.
+| # | Check | Severity |
+|---|-------|----------|
+| 25 | Each hook script/binary exists on disk | FAIL |
+| 26 | Hook output is truncated (e.g. `| head -30`) — unbounded output pollutes context | WARN |
+| 27 | No reasoning in hooks — complex logic belongs in a skill, not a hook | WARN |
+| 28 | `PostToolUse` on Edit that runs lint/typecheck? If absent, note as missed fast-feedback opportunity | WARN |
 
----
+### Layer 6 — Agents
 
-## Layer 3 — Project Tools & MCP
+| # | Check | Severity |
+|---|-------|----------|
+| 29 | Each agent has explicit `tools` or `disallowedTools` — full-access inheritance defeats isolation | WARN |
+| 30 | `model` specified: Haiku/Sonnet for exploration, Opus for critical review | WARN |
+| 31 | `maxTurns` set — unbounded agents can drift | WARN |
+| 32 | `skills:` field: sum body sizes of all listed skills — fully injected at cold start, not lazy-loaded; flag if total > 5K tokens | WARN |
+| 33 | Agent justified by context bloat — low-bloat ops (one write, one API call) belong as skills; cold start overhead exceeds skill body cost | WARN |
 
-Check `.claude/settings.json` if present:
+## Run
 
-- List MCP servers enabled at project level. For each: estimate token overhead (20–30 tools × ~200 tokens ≈ 4–6K per server). Show running total.
-- `allowedTools` configured? Check for dangerous patterns: `rm -rf`, `sudo`, `chmod 777`, `dd`, `mkfs`, `:(){:|:&};:`. Flag any. Note: `skipDangerousModePermissionPrompt: true` without strong hook guards is a risk.
-- Any MCP servers that duplicate global ones? Flag redundancy.
+```bash
+ls .claude/ 2>/dev/null || echo "No .claude/ found at $(pwd)"
+find . -name "CLAUDE.md" -maxdepth 3 2>/dev/null
+```
 
----
+Read each relevant file. Apply all checks. Output a report table:
 
-## Layer 4 — Project Hooks
+```
+Layer  | # | Status | Detail
+-------|---|--------|-------
+1      | 3 |  WARN  | No build/test commands found
+1      | 6 |  FAIL  | No Verification section
+3      | 17|  WARN  | scan-logs skill reads 50+ files, missing context:fork
+...
+```
 
-Check `hooks` in `.claude/settings.json`:
+After the table, list all WARN/FAIL items grouped by layer with proposed fix diffs. Apply fixes upon user confirmation (or immediately if invoked with `--fix`).
 
-- List hook points (PreToolUse, PostToolUse, SessionStart, etc.).
-- For each hook command: does the script/binary actually exist?
-- Output truncated (e.g. `| head -30`)? Warn if unbounded — hook output pollutes context.
-- Hook doing simple deterministic work (format, lint, block)? Flag if it seems to be doing reasoning — that belongs in a Skill.
-- No `PostToolUse` on Edit that runs lint/typecheck? Note as missed opportunity for fast feedback loop.
+## Params
 
----
+- `--fix` — optional; apply all proposed fixes immediately without user confirmation
 
-## Layer 5 — Verification
+## Anti-pattern checklist
 
-- CLAUDE.md has explicit verification commands with pass/fail criteria?
-- Any Skill has a Verification section with runnable commands?
-- Are contract tests, smoke tests, or screenshot checks referenced?
-
-Flag if: tasks are described without any verifiable completion criterion. ("Claude thinks it's done" is not a verifier.)
-
----
-
-## Layer 6 — Subagents & Isolation
-
-Check `.claude/agents/`:
-
-- List agents. For each:
-  - Explicit `tools` or `disallowedTools`? Flag full-access inheritance.
-  - `model` specified? (Exploration → Haiku/Sonnet; critical review → Opus.)
-  - `maxTurns` set? Unbounded agents can drift.
-  - `isolation: worktree` used for file-modifying agents?
-  - `skills:` field present? Skills listed here are **fully injected** at cold start (not lazy-loaded). Sum body sizes — flag if > 5K tokens total.
-  - Is the agent justified by context bloat? Low-bloat ops (one write, one API call) belong as skills — cold start overhead exceeds the body cost.
-
----
-
-## Anti-Pattern Checklist
-
-Check for these eight anti-patterns from the six-layer framework:
-
-| Anti-pattern | How to detect |
+| Anti-pattern | Signal |
 |---|---|
-| CLAUDE.md as wiki | > 2000 tokens OR contains long prose / API docs |
-| Skill 大杂烩 | Skill covers > 2 unrelated workflows, or description is vague |
-| Tool namespace pollution | MCP tools without clear `resource_action` naming |
-| No verification loop | CLAUDE.md has no verifier / definition-of-done |
-| Over-autonomous agents | Agents with full tool access and no maxTurns |
-| No context segmentation | All research/impl/review expected in one session with no Subagent guidance |
-| Allowed commands too broad | Dangerous patterns in allowedTools (see Layer 3) |
-| Static rules never reviewed | CLAUDE.md last-modified date > 90 days with active project activity |
-| No shared context for tooling groups | ≥ 2 skills for same tool each document auth/paths independently — drift risk |
-| Hardcoded user-specifics in skills | Dates, absolute user paths, or env-specific values in SKILL.md body |
-| Service/recipe conflation | Same skill enumerates API surface AND contains step-by-step workflow scripts |
-| Subagent for low-bloat ops | Agent handles single-output operations — cold start exceeds skill body cost; use skill instead |
-| Missing `context: fork` | Skill does batch/scan/large-response work without `context: fork` — pollutes main context |
-| Agent `skills:` body bloat | Agent lists many skills in `skills:` field — fully injected at cold start, not lazy-loaded |
+| CLAUDE.md as wiki | > 2000 tokens or contains long prose / API docs / background history |
+| No verification loop | No runnable pass/fail commands in CLAUDE.md or any skill |
+| Skill 大杂烩 | Skill covers > 2 unrelated workflows or has a vague description |
+| Over-autonomous agents | Agent with full tool access and no `maxTurns` |
+| Missing `context: fork` | Skill does batch/scan/large-response work without forking |
+| Agent `skills:` bloat | Agent lists many skills — all fully injected at cold start |
+| Hooks doing reasoning | Hook command invokes LLM or contains multi-step logic |
+| No shared context for tool groups | ≥ 2 skills for same tool each document auth/paths independently |
+| Hardcoded user-specifics | Dates, absolute paths, or env values baked into SKILL.md body |
+| Static rules never reviewed | CLAUDE.md last-modified > 90 days with active project commits |
 
----
+## Summary format
 
-## Summary
+```
+### Context cost snapshot
+MCP overhead: ~XK + skill descriptors: ~XK + rules: ~XK = ~XK constant tokens added by this project
 
-### Context cost snapshot (project-level additions)
-Show: MCP overhead + skill descriptor overhead + rules size = estimated constant tokens added by this project.
-
-### Overall health: [Healthy / Needs attention / Critical issues]
+### Overall health: [Healthy / Needs attention / Critical]
 
 ### Fix now
-Numbered list of ❌ errors only.
+❌ errors only, numbered.
 
 ### Fix soon
-Numbered list of ⚠️ warnings, ordered by impact.
+⚠️ warnings, ordered by impact.
 
 ### Working well
 2–3 ✅ highlights.
-
-### Suggested next step
-If significant global config issues are likely, suggest running `/claude-global-doctor`.
+```

@@ -1,0 +1,433 @@
+aurora on  main is 📦 v0.1.0 via  v25.8.0 on ☁️  bedrock-claude (us-west-2) on ☁️  maixu@umich.edu
+❯ npm run
+Scripts available in aurora@0.1.0 via `npm run`:
+  dev
+    vite
+  build
+    tsc && vite build && electron-builder
+  build:electron
+    tsc && vite build
+  preview
+    electron dist/main/index.js
+
+aurora on  main is 📦 v0.1.0 via  v25.8.0 on ☁️  bedrock-claude (us-west-2) on ☁️  maixu@umich.edu
+❯ npm run dev
+
+> aurora@0.1.0 dev
+> vite
+
+Port 5173 is in use, trying another one...
+vite v6.4.1 building for development...
+
+watching for file changes...
+vite v6.4.1 building for development...
+
+watching for file changes...
+vite v6.4.1 building for development...
+
+watching for file changes...
+
+build started...
+
+build started... (x2)
+
+build started... (x3)
+
+  VITE v6.4.1  ready in 189 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+✓ 2 modules transformed.
+✓ 2 modules transformed. (x2)
+../../dist/preload/chatgpt-preload.js  0.43 kB │ gzip: 0.27 kB
+built in 58ms.
+../../dist/preload/hud-preload.js  0.81 kB │ gzip: 0.39 kB
+built in 59ms.
+✓ 11 modules transformed.
+../../dist/main/index.js  12.37 kB │ gzip: 4.14 kB
+built in 78ms.
+
+aurora on  main is 📦 v0.1.0 via  v25.8.0 on ☁️  bedrock-claude (us-west-2) on ☁️  maixu@umich.edu
+❯ npm run dev
+
+> aurora@0.1.0 dev
+> vite
+
+Port 5173 is in use, trying another one...
+vite v6.4.1 building for development...
+
+watching for file changes...
+vite v6.4.1 building for development...
+
+watching for file changes...
+vite v6.4.1 building for development...
+
+watching for file changes...
+
+build started...
+
+build started... (x2)
+
+build started... (x3)
+
+  VITE v6.4.1  ready in 184 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+✓ 2 modules transformed.
+✓ 2 modules transformed. (x2)
+../../dist/preload/hud-preload.js  0.81 kB │ gzip: 0.39 kB
+built in 55ms.
+../../dist/preload/chatgpt-preload.js  0.43 kB │ gzip: 0.27 kB
+built in 55ms.
+✓ 11 modules transformed.
+../../dist/main/index.js  12.37 kB │ gzip: 4.14 kB
+built in 76ms.
+
+aurora on  main is 📦 v0.1.0 via  v25.8.0 on ☁️  bedrock-claude (us-west-2) on ☁️  maixu@umich.edu
+❯ npm run dev
+
+> aurora@0.1.0 dev
+> vite
+
+vite v6.4.1 building for development...
+
+watching for file changes...
+vite v6.4.1 building for development...
+
+watching for file changes...
+vite v6.4.1 building for development...
+
+watching for file changes...
+
+build started...
+
+build started... (x2)
+
+build started... (x3)
+
+  VITE v6.4.1  ready in 173 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+✓ 2 modules transformed.
+✓ 2 modules transformed. (x2)
+✓ 11 modules transformed.
+../../dist/preload/chatgpt-preload.js  0.43 kB │ gzip: 0.27 kB
+built in 72ms.
+../../dist/preload/hud-preload.js  0.81 kB │ gzip: 0.39 kB
+built in 74ms.
+../../dist/main/index.js  12.37 kB │ gzip: 4.14 kB
+built in 77ms.
+
+DevTools listening on ws://127.0.0.1:9222/devtools/browser/5ba425c3-2533-4bae-8ce1-92bddcf97386
+[hotkey] listening for keycode 56 (long-press ≥150ms)
+[aurora] ready — menu bar icon active
+[ipc] HUD ready
+[46714:0321/084407.938877:ERROR:system_services.cc(35)] SetApplicationIsDaemon: Error Domain=NSOSStatusErrorDomain Code=-50 "paramErr: error in user parameter list" (-50)
+[chatgpt] buttons: [
+  {
+    "ariaLabel": "Open sidebar",
+    "testId": null,
+    "title": null,
+    "cls": "text-token-text-primary no-draggable hover:bg-token-surface-hover keyboard-focus",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Close sidebar",
+    "testId": "close-sidebar-button",
+    "title": null,
+    "cls": "text-token-text-tertiary no-draggable hover:bg-token-surface-hover keyboard-focu",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open project options for 健康",
+    "testId": null,
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open project options for 财务",
+    "testId": null,
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open project options for Misc",
+    "testId": null,
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open project options for 写作",
+    "testId": null,
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open project options for 猫猫",
+    "testId": null,
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 晚间精力管理建议",
+    "testId": "history-item-0-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for Agentic时代的潜力变化",
+    "testId": "history-item-1-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for Gemini CLI vs Cloud Code",
+    "testId": "history-item-2-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for NIW Advanced Degree Criterion",
+    "testId": "history-item-3-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for EB3 PD转EB2 NIW",
+    "testId": "history-item-4-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for AMEX年费关卡流程",
+    "testId": "history-item-5-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 大脑训练app有效吗",
+    "testId": "history-item-6-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 无法访问全文内容",
+    "testId": "history-item-7-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for Chrome后台标签操作",
+    "testId": "history-item-8-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 日语敬称差异",
+    "testId": "history-item-9-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for AWS服务器成本估算",
+    "testId": "history-item-10-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for Stubby call本质解析",
+    "testId": "history-item-11-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for v3 Predicate 区别分析",
+    "testId": "history-item-12-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for Cloud API 数据存储",
+    "testId": "history-item-13-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 2026 H1B抽签时间",
+    "testId": "history-item-14-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 护手霜使用建议",
+    "testId": "history-item-15-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 总图互扫伤分析",
+    "testId": "history-item-16-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for AMEX Gold年费研究",
+    "testId": "history-item-17-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for MBS泡沫形成过程",
+    "testId": "history-item-18-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 中国用工关系分析",
+    "testId": "history-item-19-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 均衡饮食方案分析",
+    "testId": "history-item-20-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for Memory Export Request",
+    "testId": "history-item-21-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for YC Startup School 帮助",
+    "testId": "history-item-22-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 3-2-1备份方案",
+    "testId": "history-item-23-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for Voice 表达不清",
+    "testId": "history-item-24-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for OpenCloud与Mac mini",
+    "testId": "history-item-25-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 不建议中途购物",
+    "testId": "history-item-26-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Open conversation options for 房租支付策略",
+    "testId": "history-item-27-options",
+    "title": null,
+    "cls": "__menu-item-trailing-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Upgrade",
+    "testId": null,
+    "title": null,
+    "cls": "__menu-item-trailing-btn cursor-default -my-1.5 -ms-2 -me-2.5 py-1.5 ps-2 pe-2.5",
+    "text": "Upgrade"
+  },
+  {
+    "ariaLabel": "Model selector",
+    "testId": "model-switcher-dropdown-button",
+    "title": null,
+    "cls": "group flex cursor-pointer justify-center items-center gap-1 rounded-lg min-h-9 t",
+    "text": "ChatGPT"
+  },
+  {
+    "ariaLabel": "Start a group chat",
+    "testId": null,
+    "title": null,
+    "cls": "text-token-text-primary no-draggable hover:bg-token-surface-hover keyboard-focus",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Turn on temporary chat",
+    "testId": null,
+    "title": null,
+    "cls": "text-token-text-primary no-draggable hover:bg-token-surface-hover keyboard-focus",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Add files and more",
+    "testId": "composer-plus-btn",
+    "title": null,
+    "cls": "composer-btn",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Dictate button",
+    "testId": null,
+    "title": null,
+    "cls": "composer-btn h-9 min-h-9 w-9 min-w-9",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Start Voice",
+    "testId": null,
+    "title": null,
+    "cls": "composer-submit-button-color text-submit-btn-text flex h-9 w-9 items-center just",
+    "text": ""
+  },
+  {
+    "ariaLabel": "Close",
+    "testId": "close-button",
+    "title": null,
+    "cls": "flex h-9 w-9 items-center justify-center rounded-lg hover:bg-token-surface-hover",
+    "text": ""
+  }
+]

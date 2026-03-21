@@ -1,171 +1,114 @@
 ---
 name: create-skill
-description: Use when scaffolding a new skill or agent for a tool or workflow.
+description: Use when creating a new skill or agent.
 ---
 
-Scaffold a new skill or agent using the three-pattern methodology.
+Guide for creating a new skill or agent under `~/.claude/skills/` or `~/.claude/agents/`. Run `/skill_doctor` after creation to validate.
 
-Input: `$ARGUMENTS` — tool name or workflow description. If not provided, ask.
+## Skill vs Agent
 
-## Step 1 — Apply the decision framework
+| | Skill | Agent |
+|--|-------|-------|
+| Context | Runs in main session | Runs in isolated sub-context |
+| Use when | Low–medium context bloat | High bloat: batch scans, large API responses, multi-step reasoning |
+| Cold start | None | ~500–1K token overhead per invocation |
+| Example | `gws-chat-send`, `create-skill` | `obsidian`, `things` |
 
-Ask the user (or infer from context) if not obvious:
+Use a skill unless the operation produces enough intermediate context to pollute the main session.
 
-1. **Does the tool have runtime self-description?** (e.g., `--help` flag, `schema` command, structured JSON output that Claude can introspect at runtime)
-2. **How much context does a single operation produce?** Low = single API call, one file write, brief response. High = scanning many files, batch API calls, large text processing, multi-step reasoning with large intermediate outputs.
-3. **Does the workflow span multiple tools with high intermediate bloat?**
+## Patterns
 
-Then determine the pattern:
+| Pattern | When | Structure |
+|---------|------|-----------|
+| 1 — Flat skills | Tool has runtime self-description (`--help`, schema), or reference material is small | One `SKILL.md` per capability; add `context: fork` for high-bloat ops |
+| 2 — Router + recipes | Tool lacks self-description AND reference material is large | Lightweight router skill + dense `context: fork` recipes skill |
+| 3 — Custom agent | Cross-tool orchestration with high intermediate bloat | Agent in `~/.claude/agents/`; supporting atomics as Pattern 1 skills |
+
+Low-bloat cross-tool orchestration stays as a recipe skill (Pattern 1) — don't create an agent just because multiple tools are involved.
+
+## File layout
 
 ```
-Tool has good self-description?
-├─ Yes → Pattern 1: flat skills (default)
-│         └─ Some ops produce high bloat? → add `context: fork` to those skills
-└─ No  → Reference material large (hundreds of commands, complex param matrix)?
-          ├─ Yes → Pattern 2: router + context:fork recipes
-          └─ No  → Pattern 1, with inline reference in skill body
+~/.claude/skills/<name>/
+  SKILL.md        ← required
+  scripts/        ← optional: shell scripts, Python helpers
 
-Cross-tool orchestration + high intermediate bloat? → Pattern 3: custom agent
-Low-bloat cross-tool? → Recipe skill (still Pattern 1, runs in main session)
+~/.claude/agents/<name>.md   ← Pattern 3 only
 ```
 
-Present the recommended pattern with one sentence of reasoning before generating files.
+Naming: kebab-case. Group shared context as `<tool>-shared/`.
 
+## Frontmatter template
+
+```yaml
 ---
-
-## Step 2 — Determine file location
-
-**Pattern 1 (flat skills):**
-- Shared context: `~/.claude/skills/{tool}-shared/SKILL.md` — create first if ≥ 2 skills for this tool
-- Service skill: `~/.claude/skills/{tool}-{service}/SKILL.md`
-- Recipe skill: `~/.claude/skills/{tool}-{workflow}/SKILL.md`
-- Global (`~/.claude/skills/`) for personal tools; project (`.claude/skills/`) for repo-specific tools
-
-**Pattern 2 (router + recipes):**
-- Router: `~/.claude/skills/{tool}-router/SKILL.md`
-- Recipes: `~/.claude/skills/{tool}-recipes/SKILL.md`
-
-**Pattern 3 (custom agent):**
-- Agent: `~/.claude/agents/{workflow}.md`
-- Any atomic supporting skills → Pattern 1 above
-
+name: <name>           # matches directory name
+description: Use when <trigger condition>.   # ≤ 9 tokens
+context: fork          # add if high-bloat
+agent: <name>          # add if skill routes to a specific agent
+disable-model-invocation: true   # add if pure shell, no LLM needed
 ---
+```
 
-## Step 3 — Generate scaffold
+**Description rules:**
+- ≤ 9 tokens — loaded into every session's skill list, constant context tax
+- States *when to use* the skill, not *what params it takes*
+- Params live in the body (only loaded on invocation)
 
-### SKILL.md frontmatter reference
+## Body template
+
+```markdown
+<One sentence expanding on what this skill does.>
+
+## Params
+
+- `param_a` — required; if not provided, auto-detect via: `<command>`
+- `param_b` — default: <value>; use <other value> for <condition>
+
+## Steps
+
+1. ...
+2. ...
+```
+
+**Param rules:**
+- Document every input the skill accepts
+- For each required param, specify the auto-detect fallback for manual invocation
+- Default values must cover the common manual invocation case
+
+## Shared context pattern
+
+For ≥ 2 skills targeting the same tool: create `<tool>-shared/SKILL.md` first. It owns auth, global flags, paths, and security rules. Service skills reference it with:
+
+```markdown
+> **PREREQUISITE:** Read `../<tool>-shared/SKILL.md` for auth, global flags, and security rules.
+```
+
+## Agent frontmatter reference
 
 | Field | When to use |
-|---|---|
-| `name` | Always — matches directory name |
-| `description` | Always — ≤ 9 tokens, trigger-oriented: "Use when X" |
-| `context: fork` | High-bloat skills (batch ops, large responses, file scanning) |
-| `agent: {name}` | Skill should run within a specific agent's context |
-| `disable-model-invocation: true` | Skill body is pure bash — no LLM reasoning needed |
-
-### Agent frontmatter reference
-
-| Field | When to use |
-|---|---|
+|-------|-------------|
 | `tools` | Always — restrict to minimum required |
-| `model` | Always — `claude-haiku-4-5-20251001` for low-stakes; Sonnet for reasoning-heavy |
+| `model` | Always — Haiku for low-stakes; Sonnet for reasoning-heavy |
 | `maxTurns` | Always — set a reasonable bound (10–20 typical) |
-| `permissionMode` | `acceptEdits` only if agent writes files and you trust its scope |
+| `permissionMode` | `acceptEdits` only if agent writes files and scope is trusted |
 | `skills` | Avoid unless necessary — listed skills are **fully injected at cold start**, not lazy-loaded |
 
-### Content structure: service skill (Pattern 1)
+## Preview and confirm
 
-```markdown
----
-name: {tool}-{service}
-description: Use when {trigger condition}.
----
-
-> **PREREQUISITE:** Read `{tool}-shared/SKILL.md` for auth, global flags, and conventions.
-
-# {service} — {brief scope note}
-
-## {resource type}
-
-- `{command} {resource} {method}` — brief description
-- ...
-
-## Discovery
-
-```bash
-{tool} {service} --help
-{tool} schema {service}.{resource}.{method}
-```
-```
-
-### Content structure: recipe skill (Pattern 1)
-
-```markdown
----
-name: {tool}-{workflow}
-description: Use when {trigger condition}.
----
-
-> **Dependencies:** `{tool}-shared` (auth), `{tool}-{service-a}` (service), `{tool}-{service-b}` (service)
-
-## Step 1 — {action}
-
-```bash
-{command with example values, using PLACEHOLDER for user-provided args}
-```
-
-## Step 2 — ...
-```
-
-### Content structure: router + recipes (Pattern 2)
-
-Router (`context: inherit`, lightweight ~100 lines):
-```markdown
----
-name: {tool}-router
-description: Use when {trigger condition}.
-context: inherit
----
-
-Extract intent from the conversation and invoke the appropriate recipe.
-
-Allowed tools: Skill, Read, Bash
-
-...dispatch logic...
-```
-
-Recipes (`context: fork`, dense reference):
-```markdown
----
-name: {tool}-recipes
-description: {tool} reference library — invoked by {tool}-router only.
-context: fork
----
-
-> This skill is a reference library. It is invoked by {tool}-router with structured parameters and returns a result. The body is disposed after each invocation.
-
-## {category}
-
-...dense reference...
-```
-
----
-
-## Step 4 — Preview and confirm
-
-Show the user:
-- Recommended pattern + reasoning (one sentence)
+Before writing files, show the user:
+- Recommended pattern + one sentence of reasoning
 - File path(s) to be created
 - Full content of each file
 
 Ask:
 > 确认创建？回复 `y` 直接写入，或告诉我需要修改的地方。
 
-Wait for confirmation. Apply edits if requested, then re-show. Repeat until confirmed.
+Wait for confirmation. Apply edits if requested, re-show, repeat until confirmed.
 
-## Step 5 — Write files
+## After creation
 
-Write confirmed files to disk. Then note:
-- If a shared skill was created: list existing skills that should add a prerequisite link to it
-- If a new agent was created: confirm `tools`, `model`, and `maxTurns` are set
-- Run `/claude-global-doctor` if the new skill affects the description budget significantly
+1. Run `/skill_doctor` to validate against all checks
+2. Update `skill_doctor/SKILL.md` baseline table with the new skill
+3. If a shared skill was created: list existing skills that should add a prerequisite link to it
+4. If a new agent was created: confirm `tools`, `model`, and `maxTurns` are set

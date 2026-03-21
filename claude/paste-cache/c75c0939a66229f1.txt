@@ -1,0 +1,32 @@
+~/code on ☁️  bedrock-claude (us-west-2) on ☁️  maixu@umich.edu
+❯ brew upgrade --cask aerospace
+==> Auto-updating Homebrew...
+Adjust how often this is run with `$HOMEBREW_AUTO_UPDATE_SECS` or disable with
+`$HOMEBREW_NO_AUTO_UPDATE=1`. Hide these hints with `$HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+==> Auto-updated Homebrew!
+Updated 3 taps (withgraphite/tap, homebrew/core and homebrew/cask).
+==> New Formulae
+apache-arrow-adbc: Cross-language, Arrow-native database access
+cline: AI-powered coding agent for complex work
+ctx7: Manage AI coding skills and documentation context
+dtop: Terminal dashboard for Docker monitoring across multiple hosts
+ggml: Tensor library for machine learning
+lief: Library to Instrument Executable Formats
+oh-my-agent: Portable multi-agent harness for .agents-based skills and workflows
+portless: Replace port numbers with stable, named local URLs for humans and agents
+wmbusmeters: Read wired or wireless mbus protocol to acquire utility meter readings
+zycore-c: Zyan Core Library for C
+==> New Casks
+dbeaverteam: Universal database tool and SQL client
+dbvr: Lightweight CLI tool for running database operations
+fidelity-trader+: Trading platform
+font-selawik
+supasidebar: Arc-like sidebar to save links, files and folders from any browser
+tencent-ugit: Tencent Git GUI Client
+ulaa: Privacy-centric browser with advanced tracking protection
+voicemod: Real-time voice changer and soundboard
+
+You have 158 outdated formulae and 13 outdated casks installed.
+==> Migrating cask qlvideo to quicklook-video
+
+Error: Cask 'aerospace' definition is invalid: 'conflicts_with' stanza failed with: Unknown key: :formula. Valid keys are: :cask

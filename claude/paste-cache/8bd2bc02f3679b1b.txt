@@ -1,0 +1,20 @@
+[fsm] IDLE → LISTENING
+TypeError: Object has been destroyed
+    at exec (/Users/maixu/code/aurora/dist/main/index.js:259:14)
+    at startVoiceInput (/Users/maixu/code/aurora/dist/main/index.js:262:9)
+    at AppStateMachine.<anonymous> (/Users/maixu/code/aurora/dist/main/index.js:369:7)
+    at AppStateMachine.emit (node:events:518:28)
+    at AppStateMachine.transition (/Users/maixu/code/aurora/dist/main/index.js:178:10)
+    at AppStateMachine.startListening (/Users/maixu/code/aurora/dist/main/index.js:150:10)
+    at Timeout._onTimeout (/Users/maixu/code/aurora/dist/main/index.js:401:13)
+    at listOnTimeout (node:internal/timers:588:17)
+    at process.processTimers (node:internal/timers:523:7)
+2026-03-21 08:48:50.977 Electron[47361:10022338] error messaging the mach port for IMKCFRunLoopWakeUpReliable
+[fsm] LISTENING → PROCESSING
+(node:47361) UnhandledPromiseRejectionWarning: TypeError: Object has been destroyed
+    at exec (/Users/maixu/code/aurora/dist/main/index.js:259:14)
+    at Timeout.tick [as _onTimeout] (/Users/maixu/code/aurora/dist/main/index.js:297:24)
+    at listOnTimeout (node:internal/timers:588:17)
+    at process.processTimers (node:internal/timers:523:7)
+(Use `Electron --trace-warnings ...` to show where the warning was created)
+(node:47361) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 5)

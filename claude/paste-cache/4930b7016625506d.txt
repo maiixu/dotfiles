@@ -1,0 +1,81 @@
+---
+name: ytm_skill_creator
+description: Create a new ytm_* skill or workflow following YTM skill conventions.
+---
+
+Guide for creating a new skill under `~/.claude/skills/`. Run `ytm_skill_doctor` after creation to validate.
+
+## Skill vs Workflow
+
+| | Skill | Workflow |
+|--|-------|----------|
+| Does | One atomic thing | Orchestrates skills/workflows |
+| Params | Narrow, well-defined | Threaded from caller or auto-detected |
+| Example | `ytm_update_cl_desc`, `ytm_jarvis_sxs` | `ytm_verify_superroot_cl`, `ytm_auto_code_health_agent` |
+
+Both are `.md` files in `skills/` — no structural difference. Workflows just reference other skills by name instead of embedding their logic.
+
+## File layout
+
+```
+~/.claude/skills/<ytm_name>/
+  SKILL.md       ← required
+  scripts/       ← optional: shell scripts, Python helpers
+```
+
+Naming: always `ytm_` prefix. Use underscores.
+
+## Frontmatter template
+
+```yaml
+---
+name: ytm_<name>
+description: <one compact line, ≤ 120 chars, trigger condition only — no param detail>
+version: 0.1.0             # optional
+---
+```
+
+**Description rules:**
+- ≤ 120 chars — it's loaded into every session's skill list
+- States *when to use* the skill, not *what params it takes*
+- Params live in the body (only loaded on invocation)
+
+To document skills that should be loaded together, add a `## Paired with` section in the body (documentation only — not enforced by the runtime):
+```markdown
+## Paired with
+`ytm_hg`, `critique`, `create_cl`
+```
+
+## Body template
+
+```markdown
+<One sentence expanding on what this skill does.>
+
+## Params
+
+- `param_a` — required; if not provided, auto-detect via: `<command>`
+- `param_b` — default: <value>; use <other value> for <condition>
+
+## Steps
+
+1. ...
+2. ...
+```
+
+**Param rules:**
+- Document every input the skill accepts
+- For each required param, specify the auto-detect fallback for manual invocation (e.g. `hg log -r . --template "{cl}"`)
+- Default values must cover the common manual invocation case
+
+## Key conventions
+
+- **No inline skill content** — reference other skills by name, never reproduce their logic
+- **CL description amends** → always delegate to `ytm_update_cl_desc`, never raw `hg amend`
+- **Workflows** → explicit param passing between steps; store intermediate outputs as named variables
+- **No "Always read alongside X"** in description — note related skills in a `## Paired with` section in the body instead; canonical pairing groups live in CLAUDE.md
+
+## After creation
+
+1. Run `/ytm_skill_doctor` to validate against all checks
+2. Update `ytm_skill_doctor/SKILL.md` baseline table with the new skill
+3. If the skill is also a cron entry point, update the corresponding `.sh` in `~/.claude/cron/`

@@ -1922,13 +1922,13 @@ alias -- which-command=whence
 if ! (unalias rg 2>/dev/null; command -v rg) >/dev/null 2>&1; then
   function rg {
   if [[ -n $ZSH_VERSION ]]; then
-    ARGV0=rg /Users/maixu/.local/share/claude/versions/2.1.76 "$@"
+    ARGV0=rg /Users/maixu/.local/share/claude/versions/2.1.81 "$@"
   elif [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "win32" ]]; then
-    ARGV0=rg /Users/maixu/.local/share/claude/versions/2.1.76 "$@"
+    ARGV0=rg /Users/maixu/.local/share/claude/versions/2.1.81 "$@"
   elif [[ $BASHPID != $$ ]]; then
-    exec -a rg /Users/maixu/.local/share/claude/versions/2.1.76 "$@"
+    exec -a rg /Users/maixu/.local/share/claude/versions/2.1.81 "$@"
   else
-    (exec -a rg /Users/maixu/.local/share/claude/versions/2.1.76 "$@")
+    (exec -a rg /Users/maixu/.local/share/claude/versions/2.1.81 "$@")
   fi
 }
 fi

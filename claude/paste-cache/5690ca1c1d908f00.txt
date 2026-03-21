@@ -1,0 +1,151 @@
+❯ ---
+name: ytm_skill_creator
+description: Create a new ytm_* skill or workflow following YTM skill conventions.
+---
+
+Guide for creating a new skill under `~/.claude/skills/`. Run `ytm_skill_doctor` after creation to validate.
+
+## Skill vs Workflow
+
+| | Skill | Workflow |
+|--|-------|----------|
+| Does | One atomic thing | Orchestrates skills/workflows |
+| Params | Narrow, well-defined | Threaded from caller or auto-detected |
+| Example | `ytm_update_cl_desc`, `ytm_jarvis_sxs` | `ytm_verify_superroot_cl`, `ytm_auto_code_health_agent` |
+
+Both are `.md` files in `skills/` — no structural difference. Workflows just reference other skills by name instead of embedding their logic.
+
+## File layout
+
+```
+~/.claude/skills/<ytm_name>/
+  SKILL.md       ← required
+  scripts/       ← optional: shell scripts, Python helpers
+```
+
+Naming: always `ytm_` prefix. Use underscores.
+
+## Frontmatter template
+
+```yaml
+---
+name: ytm_<name>
+description: <one compact line, ≤ 120 chars, trigger condition only — no param detail>
+version: 0.1.0             # optional
+---
+```
+
+**Description rules:**
+- ≤ 120 chars — it's loaded into every session's skill list
+- States *when to use* the skill, not *what params it takes*
+- Params live in the body (only loaded on invocation)
+
+To document skills that should be loaded together, add a `## Paired with` section in the body (documentation only — not enforced by the
+runtime):
+```markdown
+## Paired with
+`ytm_hg`, `critique`, `create_cl`
+```
+
+## Body template
+
+```markdown
+<One sentence expanding on what this skill does.>
+
+## Params
+
+- `param_a` — required; if not provided, auto-detect via: `<command>`
+- `param_b` — default: <value>; use <other value> for <condition>
+
+## Steps
+
+1. ...
+2. ...
+```
+
+**Param rules:**
+- Document every input the skill accepts
+- For each required param, specify the auto-detect fallback for manual invocation (e.g. `hg log -r . --template "{cl}"`)
+- Default values must cover the common manual invocation case
+
+## Key conventions
+
+- **No inline skill content** — reference other skills by name, never reproduce their logic
+- **CL description amends** → always delegate to `ytm_update_cl_desc`, never raw `hg amend`
+- **Workflows** → explicit param passing between steps; store intermediate outputs as named variables
+- **No "Always read alongside X"** in description — note related skills in a `## Paired with` section in the body instead; canonical pairing
+groups live in CLAUDE.md
+
+## After creation
+
+1. Run `/ytm_skill_doctor` to validate against all checks
+2. Update `ytm_skill_doctor/SKILL.md` baseline table with the new skill
+3. If the skill is also a cron entry point, update the corresponding `.sh` in `~/.claude/cron/`
+---
+name: ytm_skill_doctor
+description: Audit all ytm_* skills for structural and convention compliance.
+---
+
+Checks every `~/.claude/skills/ytm_*/SKILL.md` against YTM skill conventions. Reports issues and proposes fixes.
+
+## Checks
+
+For each skill file, apply all checks below. Mark each: **PASS** / **WARN** / **FAIL**.
+
+| # | Check | Severity |
+|---|-------|----------|
+| 1 | Frontmatter has `name` and `description` | FAIL |
+| 2 | `description` ≤ 120 chars, no param detail (params belong in body) | WARN |
+| 3 | If skill accepts inputs, body must declare a `Params:` section with auto-detect fallback for manual invocation | WARN |
+| 4 | If body contains `hg amend` directly → WARN: delegate to `ytm_update_cl_desc` instead | WARN |
+| 5 | Body must not reproduce another skill's logic inline — reference by name only | FAIL |
+| 6 | No duplicate content across skills — each fact/rule/format lives in exactly one skill | FAIL |
+| 7 | Description must NOT contain "Always read alongside" | WARN |
+| 8 | Body must not contain self-referential loading instructions (e.g. "Read this skill before X") — trigger condition belongs in description;
+enforcement belongs in consuming skills | WARN |
+
+## Run
+
+```bash
+ls ~/.claude/skills/ytm_*/SKILL.md
+```
+
+Read each file. Apply all checks. Output a report table:
+
+```
+Skill                    | Check | Status | Detail
+-------------------------|-------|--------|-------
+ytm_buganizer            |   2   |  PASS  |
+ytm_jarvis_sxs           |   4   |  WARN  | No Params: section; uses cl, sample_size implicitly
+...
+```
+
+After the table, list all WARN/FAIL items grouped by skill with proposed fix diffs. Apply fixes upon user confirmation (or immediately if
+invoked with `--fix`).
+
+## Known baseline (last audited 2026-03-21)
+
+| Skill | Description | Params | Invokes | Issues |
+|-------|-------------|--------|---------|--------|
+| `ytm_agent_policy` | Safety policy for autonomous YTM agents | — | — | PASS |
+| `ytm_auto_code_health_agent` | Daily code health agent — find stale TODOs, create cleanup CL, verify | — (self-directed workflow) |
+`ytm_buganizer`, `ytm_verify_superroot_cl`, `ytm_update_cl_desc`, `create_cl` | PASS |
+| `ytm_buganizer` | YTM-specific Buganizer patterns — component ID, CL→bug linking | — | paired: `buganizer_cli` | PASS |
+| `ytm_hg` | YTM hg/Fig overrides — g4→hg translation, CL footer format, safe-hg | — | paired: `hg`, `critique`, `create_cl`, `cl_submission`,
+`ytm_startblock` | PASS |
+| `ytm_jarvis_sxs` | Launch YTM SxS evals via Jarvis | `cl_number` (auto), `workspace` (default), `sample_size` (default 500), `build_method`
+(infer) | `ytm_update_cl_desc` (after launch) | PASS |
+| `ytm_mendel` | YTM Mendel experiments — GCL templates, BUILD rules, CL tags | — | paired: `mendel` | PASS |
+| `ytm_skill_creator` | Create a new ytm_* skill or workflow | — | references `ytm_skill_doctor` (post-creation validation) | PASS |
+| `ytm_skill_doctor` | Audit all ytm_* skills for structural/convention compliance | — | — | PASS |
+| `ytm_startblock` | Schedule CL submission using Startblock | `cl` (auto), `datetime` (required), `timezone` (default `Google/MTV`) | — | PASS
+|
+| `ytm_superroot` | Build/test YTM superroot — rabbit build, borgcfg reload, proof | `cl` (auto), `workspace` (auto), `sample_size` (default 10
+queries) | `ytm_update_cl_desc` (description amend); ref: `ytm_jarvis_sxs` | PASS |
+| `ytm_update_cl_desc` | Amend a YTM CL description with footer validation | `cl_number` (auto), `description` (caller constructs) | — | PASS |
+| `ytm_verify_superroot_cl` | Full verification workflow — test_custom_superroot + Jarvis SxS in parallel | `cl` (auto), `workspace` (auto),
+`sample_size` (default 500) | `ytm_superroot`, `ytm_jarvis_sxs`, `ytm_update_cl_desc` | PASS |
+
+<!-- Last full audit: 2026-03-21. Fixed: ytm_verify_superroot_cl check 3 (added ## Params with auto-detect), ytm_superroot check 3 (added ##
+Params section), ytm_update_cl_desc check 3 (converted inline Params to ## Params section with auto-detect for cl_number). -->
+ 这是我在 corp 电脑写的俩 skill，跟我的 doctor compare 咋样
