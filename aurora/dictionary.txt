@@ -1,5 +1,7 @@
 Claude, Claude Code, Cursor, Obsidian, Things 3, Karabiner Elements, TypeScript, Electron, Vite, GitHub, EC2, macOS, Whisper
 
 [replace]
+clarkcode = Claude Code
+clark code = Claude Code
 cloud code = Claude Code
 cloud = Claude
