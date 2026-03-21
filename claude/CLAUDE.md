@@ -1,4 +1,13 @@
+# ⚠️ LANGUAGE POLICY (STRICTLY ENFORCED)
+Output ONLY in Chinese (中文) or English. NEVER output Korean, Japanese, or any other language — not in explanations, code comments, commit messages, or any other content. The codebase may contain Korean/Japanese strings for i18n purposes; those are data, not a reason to switch output language. Always respond in Chinese or English regardless of codebase content.
+
+---
+
 # 全局记忆
+
+## Dotfiles 工作流
+
+每次编辑 dotfiles 后，必须立即 commit 并 push 到远端。不需要等用户提醒。
 
 ## 沟通偏好
 
@@ -7,11 +16,11 @@
 
 ## Things 3
 
-所有 Things 3 操作（添加任务、更新任务、读取状态）必须通过 `things` subagent 完成，main session 不直接操作。对话中产生 actionable next steps 时主动 invoke。
+Things 3 操作通过 `things` subagent 完成（仅当 `~/.claude/agents/things.md` 存在时）；否则直接调用 `/things_daily_review` 或 `/things_read` skill。对话中产生 actionable next steps 时主动 invoke。
 
 ## Obsidian
 
-所有 Obsidian vault 写操作必须通过 `obsidian` subagent 完成，main session 不直接写入 vault 文件。对话中产生关于人的值得记录的信息时主动触发 `obsidian-people-note` skill。
+Obsidian vault 写操作通过 `obsidian` subagent 完成（仅当 `~/.claude/agents/obsidian.md` 存在时）；否则直接调用 `/obsidian_new_note` 或 `/obsidian_people_note` skill。对话中产生关于人的值得记录的信息时主动触发 `obsidian_people_note` skill。
 
 ## 事故复盘：2026-03-07 主目录误删事件
 
@@ -29,3 +38,7 @@
 1. `run_in_background=true` 的后台 shell 环境存在路径解析差异，不能用于任何破坏性操作
 2. 执行前没有确认路径是否正确展开
 3. 当时 `trash` 别名尚未配置，直接用了 `rm -rf`，没有任何安全兜底
+
+---
+
+# ⚠️ REMINDER: Chinese and English output ONLY. No Korean. No Japanese. No exceptions.
