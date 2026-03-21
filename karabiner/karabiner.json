@@ -85,27 +85,6 @@
                         ]
                     },
                     {
-                        "description": "u/i char navigation",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "u",
-                                    "modifiers": { "mandatory": ["right_control"], "optional": ["left_shift"] }
-                                },
-                                "to": [{ "key_code": "left_arrow" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "i",
-                                    "modifiers": { "mandatory": ["right_control"], "optional": ["left_shift"] }
-                                },
-                                "to": [{ "key_code": "right_arrow" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "[/] line start/end navigation and selection",
                         "manipulators": [
                             {
@@ -180,29 +159,22 @@
                         ]
                     },
                     {
-                        "description": "o/O vim new line below/above",
+                        "description": "i/o char navigation",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "o",
-                                    "modifiers": { "mandatory": ["right_control"] }
+                                    "key_code": "i",
+                                    "modifiers": { "mandatory": ["right_control"], "optional": ["left_shift"] }
                                 },
-                                "to": [
-                                    { "key_code": "right_arrow", "modifiers": ["left_command"] },
-                                    { "key_code": "return_or_enter" }
-                                ],
+                                "to": [{ "key_code": "left_arrow" }],
                                 "type": "basic"
                             },
                             {
                                 "from": {
                                     "key_code": "o",
-                                    "modifiers": { "mandatory": ["right_control", "left_shift"] }
+                                    "modifiers": { "mandatory": ["right_control"], "optional": ["left_shift"] }
                                 },
-                                "to": [
-                                    { "key_code": "left_arrow", "modifiers": ["left_command"] },
-                                    { "key_code": "return_or_enter" },
-                                    { "key_code": "up_arrow" }
-                                ],
+                                "to": [{ "key_code": "right_arrow" }],
                                 "type": "basic"
                             }
                         ]
