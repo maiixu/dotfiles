@@ -1,1 +1,16 @@
 settings.local.json
+history.jsonl
+mcp-needs-auth-cache.json
+plugins/blocklist.json
+projects/
+sessions/
+cache/
+telemetry/
+shell-snapshots/
+paste-cache/
+image-cache/
+debug/
+backups/
+file-history/
+agent-memory/
+tasks/
