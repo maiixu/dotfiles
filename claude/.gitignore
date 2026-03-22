@@ -14,4 +14,4 @@ backups/
 file-history/
 agent-memory/
 tasks/
-channels/*.state.json
+channels/**/*.state.json
