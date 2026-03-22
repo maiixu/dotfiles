@@ -140,3 +140,10 @@ export AWS_PROFILE=bedrock-claude
 if command -v starship &> /dev/null; then
     eval "$(starship init zsh)"
 fi
+
+# bun completions
+[ -s "/Users/maixu/.bun/_bun" ] && source "/Users/maixu/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
