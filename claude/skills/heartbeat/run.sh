@@ -3,7 +3,7 @@ set -euo pipefail
 export GOOGLE_WORKSPACE_CLI_KEYRING_BACKEND=file
 export PATH=/Users/ec2-user/.bun/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin
 
-DEFAULT_SPACE="spaces/AAQAR3itp9E"
+DEFAULT_SPACE="spaces/AAQAdgITNE8"
 
 # ── 1. Sync dotfiles ──────────────────────────────────────────────────────────
 cd ~/code/dotfiles
