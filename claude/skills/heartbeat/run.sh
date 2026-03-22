@@ -24,7 +24,12 @@ fi
 
 # ── 3. Sync notes ─────────────────────────────────────────────────────────────
 cd ~/notes
-if git pull --ff-only 2>&1 | grep -q "Already up to date"; then
+git add -A
+if ! git diff --cached --quiet; then
+  git commit -m "vault backup: $(date '+%Y-%m-%d %H:%M:%S')"
+  git pull --rebase -q 2>/dev/null || true
+  git push -q 2>/dev/null && NOTES_STATUS="↑ notes pushed" || NOTES_STATUS="⚠️ notes push failed"
+elif git pull --ff-only 2>&1 | grep -q "Already up to date"; then
   NOTES_STATUS="✓ notes up to date"
 else
   NOTES_STATUS="↓ notes pulled"

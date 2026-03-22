@@ -39,6 +39,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/maixu/.claude/hooks/auto-push-tracked-repos.sh",
+            "async": true
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
