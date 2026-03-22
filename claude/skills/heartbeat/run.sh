@@ -58,17 +58,27 @@ THINGS_LAST=$(last_seen ~/.claude/channels/gchat/things.state.json)
 
 # ── 5. Build and send report ──────────────────────────────────────────────────
 NOW=$(TZ=America/Detroit date +"%Y-%m-%d %H:%M %Z")
-REPORT="🤖 Heartbeat ${NOW}
 
-Agents
-• ${DEFAULT_AGENT} (last: ${DEFAULT_LAST})
-• ${OBSIDIAN_AGENT} (last: ${OBSIDIAN_LAST})
-• ${THINGS_AGENT} (last: ${THINGS_LAST})
+python3 - <<PYEOF
+import json, subprocess
 
-Sync
-• ${DOTFILES_STATUS}
-• ${NOTES_STATUS}"
+text = (
+    f"🤖 Heartbeat ${NOW}\n\n"
+    f"Agents\n"
+    f"• ${DEFAULT_AGENT} (last: ${DEFAULT_LAST})\n"
+    f"• ${OBSIDIAN_AGENT} (last: ${OBSIDIAN_LAST})\n"
+    f"• ${THINGS_AGENT} (last: ${THINGS_LAST})\n\n"
+    f"Sync\n"
+    f"• ${DOTFILES_STATUS}\n"
+    f"• ${NOTES_STATUS}"
+)
 
-gws chat spaces messages create \
-  --params "{\"parent\":\"${DEFAULT_SPACE}\"}" \
-  --json "{\"text\":\"${REPORT}\"}"
+params = json.dumps({"parent": "${DEFAULT_SPACE}"})
+body = json.dumps({"text": text})
+
+subprocess.run([
+    "gws", "chat", "spaces", "messages", "create",
+    "--params", params,
+    "--json", body,
+], check=True)
+PYEOF
