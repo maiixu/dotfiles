@@ -1,8 +1,23 @@
 {
-  "env": {},
-  "model": "claude-sonnet-4-6",
+  "env": {
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "AWS_PROFILE": "bedrock-claude",
+    "AWS_REGION": "us-west-2"
+  },
+  "model": "us.anthropic.claude-sonnet-4-6[1m]",
   "language": "chinese",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ~/code/dotfiles && git pull --ff-only -q 2>/dev/null; cd ~/notes && git pull --ff-only -q 2>/dev/null",
+            "async": true
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "matcher": "",
