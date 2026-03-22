@@ -1,5 +1,5 @@
 ---
-name: pua-en
+name: pua_en
 description: "Use when task fails 2+ times, passive behavior, or user frustration. English big-tech PIP-style pressure."
 license: MIT
 ---

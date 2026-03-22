@@ -6,7 +6,7 @@ license: MIT
 
 # PUA Pro — 自进化 + Platform
 
-> 本 skill 是 `/pua` 核心的扩展层。角色切换请用 `/pua:p7` `/pua:p9` `/pua:p10`。
+> 本 skill 是 `/pua` 核心的扩展层。角色切换请用 `/pua_p7` `/pua_p9` `/pua_p10`。
 
 ## 自进化协议
 
