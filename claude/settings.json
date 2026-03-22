@@ -1,10 +1,6 @@
 {
-  "env": {
-    "CLAUDE_CODE_USE_BEDROCK": "1",
-    "AWS_PROFILE": "bedrock-claude",
-    "AWS_REGION": "us-west-2"
-  },
-  "model": "us.anthropic.claude-sonnet-4-6[1m]",
+  "env": {},
+  "model": "claude-sonnet-4-6",
   "language": "chinese",
   "hooks": {
     "SessionStart": [
@@ -14,17 +10,6 @@
             "type": "command",
             "command": "cd ~/code/dotfiles && git pull --ff-only -q 2>/dev/null; cd ~/notes && git pull --ff-only -q 2>/dev/null",
             "async": true
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/maixu/.claude/hooks/check-output-language.sh"
           }
         ]
       }
