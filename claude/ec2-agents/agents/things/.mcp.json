@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "gchat-things": {
+      "type": "stdio",
+      "command": "/Users/ec2-user/.bun/bin/bun",
+      "args": ["/Users/ec2-user/code/gchat-channel/channel.ts", "--config", "/Users/ec2-user/.claude/channels/gchat/things.json"],
+      "env": { "GOOGLE_WORKSPACE_CLI_KEYRING_BACKEND": "file" }
+    }
+  }
+}

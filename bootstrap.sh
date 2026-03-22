@@ -12,6 +12,7 @@ NC='\033[0m' # No Color
 INSTALL_BREW=false
 INSTALL_PACKAGES=false
 SERVER_MODE=false
+EC2_MODE=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -25,6 +26,11 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --server)
+            SERVER_MODE=true
+            shift
+            ;;
+        --ec2)
+            EC2_MODE=true
             SERVER_MODE=true
             shift
             ;;
@@ -352,6 +358,45 @@ if [ "$INSTALL_PACKAGES" = true ]; then
 
     echo ""
     echo -e "${GREEN}✓ Packages installed${NC}"
+    echo ""
+fi
+
+
+# ==============================================================================
+# STEP EC2: GChat agents setup (EC2 only)
+# ==============================================================================
+
+if [ "$EC2_MODE" = true ]; then
+    echo "Setting up EC2 GChat agents..."
+    DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+    EC2_AGENTS="$DOTFILES_DIR/claude/ec2-agents"
+
+    for agent in default obsidian things; do
+        mkdir -p ~/agents/$agent
+        ln -sf "$EC2_AGENTS/agents/$agent/.mcp.json" ~/agents/$agent/.mcp.json
+        echo "  linked agents/$agent/.mcp.json"
+    done
+
+    for f in start-claude-default.sh start-claude-obsidian.sh start-claude-things.sh keepalive.sh; do
+        ln -sf "$EC2_AGENTS/agents/$f" ~/agents/$f
+        chmod +x ~/agents/$f
+        echo "  linked agents/$f"
+    done
+
+    mkdir -p ~/Library/LaunchAgents
+    for plist in "$EC2_AGENTS/LaunchAgents/"*.plist; do
+        name=$(basename "$plist")
+        ln -sf "$plist" ~/Library/LaunchAgents/$name
+        launchctl load ~/Library/LaunchAgents/$name 2>/dev/null || true
+        echo "  loaded $name"
+    done
+
+    if ! crontab -l 2>/dev/null | grep -q "keepalive.sh"; then
+        (crontab -l 2>/dev/null; echo "* * * * * /Users/ec2-user/agents/keepalive.sh") | crontab -
+        echo "  added keepalive cron"
+    fi
+
+    echo "EC2 agents setup complete"
     echo ""
 fi
 
