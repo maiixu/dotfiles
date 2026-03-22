@@ -1,6 +1,6 @@
 ---
 name: heartbeat
-description: Hourly health report — syncs dotfiles/notes and sends status to Default Chat space. Designed to run headlessly from cron without model invocation.
+description: "Use when running the hourly EC2 health report cron job."
 context: fork
 ---
 

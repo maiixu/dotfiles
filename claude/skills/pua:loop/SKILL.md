@@ -10,7 +10,7 @@ license: MIT
 
 ## 核心规则
 
-1. **加载 `pua:pua` 核心 skill 的全部行为协议** — 三条红线、方法论、压力升级照常执行
+1. **加载 `/pua` 核心 skill 的全部行为协议** — 三条红线、方法论、压力升级照常执行
 2. **禁止调用 AskUserQuestion** — loop 模式下不打断用户，所有决策自主完成
 3. **禁止说"我无法解决"** — 在 loop 里没有退出权，穷尽一切才能输出完成信号
 4. **每次迭代自动执行**：检查上次改动 → 跑验证 → 发现问题 → 修复 → 再验证
@@ -21,12 +21,19 @@ license: MIT
 
 ### Step 1: 启动 PUA Loop
 
-运行 setup 脚本（改编自 Ralph Loop，MIT 协议）：
-```bash
-bash "${CLAUDE_PLUGIN_ROOT}/scripts/setup-pua-loop.sh" "$ARGUMENTS" --max-iterations 30 --completion-promise "LOOP_DONE"
+<!-- TODO: setup-pua-loop.sh 尚未实现。目前手动创建状态文件： -->
+
+手动创建 `.claude/pua-loop.local.md` 状态文件，写入以下内容：
+
+```markdown
+active: true
+task: "$ARGUMENTS"
+max_iterations: 30
+current_iteration: 0
+completion_promise: LOOP_DONE
 ```
 
-这会创建 `.claude/pua-loop.local.md` 状态文件，内含用户任务描述和 PUA 行为协议。PUA 的 Stop hook 检测到此文件后循环运行，每次迭代将文件内容喂回 Claude——**行为协议随每次迭代送达，context compaction 后也不会丢失**。
+文件存在后，Stop hook 检测到此文件并循环运行，每次迭代将文件内容喂回 Claude——**行为协议随每次迭代送达，context compaction 后也不会丢失**。
 
 ### Step 2: 告知用户
 
