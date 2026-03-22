@@ -13,7 +13,15 @@ else
   DOTFILES_STATUS="↓ dotfiles pulled"
 fi
 
-# ── 2. Sync notes ─────────────────────────────────────────────────────────────
+# ── 2. Sync gchat-channel ─────────────────────────────────────────────────────
+cd ~/code/gchat-channel
+if git pull --ff-only 2>&1 | grep -q "Already up to date"; then
+  CHANNEL_STATUS="✓ gchat-channel up to date"
+else
+  CHANNEL_STATUS="↓ gchat-channel pulled"
+fi
+
+# ── 3. Sync notes ─────────────────────────────────────────────────────────────
 cd ~/notes
 if git pull --ff-only 2>&1 | grep -q "Already up to date"; then
   NOTES_STATUS="✓ notes up to date"
@@ -24,10 +32,18 @@ fi
 # ── 3. Check agent sessions ───────────────────────────────────────────────────
 agent_status() {
   local name=$1
-  if tmux has-session -t "claude-${name}" 2>/dev/null; then
-    echo "✓ ${name}"
+  if ! tmux has-session -t "claude-${name}" 2>/dev/null; then
+    echo "✗ ${name} (session down)"
+    return
+  fi
+  local pane
+  pane=$(tmux capture-pane -t "claude-${name}" -p 2>/dev/null)
+  if echo "$pane" | grep -q "Not logged in"; then
+    echo "⚠️ ${name} (Pro auth expired)"
+  elif echo "$pane" | grep -q "API Usage Billing"; then
+    echo "⚠️ ${name} (API billing, not Pro)"
   else
-    echo "✗ ${name} (down)"
+    echo "✓ ${name}"
   fi
 }
 
@@ -58,6 +74,9 @@ THINGS_LAST=$(last_seen ~/.claude/channels/gchat/things.state.json)
 
 # ── 5. Build and send report ──────────────────────────────────────────────────
 NOW=$(TZ=America/Detroit date +"%Y-%m-%d %H:%M %Z")
+BUN_COUNT=$(ps aux | grep "bun.*channel" | grep -v grep | wc -l | tr -d ' ')
+BUN_STATUS="✓ ${BUN_COUNT}/9 bun procs"
+[ "${BUN_COUNT}" -lt 9 ] && BUN_STATUS="⚠️ ${BUN_COUNT}/9 bun procs"
 
 python3 - <<PYEOF
 import json, subprocess
@@ -67,9 +86,11 @@ text = (
     f"Agents\n"
     f"• ${DEFAULT_AGENT} (last: ${DEFAULT_LAST})\n"
     f"• ${OBSIDIAN_AGENT} (last: ${OBSIDIAN_LAST})\n"
-    f"• ${THINGS_AGENT} (last: ${THINGS_LAST})\n\n"
+    f"• ${THINGS_AGENT} (last: ${THINGS_LAST})\n"
+    f"• ${BUN_STATUS}\n\n"
     f"Sync\n"
     f"• ${DOTFILES_STATUS}\n"
+    f"• ${CHANNEL_STATUS}\n"
     f"• ${NOTES_STATUS}"
 )
 
