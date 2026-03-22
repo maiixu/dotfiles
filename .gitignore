@@ -53,8 +53,8 @@ claude/projects/**/*.jsonl
 claude/projects/**/subagents/
 claude/projects/**/tool-results/
 
-# gstack — nested git repo, install via: git clone https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && ~/.claude/skills/gstack/setup
-claude/skills/gstack/
+# gstack — lives at ~/code/gstack, install via: git clone https://github.com/garrytan/gstack.git ~/code/gstack && ~/code/gstack/setup
+claude/skills/gstack
 # gstack skill symlinks (auto-created by gstack/setup)
 claude/skills/autoplan
 claude/skills/benchmark
