@@ -1,6 +1,13 @@
 {
   "agents": [
-    { "label": "default", "spaceId": "spaces/AAQAdgITNE8" }
+    {
+      "label": "default",
+      "spaceId": "spaces/AAQAdgITNE8"
+    }
   ],
-  "allowedSenders": ["users/101479928097898375664", "users/113873951019422151855"]
+  "allowedSenders": [
+    "users/101479928097898375664",
+    "users/113873951019422151855"
+  ],
+  "botSenderId": "users/101479928097898375664"
 }
