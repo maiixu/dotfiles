@@ -1,5 +1,5 @@
 ---
-name: office-hours
+name: gstack_office_hours
 version: 2.0.0
 description: "Use when brainstorming a new product idea or exploring whether to build."
 allowed-tools:
