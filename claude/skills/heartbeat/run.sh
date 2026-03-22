@@ -7,6 +7,7 @@ DEFAULT_SPACE="spaces/AAQAdgITNE8"
 
 # ── 1. Sync dotfiles ──────────────────────────────────────────────────────────
 cd ~/code/dotfiles
+git checkout -- . 2>/dev/null
 if git pull --ff-only 2>&1 | grep -q "Already up to date"; then
   DOTFILES_STATUS="✓ dotfiles up to date"
 else
