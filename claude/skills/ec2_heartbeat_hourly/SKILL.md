@@ -1,5 +1,5 @@
 ---
-name: heartbeat
+name: ec2_heartbeat_hourly
 description: "Use when running the hourly EC2 health report cron job."
 context: fork
 ---

@@ -1,5 +1,5 @@
 ---
-name: skill_doctor
+name: dotfiles_skill_doctor
 description: Use when auditing ~/.claude/skills/ for health and compliance.
 context: fork
 ---

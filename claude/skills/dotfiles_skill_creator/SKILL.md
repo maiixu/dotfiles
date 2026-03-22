@@ -1,5 +1,5 @@
 ---
-name: skill_creator
+name: dotfiles_skill_creator
 description: Use when creating a skill or agent.
 context: fork
 ---

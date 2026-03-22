@@ -1,5 +1,5 @@
 ---
-name: hotkey_doctor
+name: dotfiles_hotkey_doctor
 description: Use when auditing hotkey config across Aerospace and Karabiner.
 context: fork
 ---
