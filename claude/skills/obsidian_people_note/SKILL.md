@@ -8,9 +8,9 @@ Record a memory about a person into Obsidian.
 
 ## Vault
 
-- Path: `/Users/maixu/notes/`
-- People notes: `/Users/maixu/notes/板块 Areas/人际 Friends/`
-- People MOC: `/Users/maixu/notes/板块 Areas/人际 Friends/人际 Friends.md`
+- Path: `~/notes/`
+- People notes: `~/notes/板块 Areas/人际 Friends/`
+- People MOC: `~/notes/板块 Areas/人际 Friends/人际 Friends.md`
 
 ## Writing Files
 
@@ -23,16 +23,6 @@ path = pathlib.Path("{FULL_PATH}")
 path.write_text("""{CONTENT}""", encoding="utf-8")
 print(f"Saved: {path.name}")
 PYEOF
-```
-
-## Opening Notes in Obsidian
-
-```bash
-python3 -c "
-import urllib.parse, subprocess
-path = urllib.parse.quote('{RELATIVE_PATH_FROM_VAULT_ROOT}')
-subprocess.run(['open', f'obsidian://open?vault=notes&file={path}'])
-"
 ```
 
 ## Params
@@ -111,9 +101,13 @@ Content:
 
 Write the file to `板块 Areas/人际 Friends/`, then add to the MOC (`人际 Friends.md`): insert a link in the contacts list, maintaining alphabetical order.
 
-## Step 3 — Open in Obsidian and confirm
+## Step 3 — Commit, push, and confirm
 
-Open the note, then report what was done.
+```bash
+cd ~/notes && git add -A && git commit -m "people: {Name}" && git push
+```
+
+Then report what was done.
 
 For updates:
 ```

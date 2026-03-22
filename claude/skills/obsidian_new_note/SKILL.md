@@ -8,8 +8,8 @@ Create a new Obsidian note for the inbox.
 
 ## Vault
 
-- Path: `/Users/maixu/notes/`
-- Inbox: `/Users/maixu/notes/收件箱 Inbox/`
+- Path: `~/notes/`
+- Inbox: `~/notes/收件箱 Inbox/`
 
 ## Writing Files
 
@@ -22,16 +22,6 @@ path = pathlib.Path("{FULL_PATH}")
 path.write_text("""{CONTENT}""", encoding="utf-8")
 print(f"Saved: {path.name}")
 PYEOF
-```
-
-## Opening Notes in Obsidian
-
-```bash
-python3 -c "
-import urllib.parse, subprocess
-path = urllib.parse.quote('{RELATIVE_PATH_FROM_VAULT_ROOT}')
-subprocess.run(['open', f'obsidian://open?vault=notes&file={path}'])
-"
 ```
 
 ## Params
@@ -105,4 +95,8 @@ Wait for user reply. If they request edits, update and re-show the preview. Repe
 
 ## Step 6 — Save
 
-Write the finalized file to the inbox, then open in Obsidian.
+Write the finalized file to the inbox. Then commit and push:
+
+```bash
+cd ~/notes && git add -A && git commit -m "note: {Title}" && git push
+```
