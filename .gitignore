@@ -53,32 +53,6 @@ claude/projects/**/*.jsonl
 claude/projects/**/subagents/
 claude/projects/**/tool-results/
 
-# gstack — lives at ~/code/gstack, install via: git clone https://github.com/garrytan/gstack.git ~/code/gstack && ~/code/gstack/setup
+# gstack — lives at ~/code/gstack (independent git repo, not tracked here)
+# Install: git clone https://github.com/garrytan/gstack.git ~/code/gstack && ~/code/gstack/setup
 claude/skills/gstack
-# gstack skill symlinks (auto-created by gstack/setup)
-claude/skills/autoplan
-claude/skills/benchmark
-claude/skills/browse
-claude/skills/canary
-claude/skills/careful
-claude/skills/codex
-claude/skills/design-consultation
-claude/skills/design-review
-claude/skills/document-release
-claude/skills/freeze
-claude/skills/gstack-upgrade
-claude/skills/guard
-claude/skills/investigate
-claude/skills/land-and-deploy
-claude/skills/office-hours
-claude/skills/plan-ceo-review
-claude/skills/plan-design-review
-claude/skills/plan-eng-review
-claude/skills/qa
-claude/skills/qa-only
-claude/skills/retro
-claude/skills/review
-claude/skills/setup-browser-cookies
-claude/skills/setup-deploy
-claude/skills/ship
-claude/skills/unfreeze
