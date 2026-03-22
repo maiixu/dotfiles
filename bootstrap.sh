@@ -292,11 +292,41 @@ done
 echo ""
 
 # ==============================================================================
-# STEP 5: Install packages (optional)
+# STEP 5: Link bin scripts to ~/.local/bin
+# ==============================================================================
+
+echo -e "${GREEN}🔗 Step 5: Linking bin scripts...${NC}"
+echo ""
+
+BIN_SOURCE="$DOTFILES_DIR/bin"
+BIN_TARGET="$HOME/.local/bin"
+
+if [ -d "$BIN_SOURCE" ]; then
+    mkdir -p "$BIN_TARGET"
+    for script in "$BIN_SOURCE"/*; do
+        name="$(basename "$script")"
+        target="$BIN_TARGET/$name"
+        if [ -L "$target" ] && [ "$(readlink "$target")" = "$script" ]; then
+            echo "✓ Already linked: ~/.local/bin/$name"
+        elif [ -e "$target" ]; then
+            echo -e "${YELLOW}⚠️  ~/.local/bin/$name already exists, skipping${NC}"
+        else
+            ln -s "$script" "$target"
+            echo -e "${GREEN}✓ Linked: ~/.local/bin/$name${NC}"
+        fi
+    done
+else
+    echo -e "${YELLOW}⚠️  No bin/ directory found, skipping${NC}"
+fi
+
+echo ""
+
+# ==============================================================================
+# STEP 6: Install packages (optional)
 # ==============================================================================
 
 if [ "$INSTALL_PACKAGES" = true ]; then
-    echo -e "${GREEN}📦 Step 5: Installing essential packages...${NC}"
+    echo -e "${GREEN}📦 Step 6: Installing essential packages...${NC}"
     echo ""
 
     if ! command -v brew &> /dev/null; then
