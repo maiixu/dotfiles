@@ -1,0 +1,6 @@
+{
+  "agents": [
+    { "label": "dev", "spaceId": "spaces/o7YlBSAAAAE", "cwd": "/Users/maixu/code" }
+  ],
+  "allowedSenders": ["users/101479928097898375664", "users/113873951019422151855"]
+}
