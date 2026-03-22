@@ -377,6 +377,10 @@ if [ "$EC2_MODE" = true ]; then
         echo "  linked agents/$agent/.mcp.json"
     done
 
+    for agent in default obsidian things; do
+        [ -f "$EC2_AGENTS/agents/$agent/CLAUDE.md" ] && ln -sf "$EC2_AGENTS/agents/$agent/CLAUDE.md" ~/agents/$agent/CLAUDE.md
+    done
+
     for f in start-claude-default.sh start-claude-obsidian.sh start-claude-things.sh keepalive.sh; do
         ln -sf "$EC2_AGENTS/agents/$f" ~/agents/$f
         chmod +x ~/agents/$f
