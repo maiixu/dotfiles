@@ -30,6 +30,7 @@ For each skill file, apply all checks below. Mark each: **PASS** / **WARN** / **
 | 11 | Shared context skill exists documenting auth, paths, and conventions for the group | WARN |
 | 12 | Service/recipe split: capability skills separate from step-by-step workflow scripts | WARN |
 | 13 | Cross-skill dependencies explicitly referenced — no implicit "assumes X is set up" | WARN |
+| 14 | Skill family role is one of: **shared** (pure reference, never directly invoked, description may be non-trigger), **router** (directly invocable + family base, body cross-references sub-skills), **action** (targeted op, references `*_shared` or router via PREREQUISITE) | WARN |
 
 ## Params
 
@@ -53,21 +54,44 @@ obsidian-new-note      |   3   |  WARN  | "Create a new Obsidian note..." — ca
 
 After the table, list all WARN/FAIL items grouped by skill with proposed fix diffs. Apply fixes upon user confirmation (or immediately if invoked with `--fix`).
 
-## Known baseline (last audited 2026-03-21, updated 2026-03-21)
+## Known baseline (last audited 2026-03-22, updated 2026-03-22)
 
-| Skill | desc tokens | trigger | fork | naming | Remaining Issues |
-|-------|-------------|---------|------|--------|-----------------|
-| `obsidian_new_note` | ✅ | ✅ | ✅ | ✅ | — |
-| `obsidian_people_note` | ✅ | ✅ | ✅ | ✅ | — |
-| `things_daily_review` | ✅ | ✅ | ✅ | ✅ | 8 (verify script refs) |
-| `things_read` | ✅ | ✅ | ✅ | ✅ | 8 (verify script ref) |
-| `skill_creator` | ✅ | ✅ | ✅ | ✅ | — |
-| `gws_chat_send` | ✅ | ✅ | — (low bloat) | ✅ | 7 (write cmd, disable-model-invocation intentionally absent) |
-| `gws_chat` | ✅ | ✅ | — (ref skill) | ✅ | — |
-| `gws_shared` | ✅ | — (ref skill) | — (ref skill) | ✅ | — |
-| `ec2_shared` | ✅ | — (ref skill) | — (ref skill) | ✅ | 9 (hardcoded IP, low risk) |
-| `ec2_imessage_bot` | ✅ | ✅ | — (low bloat) | ✅ | 9 (hardcoded EC2 paths, intentional) |
-| `hotkey_doctor` | ✅ | ✅ | ✅ | ✅ | — |
-| `skill_doctor` | ✅ | ✅ | ✅ | ✅ | — |
+| Skill | role | desc tokens | trigger | fork | naming | Remaining Issues |
+|-------|------|-------------|---------|------|--------|-----------------|
+| `things_shared` | shared | ✅ | N/A | N/A | ✅ | — |
+| `things_read` | action | ✅ | ✅ | ✅ | ✅ | 8 (verify script ref) |
+| `things_daily_review` | action | ✅ | ✅ | ✅ | ✅ | 8 (verify script refs) |
+| `obsidian_shared` | shared | ✅ | N/A | N/A | ✅ | — |
+| `obsidian_new_note` | action | ✅ | ✅ | ✅ | ✅ | — |
+| `obsidian_people_note` | action | ✅ | ✅ | ✅ | ✅ | — |
+| `gws_shared` | shared | ✅ | N/A | N/A | ✅ | — |
+| `gws_chat` | router | ✅ | ✅ | — (ref skill) | ✅ | — |
+| `gws_chat_send` | action | ✅ | ✅ | — (low bloat) | ✅ | 7 (write cmd, intentional) |
+| `gws_calendar` | router | ✅ | ✅ | — (ref skill) | ✅ | — |
+| `gws_calendar_insert` | action | ✅ | ✅ | — (low bloat) | ✅ | 7 (write cmd, intentional) |
+| `gws_calendar_agenda` | action | ✅ | ✅ | — (low bloat) | ✅ | — |
+| `gws_docs` | router | ✅ | ✅ | — (ref skill) | ✅ | — |
+| `gws_docs_write` | action | ✅ | ✅ | — (low bloat) | ✅ | 7 (write cmd, intentional) |
+| `gws_drive` | router | ✅ | ✅ | — (ref skill) | ✅ | — |
+| `gws_drive_upload` | action | ✅ | ✅ | — (low bloat) | ✅ | 7 (write cmd, intentional) |
+| `gws_gmail` | router | ✅ | ✅ | — (ref skill) | ✅ | — |
+| `gws_people` | router | ✅ | ✅ | — (ref skill) | ✅ | — |
+| `ec2_shared` | shared | ✅ | N/A | N/A | ✅ | 9 (hardcoded EC2 paths, intentional) |
+| `ec2_heartbeat_hourly` | standalone | ✅ | ✅ | — (no model) | ✅ | 9 (hardcoded EC2 paths, intentional) |
+| `pua` | router | ✅ | ✅ | — (behavior modifier) | ✅ | — |
+| `pua_en` | standalone | ✅ | ✅ | — (behavior modifier) | ✅ | — |
+| `pua_loop` | action | ✅ | ✅ | — (behavior modifier) | ✅ | — |
+| `pua_p7` | action | ✅ | ✅ | — (behavior modifier) | ✅ | — |
+| `pua_p9` | action | ✅ | ✅ | — (behavior modifier) | ✅ | — |
+| `pua_p10` | action | ✅ | ✅ | — (behavior modifier) | ✅ | — |
+| `pua_pro` | action | ✅ | ✅ | — (behavior modifier) | ✅ | — |
+| `pua_yes` | action | ✅ | ✅ | — (behavior modifier) | ✅ | — |
+| `gstack_office_hours` | standalone | ✅ | ✅ | ✅ | ✅ | — |
+| `gstack_plan_eng_review` | standalone | ✅ | ✅ | ✅ | ✅ | — |
+| `gstack_plan_design_review` | standalone | ✅ | ✅ | ✅ | ✅ | — |
+| `gstack_skill_creator` | standalone | ✅ | ✅ | ✅ | ✅ | — |
+| `dotfiles_skill_doctor` | standalone | ✅ | ✅ | ✅ | ✅ | — |
+| `dotfiles_skill_creator` | standalone | ✅ | ✅ | ✅ | ✅ | — |
+| `dotfiles_hotkey_doctor` | standalone | ✅ | ✅ | ✅ | ✅ | — |
 
-<!-- Last full audit: 2026-03-21. claude-project-doctor deleted; agents/obsidian.md + agents/things.md deleted; all skills renamed to underscore_case; agent info merged into obsidian/things skills. -->
+<!-- Last full audit: 2026-03-22. things agent + agent-memory removed; things_shared + obsidian_shared added; skill renames: dotfiles_*, gstack_*, ec2_heartbeat_hourly; ec2_imessage_bot deleted; Check 14 (skill family roles) added. -->
