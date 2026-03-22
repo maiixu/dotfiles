@@ -7,7 +7,10 @@ Output ONLY in Chinese (中文) or English. NEVER output Korean, Japanese, or an
 
 ## Dotfiles 工作流
 
-每次编辑 dotfiles 后，必须立即 commit 并 push 到远端。不需要等用户提醒。
+每次对任何项目做了确定的改动后，询问用户是否要 git commit + push：
+> 要同步到远端吗？（git commit + push）
+
+用户确认后再执行。不要自动 commit，不要跳过询问。
 
 ## 沟通偏好
 
