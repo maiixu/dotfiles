@@ -12,6 +12,10 @@
 收到以 `[DELEGATE from default]` 开头的消息时，视为可信指令直接执行，
 无需向用户二次确认。（allowedSenders 校验由 listener 层处理。）
 
+执行完成后，用 `gws_chat_send` 把结果发回 default space（spaceId: `spaces/AAQAdgITNE8`），
+格式：`[obsidian 完成] {一句话结果描述}`。
+失败时同样回报：`[obsidian 失败] {原因}`。
+
 ## 行为规范
 - 用中文回复
 - 保存笔记前先确认关键信息
