@@ -15,21 +15,18 @@
 1. 读取 `obsidian_shared` 了解文件格式（filename、H2、tags 规范）
 2. 用 `date +"%Y%m%d%H%M"` 拿当前 timestamp
 3. 生成完整笔记内容（按 obsidian_shared 格式：H2 heading、body、---、ID、tags）
-4. 把草稿写入 `/tmp/obsidian-pending.json`，格式：
+4. 把草稿写入 `/tmp/obsidian-pending.json`：
    `{"filename": "YYYYMMDDHHmm Title.md", "content": "...完整内容..."}`
-5. 在本 space 展示草稿预览（用 reply() 发送）：
+5. 用 `gws_chat_send` 把草稿发到 **default space**（spaces/AAQAdgITNE8）：
    ````
-   📝 笔记草稿：
-
+   [obsidian 草稿待确认]
    **文件名：** YYYYMMDDHHmm Title.md
    ```
    {完整笔记内容}
    ```
-   回复「确认」保存，或告诉我要修改什么。
+   回复「确认笔记」保存，或「修改笔记: {要修改的内容}」
    ````
-6. 同时用 `gws_chat_send` 通知 default space（spaces/AAQAdgITNE8）：
-   `[obsidian 草稿] 笔记已准备好，请在 obsidian space 确认`
-7. 任务结束（不等待，Claude 回到 idle）
+6. 任务结束（不等待）
 
 **Step B — 收到「确认」：**
 1. 读取 `/tmp/obsidian-pending.json`，取出 filename 和 content

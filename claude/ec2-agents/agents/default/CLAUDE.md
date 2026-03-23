@@ -18,8 +18,20 @@
 委托消息格式（发给对应 space）：
 `[DELEGATE from default] {原始用户消息的完整文本}`
 
-gws_chat_send 调用返回后立即回复用户「已委托给 [obsidian/things] 处理」或
-「委托发送失败，请直接前往对应 space 操作」。v1 不等待目标 agent 的执行结果。
+发送后立即回复用户「已委托给 [obsidian/things] 处理，草稿准备好后会在此展示」。
+
+## 草稿确认路由
+
+当用户回复以下固定短语时，转发确认给对应 agent：
+
+| 用户说 | 动作 |
+|--------|------|
+| 「确认笔记」 | gws_chat_send `[DELEGATE from default] 确认保存` → obsidian space (spaces/AAQAVAf4whs) |
+| 「确认任务」 | gws_chat_send `[DELEGATE from default] 确认保存` → things space (spaces/AAQAicUYGGQ) |
+| 「修改笔记: {内容}」 | gws_chat_send `[DELEGATE from default] 修改: {内容}` → obsidian space |
+| 「修改任务: {内容}」 | gws_chat_send `[DELEGATE from default] 修改: {内容}` → things space |
+
+转发后回复用户「已转发确认」，不需要其他操作。
 
 ## 行为规范
 - 用中文回复，除非 Mai 用英文问

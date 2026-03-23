@@ -13,20 +13,18 @@
 
 **Step A — 收到 [DELEGATE]，生成草稿：**
 1. 读取 `things_shared` 的 routing guide，判断标题、所属项目、deadline
-2. 把草稿写入 `/tmp/things-pending.json`，格式：
+2. 把草稿写入 `/tmp/things-pending.json`：
    `{"title": "...", "list": "...", "deadline": "YYYY-MM-DD", "notes": "..."}`
-3. 在本 space 展示草稿预览（用 reply() 发送）：
+3. 用 `gws_chat_send` 把草稿发到 **default space**（spaces/AAQAdgITNE8）：
    ```
-   📋 任务草稿：
+   [things 草稿待确认]
    - 标题：{title}
    - 项目：{list}
    - 截止：{deadline}
    - 备注：{notes 如有}
-   回复「确认」创建，或告诉我要修改什么。
+   回复「确认任务」创建，或「修改任务: {要修改的内容}」
    ```
-4. 同时用 `gws_chat_send` 通知 default space（spaces/AAQAdgITNE8）：
-   `[things 草稿] 任务已准备好，请在 things space 确认`
-5. 任务结束（不等待）
+4. 任务结束（不等待）
 
 **Step B — 收到「确认」：**
 1. 读取 `/tmp/things-pending.json`
