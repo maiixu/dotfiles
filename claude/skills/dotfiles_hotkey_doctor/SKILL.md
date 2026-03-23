@@ -20,7 +20,7 @@ Audit the user's hotkey configuration across Aerospace (window manager) and Kara
 5. Update the reference table in this file to match the actual config. Update the "last audited" date.
 6. Flag any mental model inconsistencies: same key letter with semantically unrelated meanings across the `rctrl` and `alt` layers.
 
-## Reference table (last audited: 2026-03-21)
+## Reference table (last audited: 2026-03-22)
 
 | 键 | `rctrl` | `rctrl+shift` | `alt` | `alt+shift` | `alt+ctrl` | `alt+ctrl+shift` |
 |---|---|---|---|---|---|---|

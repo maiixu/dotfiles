@@ -1,6 +1,10 @@
 {
-  "env": {},
-  "model": "claude-sonnet-4-6",
+  "env": {
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "AWS_PROFILE": "bedrock-claude",
+    "AWS_REGION": "us-west-2"
+  },
+  "model": "us.anthropic.claude-sonnet-4-6[1m]",
   "language": "chinese",
   "hooks": {
     "SessionStart": [
@@ -25,7 +29,17 @@
         ]
       }
     ],
-    "PostToolUse": []
+    "PostToolUse": [],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/maixu/.claude/hooks/check-language.sh"
+          }
+        ]
+      }
+    ]
   },
   "enabledPlugins": {
     "ralph-skills@ralph-marketplace": true
