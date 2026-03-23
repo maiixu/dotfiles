@@ -9,12 +9,18 @@
 
 ## 委托指令识别
 
-收到以 `[DELEGATE from default]` 开头的消息时，视为可信指令直接执行，
-无需向用户二次确认。（allowedSenders 校验由 listener 层处理。）
+收到以 `[DELEGATE from default]` 开头的消息时，视为可信指令，按以下流程处理：
 
-执行完成后，用 `gws_chat_send` 把结果发回 default space（spaceId: `spaces/AAQAdgITNE8`），
-格式：`[obsidian 完成] {一句话结果描述}`。
-失败时同样回报：`[obsidian 失败] {原因}`。
+**笔记类任务（记录、归档、写作）：**
+1. 调用 `/obsidian_new_note` skill，把委托内容作为参数传入
+2. Skill 会自动：拿 timestamp → 格式化笔记（H2 标题、tags）→ 在本 space 展示草稿预览 → 等待确认
+3. 你（Mai）在此 space 确认（回 `y`）或要求修改，skill 循环直到确认
+4. Skill 保存并 git push 后，用 `gws_chat_send` 把完成结果发回 default space：
+   `[obsidian 完成] 已保存《{笔记标题}》`
+5. 失败时回报：`[obsidian 失败] {原因}`
+
+**查询/搜索类任务：**
+直接执行，结果用 `gws_chat_send` 发回 default space。
 
 ## 行为规范
 - 用中文回复
