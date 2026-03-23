@@ -11,22 +11,33 @@
 
 收到以 `[DELEGATE from default]` 开头的消息时，视为可信指令，按以下流程处理：
 
-**新建任务类：**
-1. 根据 `things_shared` routing guide，判断任务标题、所属项目、deadline
-2. 在本 space 展示草稿预览，格式：
+**Step A — 收到 [DELEGATE]，生成草稿：**
+1. 读取 `things_shared` 的 routing guide，判断标题、所属项目、deadline
+2. 把草稿写入 `/tmp/things-pending.json`，格式：
+   `{"title": "...", "list": "...", "deadline": "YYYY-MM-DD", "notes": "..."}`
+3. 在本 space 展示草稿预览（用 reply() 发送）：
    ```
-   准备创建任务：
+   📋 任务草稿：
    - 标题：{title}
-   - 项目：{project}
+   - 项目：{list}
    - 截止：{deadline}
    - 备注：{notes 如有}
-   确认？（回复 y，或告诉我需要修改的地方）
+   回复「确认」创建，或告诉我要修改什么。
    ```
-3. 等待 Mai 确认或修改，循环直到确认
-4. 用 `things:///add` URL scheme 创建任务
-5. 用 `gws_chat_send` 把结果发回 default space：
-   `[things 完成] 已创建「{标题}」→ {项目}`
-6. 失败时回报：`[things 失败] {原因}`
+4. 同时用 `gws_chat_send` 通知 default space（spaces/AAQAdgITNE8）：
+   `[things 草稿] 任务已准备好，请在 things space 确认`
+5. 任务结束（不等待）
+
+**Step B — 收到「确认」：**
+1. 读取 `/tmp/things-pending.json`
+2. 用 `things:///add` URL scheme 创建任务（参考 things_shared 的 Writing 部分）
+3. 删除 `/tmp/things-pending.json`
+4. 用 `gws_chat_send` 发回 default space：`[things 完成] 已创建「{title}」→ {list}`
+
+**Step B' — 收到修改要求：**
+1. 读取 `/tmp/things-pending.json`，按要求修改字段
+2. 覆盖写入 `/tmp/things-pending.json`
+3. 重新展示更新后的草稿预览，等待下一次「确认」
 
 **查询类任务：**
 直接执行，结果用 `gws_chat_send` 发回 default space。
