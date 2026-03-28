@@ -5,19 +5,28 @@ description: Obsidian vault reference — paths, note format, tags, write helper
 
 Shared reference for all `obsidian_*` skills. Loaded automatically before any `obsidian_*` operation.
 
+## Vault Philosophy
+
+- **Journal** (`札记 Journal/`) — default landing zone for all non-MOC notes, organized as `{year theme}/{MM}/{YYYYMMDDHHmm} {title}.md`
+- **Evergreen** (`联想 Evergreen/`) — graduated notes that have become mature, settled thinking; not yet active
+- **MOC** — navigation/index files only; stay in their respective sections
+- All other areas (People, Projects, etc.) follow the same `{timestamp} {title}.md` format and live under Journal until Evergreen opens
+
+**Timestamp is a unique ID** — never reuse the same timestamp across any two notes. If multiple notes are created in the same minute, increment by 1 minute per note.
+
 ## Vault
 
 - Root: `~/notes/`
 - Inbox: `~/notes/收件箱 Inbox/`
-- People notes: `~/notes/板块 Areas/人际 Friends/`
-- People MOC: `~/notes/板块 Areas/人际 Friends/人际 Friends.md`
+- Journal: `~/notes/札记 Journal/{year theme}/{MM}/`
+- People notes: in Journal, findable via tag `#Meta--元数据/Type--类型/People--人际`
 
 ## Note Format
 
 Filename: `YYYYMMDDHHmm Title.md`
 
 ```
-## YYYYMMDDHHmm Title
+## Title
 
 {body content}
 
@@ -26,15 +35,28 @@ YYYYMMDDHHmm
 
 #SubjectTag
 #Meta--元数据/Source--来源/Claude-Code
-
 ```
 
 Rules:
-- H2 heading = ID + space + Title (same as filename without extension)
-- `---` separator line after body
-- ID repeated on its own line after separator
+- H2 heading = Title only (no timestamp)
+- Timestamp lives in the filename and in the footer (line after after `---`)
+- `---` separator line after body, don't use `---` separator line in the body
+- Timestamp on its own line after separator
+- A blank line between timestamp and the first tag
 - Tags one per line (subject tags first, meta last)
-- File ends with a space on the last line, then a newline
+
+## Memory Entry Format
+
+For notes that record time-stamped memories (e.g. people notes):
+
+```
+YYYYMMDD {memory text on a single line}
+YYYYMMDD {memory text on a single line}
+```
+
+- Date only (8 digits), not full timestamp
+- One line per memory — date and text separated by a single space
+- No bullet points, no subheadings
 
 ## Tag System
 
@@ -49,6 +71,7 @@ Naming convention: `#English--中文/Subcategory--中文`
 | `#Meta--元数据/Type--类型/MOC--Map-of-Content--目录` | Index/navigation page |
 | `#Meta--元数据/Type--类型/Flashcards--记忆卡片` | Flashcard note |
 | `#Meta--元数据/Type--类型/Collection--合集` | Collection note |
+| `#Meta--元数据/Type--类型/People--人际` | People note |
 
 **Common subject tags:**
 ```

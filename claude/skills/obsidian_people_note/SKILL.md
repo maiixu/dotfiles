@@ -13,13 +13,13 @@ params:
 ```
 $ARGUMENTS: "{name} {memory}"
               ↓
-        ls 人际 Friends/ → match by name
+        grep People tag → match filename by name
               ↓
        found? ── yes ──→ read note → insert entry before ---
           │                                   ↓
           no                          git commit + push
           ↓
-       create new note → add link to MOC
+       create new note (date + timestamp)
               ↓
         git commit + push
 ```
@@ -27,10 +27,10 @@ $ARGUMENTS: "{name} {memory}"
 ## Step 1 — Find existing note
 
 ```bash
-ls ~/notes/"板块 Areas/人际 Friends/"
+grep -rl "Meta--元数据/Type--类型/People--人际" ~/notes --include="*.md"
 ```
 
-Match by filename — Chinese name, English name, or with timestamp prefix. Check YAML `aliases` if present. If found, read it.
+Match result filenames against the person's name (Chinese, English, or partial). If found, read it.
 
 ## Step 2 — Update or create
 
@@ -51,7 +51,7 @@ Get timestamp:
 date +"%Y%m%d%H%M"
 ```
 
-Filename: `{timestamp} {Name}.md`
+Determine destination folder from current date (see `obsidian_shared` for Journal structure).
 
 ```
 ## {timestamp} {Name}
@@ -63,10 +63,8 @@ Filename: `{timestamp} {Name}.md`
 ---
 {timestamp}
 
-#Relationship--社交/Notes--备注
+#Meta--元数据/Type--类型/People--人际
 ```
-
-Write to `板块 Areas/人际 Friends/`, then add link to MOC (`人际 Friends.md`) in alphabetical order.
 
 ## Step 3 — Commit, push, report
 
@@ -74,4 +72,4 @@ Write to `板块 Areas/人际 Friends/`, then add link to MOC (`人际 Friends.m
 cd ~/notes && git add -A && git commit -m "people: {Name}" && git push
 ```
 
-Report what was done (updated vs created, what was recorded).
+Report: updated vs created, what was recorded.

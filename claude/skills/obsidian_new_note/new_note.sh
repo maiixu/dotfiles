@@ -31,7 +31,7 @@ if tag_lines:
     tag_lines += "\n"
 
 content = (
-    "## " + timestamp + " " + title + "\n\n"
+    "## " + title + "\n\n"
     + body + "\n\n"
     + "---\n"
     + timestamp + "\n\n"
