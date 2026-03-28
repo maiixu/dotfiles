@@ -15,7 +15,8 @@ parent extracts title + body + tags from conversation
               ↓ $ARGUMENTS (or inferred)
         decide: title, body, tags
               ↓
-        preview → confirm
+   obvious? → preview → y/n confirm
+   ambiguous? → numbered options → wait → preview → confirm
               ↓
         new_note.sh "title" "body" "tags"
               ↓
@@ -29,9 +30,17 @@ From `$ARGUMENTS` or conversation context, determine:
 - **Body**: concise standalone note — not a chat transcript. OK to leave empty.
 - **Tags**: one or more relevant subject tag (see `obsidian_shared`); `#Meta--元数据/Source--来源/Claude-Code` is added by the script automatically.
 
+If any of these are ambiguous, ask via AskUserQuestion with numbered options before proceeding. One question at a time.
+
+Example (ambiguous title):
+> 标题不确定，选一个：
+> 1. Claude Code Skill 设计规范
+> 2. Obsidian Skill 写法约定
+> 3. 自定义 →
+
 ## Step 2 — Preview and confirm
 
-Show:
+Show via AskUserQuestion:
 ````
 **Title:** {title}
 **Body:**
@@ -39,7 +48,7 @@ Show:
 **Tags:** {tags}
 ````
 
-> 确认保存？回复 `y` 直接保存，或告诉我需要修改的地方。
+> 确认保存？`y` 直接保存，或告诉我需要修改的地方。
 
 Wait for confirmation. Apply edits if requested, repeat until confirmed.
 

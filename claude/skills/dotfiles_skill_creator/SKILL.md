@@ -99,6 +99,29 @@ For ≥ 2 skills targeting the same tool: create `<tool>_shared/SKILL.md` first.
 | `permissionMode` | `acceptEdits` only if agent writes files and scope is trusted |
 | `skills` | Avoid unless necessary — listed skills are **fully injected at cold start**, not lazy-loaded |
 
+## Interaction Design
+
+Skills that interact with users should follow this philosophy:
+
+**Obvious input → preview → confirm**
+When the intent is clear, show what will happen and ask `y` to proceed. Don't make the user choose if there's nothing to choose.
+
+**Ambiguous input → numbered options**
+When there's genuine uncertainty (e.g. multiple phrasings, multiple matches, missing params), offer 1–5 numbered options. Always end with a custom/free-text option. Show only as many as are meaningfully different — don't pad.
+
+```
+1. {option A}
+2. {option B}
+3. {option C — only if genuinely different}
+N. 自定义 →
+```
+
+**One question at a time.** Use AskUserQuestion. Never batch multiple decisions into one prompt. Wait for the response before asking the next question.
+
+**LLM adds value at the option stage.** Options aren't just rephrasing — they can polish, merge, reframe, or improve the raw input. The user picks, not the skill.
+
+**Apply to any decision point:** which file to update, what to write, what title/tag/content to use, which approach to take.
+
 ## Preview and confirm
 
 Before writing files, show the user:
@@ -106,7 +129,7 @@ Before writing files, show the user:
 - File path(s) to be created
 - Full content of each file
 
-Ask:
+Ask via AskUserQuestion:
 > 确认创建？回复 `y` 直接写入，或告诉我需要修改的地方。
 
 Wait for confirmation. Apply edits if requested, re-show, repeat until confirmed.
