@@ -1,6 +1,6 @@
 ## Shared Skills 规则
 
-写 skill 时：每个 `prefix_*` skill 开头必须显式引用 `prefix_shared`（若存在），不依赖运行时自动加载。
+写 skill 时：每个 `prefix-*` skill 开头必须显式引用 `prefix-shared`（若存在），不依赖运行时自动加载。
 
 ## Git 工作流
 
