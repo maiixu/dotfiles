@@ -4,11 +4,25 @@ description: Use when recording a memory about a person.
 context: fork
 ---
 
-Record a memory about a person in Obsidian. Refer to `obsidian_shared` for vault paths, note format, and write helper.
+deps:    obsidian_shared
 
-## Params
+params:
+  name    required   $ARGUMENTS
+  memory  required   $ARGUMENTS
 
-- `$ARGUMENTS` — required; person name and what to remember (e.g. "诗钰 养了一只猫叫 Nami"); if not provided, ask the user
+```
+$ARGUMENTS: "{name} {memory}"
+              ↓
+        ls 人际 Friends/ → match by name
+              ↓
+       found? ── yes ──→ read note → insert entry before ---
+          │                                   ↓
+          no                          git commit + push
+          ↓
+       create new note → add link to MOC
+              ↓
+        git commit + push
+```
 
 ## Step 1 — Find existing note
 
@@ -32,7 +46,12 @@ Match by filename — Chinese name, English name, or with timestamp prefix. Chec
 
 ### If note does not exist — create new
 
-Get timestamp, filename: `{timestamp} {Name}.md`
+Get timestamp:
+```bash
+date +"%Y%m%d%H%M"
+```
+
+Filename: `{timestamp} {Name}.md`
 
 ```
 ## {timestamp} {Name}

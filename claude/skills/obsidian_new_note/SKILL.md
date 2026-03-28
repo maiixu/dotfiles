@@ -1,45 +1,50 @@
 ---
 name: obsidian_new_note
-description: Use when saving a note to Obsidian inbox.
-context: fork
+description: Use when creating a new Obsidian inbox note from conversation or given content.
 ---
 
-Create a new Obsidian note in the inbox. Refer to `obsidian_shared` for vault paths, note format, tag system, and write helper.
+deps:    obsidian_shared
 
-## Params
+params:
+  title   required   $ARGUMENTS | infer
+  body    optional   $ARGUMENTS | infer
+  tags    required   $ARGUMENTS | infer
 
-- `$ARGUMENTS` — optional; note title; if not provided, infer from conversation context
-
-## Step 1 — Get timestamp
-
-```bash
-date +"%Y%m%d%H%M"
+```
+parent extracts title + body + tags from conversation
+              ↓ $ARGUMENTS (or inferred)
+        decide: title, body, tags
+              ↓
+        preview → confirm
+              ↓
+        new_note.sh "title" "body" "tags"
+              ↓
+        new_note.sh git commit + push
 ```
 
-## Step 2 — Determine title and content
+## Step 1 — Decide content
 
-- Title: use `$ARGUMENTS` if provided, otherwise infer from conversation
-- Body: write a concise, standalone note — not a chat summary. OK to leave empty if no clear content yet.
+From `$ARGUMENTS` or conversation context, determine:
+- **Title**: short, descriptive
+- **Body**: concise standalone note — not a chat transcript. OK to leave empty.
+- **Tags**: one or more relevant subject tag (see `obsidian_shared`); `#Meta--元数据/Source--来源/Claude-Code` is added by the script automatically.
 
-## Step 3 — Choose tags
-
-Always include `#Meta--元数据/Source--来源/Claude-Code` as the last tag. Add one relevant subject tag above it (see `obsidian_shared` for examples).
-
-## Step 4 — Preview and confirm
+## Step 2 — Preview and confirm
 
 Show:
 ````
-**Filename:** {ID} {Title}.md
-
-```
-{full note content}
-```
+**Title:** {title}
+**Body:**
+{body}
+**Tags:** {tags}
 ````
 
 > 确认保存？回复 `y` 直接保存，或告诉我需要修改的地方。
 
 Wait for confirmation. Apply edits if requested, repeat until confirmed.
 
-## Step 5 — Save and push
+## Step 3 — Run script
 
-Write to inbox using the write helper in `obsidian_shared`, then commit and push.
+```bash
+~/code/dotfiles/claude/skills/obsidian_new_note/new_note.sh "{title}" "{body}" "{tags}"
+```
