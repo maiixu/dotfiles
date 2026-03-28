@@ -113,8 +113,10 @@ When there's genuine uncertainty (e.g. multiple phrasings, multiple matches, mis
 1. {option A}
 2. {option B}
 3. {option C — only if genuinely different}
-N. 自定义 →
+4. 自定义 →
 ```
+
+最后一项永远是「自定义 →」，编号跟着实际选项数走。
 
 **One question at a time.** Use AskUserQuestion. Never batch multiple decisions into one prompt. Wait for the response before asking the next question.
 

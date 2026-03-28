@@ -1,5 +1,5 @@
 ---
-name: obsidian_new_note
+name: obsidian_new
 description: Use when creating a new Obsidian inbox note from conversation or given content.
 ---
 
@@ -18,9 +18,9 @@ parent extracts title + body + tags from conversation
    obvious? → preview → y/n confirm
    ambiguous? → numbered options → wait → preview → confirm
               ↓
-        new_note.sh "title" "body" "tags"
+        new.sh "title" "body" "tags"
               ↓
-        new_note.sh git commit + push
+        git commit + push
 ```
 
 ## Step 1 — Decide content
@@ -55,5 +55,5 @@ Wait for confirmation. Apply edits if requested, repeat until confirmed.
 ## Step 3 — Run script
 
 ```bash
-~/code/dotfiles/claude/skills/obsidian_new_note/new_note.sh "{title}" "{body}" "{tags}"
+~/code/dotfiles/claude/skills/obsidian_new/new.sh "{title}" "{body}" "{tags}"
 ```

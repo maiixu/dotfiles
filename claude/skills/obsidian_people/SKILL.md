@@ -1,7 +1,6 @@
 ---
 name: obsidian_people
 description: Use when recording a memory about a person.
-context: fork
 ---
 
 deps:    obsidian_shared
@@ -47,9 +46,10 @@ Draft options for how to write the memory line, then ask via AskUserQuestion. Sh
 1. 20260328 {as-is，原话}
 2. 20260328 {polished，口语转书面，更简洁}
 3. 20260328 {merged，多点合一行}（多个点时）
-…
-N. 自定义 →
+4. 自定义 →
 ```
+
+最后一项永远是「自定义 →」，编号跟着实际选项数走。
 
 If the input is already clean and one version is obvious best, skip the options and just show that one with `y` to confirm.
 
